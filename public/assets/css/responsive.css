@@ -1,0 +1,11 @@
+@media (max-width: 991px) {
+    .accesos-rapidos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 575px) {
+    .accesos-rapidos {
+        grid-template-columns: 1fr;
+    }
+}

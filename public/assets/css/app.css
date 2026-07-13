@@ -5,6 +5,8 @@
 @import url("./layout/sidebar.css");
 @import url("./layout/footer.css");
 
+@import url("./components/tarjetas.css");
+
 @import url("./dashboard/dashboard.css");
 @import url("./proyectos/proyectos.css");
 @import url("./sistemas/sistemas.css");

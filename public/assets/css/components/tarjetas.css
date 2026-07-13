@@ -1,0 +1,28 @@
+.tarjeta-resumen {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 25px;
+    background-color: #ffffff;
+    border: 1px solid #d9dee5;
+    border-radius: 12px;
+}
+
+.tarjeta-resumen__icono {
+    flex-shrink: 0;
+    font-size: 2.5rem;
+}
+
+.tarjeta-resumen__contenido {
+    display: flex;
+    flex-direction: column;
+}
+
+.tarjeta-resumen__cantidad {
+    font-size: 2rem;
+}
+
+.tarjeta-resumen__titulo {
+    margin-top: 5px;
+    color: #667085;
+}

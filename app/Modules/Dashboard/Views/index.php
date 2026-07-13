@@ -2,53 +2,18 @@
 
 <?= $this->section('content') ?>
 
-<section class="dashboard">
-    <div class="dashboard__header">
-        <div>
-            <h2>Dashboard</h2>
-            <p>Resumen general de los proyectos y sistemas registrados.</p>
-        </div>
-    </div>
+<div class="dashboard">
 
-    <div class="dashboard__cards">
-        <article class="summary-card">
-            <span class="summary-card__label">Proyectos</span>
-            <strong class="summary-card__value">0</strong>
-        </article>
+    <?= $this->include('App\Modules\Dashboard\Views\sections\bienvenida') ?>
 
-        <article class="summary-card">
-            <span class="summary-card__label">Sistemas</span>
-            <strong class="summary-card__value">0</strong>
-        </article>
+    <?= $this->include('App\Modules\Dashboard\Views\sections\tarjetas_resumen') ?>
 
-        <article class="summary-card">
-            <span class="summary-card__label">Módulos</span>
-            <strong class="summary-card__value">0</strong>
-        </article>
+    <?= $this->include('App\Modules\Dashboard\Views\sections\accesos_rapidos') ?>
 
-        <article class="summary-card">
-            <span class="summary-card__label">APIs documentadas</span>
-            <strong class="summary-card__value">0</strong>
-        </article>
-    </div>
+    <?= $this->include('App\Modules\Dashboard\Views\sections\analitica') ?>
 
-    <div class="dashboard__grid">
-        <section class="dashboard-panel">
-            <h3>Analítica</h3>
-            <p>En este espacio se integrará el reporte de Power BI.</p>
-        </section>
+    <?= $this->include('App\Modules\Dashboard\Views\sections\actividad_reciente') ?>
 
-        <section class="dashboard-panel">
-            <h3>Accesos rápidos</h3>
-
-            <div class="quick-links">
-                <a href="#">Registrar proyecto</a>
-                <a href="#">Consultar sistemas</a>
-                <a href="#">Ver módulos</a>
-                <a href="#">Consultar APIs</a>
-            </div>
-        </section>
-    </div>
-</section>
+</div>
 
 <?= $this->endSection() ?>
