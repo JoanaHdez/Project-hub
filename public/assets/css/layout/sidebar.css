@@ -1,0 +1,27 @@
+.app-sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    min-height: calc(100vh - 72px);
+    padding: 20px 16px;
+    background-color: #ffffff;
+    border-right: 1px solid #d9dee5;
+}
+
+.app-sidebar__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.app-sidebar__link {
+    display: block;
+    padding: 12px 14px;
+    border-radius: 8px;
+    color: #344054;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.app-sidebar__link:hover {
+    background-color: #f2f4f7;
+}

@@ -1,0 +1,17 @@
+.app-container {
+    display: flex;
+    min-height: calc(100vh - 72px);
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+    padding: 24px;
+}
+
+.page-content {
+    padding: 24px;
+    background-color: #ffffff;
+    border: 1px solid #d9dee5;
+    border-radius: 12px;
+}

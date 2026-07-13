@@ -1,4 +1,20 @@
-* {
+@import url("./base.css");
+
+@import url("./layout/layout.css");
+@import url("./layout/header.css");
+@import url("./layout/sidebar.css");
+@import url("./layout/footer.css");
+
+@import url("./dashboard/dashboard.css");
+@import url("./proyectos/proyectos.css");
+@import url("./sistemas/sistemas.css");
+@import url("./modulos/modulos.css");
+@import url("./documentacion/documentacion.css");
+
+@import url("./responsive.css");
+
+/* * {
+
     box-sizing: border-box;
 }
 
@@ -108,4 +124,4 @@ body {
 
 .app-footer p {
     margin: 0;
-}
+} */
