@@ -1,10 +1,6 @@
 <?php
 
-$contenido = '
-    <p>
-        Aquí se construirá el formulario para registrar un nuevo proyecto.
-    </p>
-';
+$contenido = view('App\Modules\Proyectos\Views\forms\proyecto');
 
 $acciones = '
     <button

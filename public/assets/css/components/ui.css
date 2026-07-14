@@ -375,3 +375,121 @@
     gap: 12px;
     border-top: 1px solid #d9dee5;
 }
+
+/*==================================================
+=                  FORMULARIOS                     =
+==================================================*/
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-grupo--completo {
+    grid-column: 1 / -1;
+}
+
+.form-grupo label {
+    color: #344054;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.form-grupo input,
+.form-grupo select,
+.form-grupo textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #1f2937;
+    font: inherit;
+}
+
+.form-grupo textarea {
+    resize: vertical;
+}
+
+.form-grupo input:focus,
+.form-grupo select:focus,
+.form-grupo textarea:focus {
+    outline: 2px solid #cbd5e1;
+    border-color: #94a3b8;
+}
+
+@media (max-width: 575px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grupo--completo {
+        grid-column: auto;
+    }
+}
+
+/*==================================================
+=              BLOQUES DE FORMULARIO               =
+==================================================*/
+
+.formulario-proyecto {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.form-bloque {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.form-bloque + .form-bloque {
+    padding-top: 24px;
+    border-top: 1px solid #e4e7ec;
+}
+
+.form-bloque__titulo {
+    margin: 0;
+    padding: 0;
+    color: #1f2937;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.form-bloque__descripcion {
+    margin: 6px 0 20px;
+    color: #667085;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+/*==================================================
+=          CONFIGURACIÓN TÉCNICA                   =
+==================================================*/
+
+.configuracion-tecnica{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.configuracion-tecnica__acciones{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.form-ayuda{
+    display:block;
+    margin-top:10px;
+    color:#667085;
+    font-size:.82rem;
+}
