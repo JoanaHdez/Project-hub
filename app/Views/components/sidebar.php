@@ -4,9 +4,9 @@
             Dashboard
         </a>
 
-        <a href="#" class="app-sidebar__link">
-            Proyectos
-        </a>
+        <a href="<?= site_url('proyectos') ?>" class="app-sidebar__link">
+    Proyectos
+</a>
 
         <a href="#" class="app-sidebar__link">
             Sistemas
