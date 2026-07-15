@@ -1,5 +1,24 @@
+<?php
+
+$modo = $modo ?? 'crear';
+
+$proyecto = $proyecto ?? [
+    'nombre' => '',
+    'estado' => '',
+    'origen' => '',
+    'descripcion' => '',
+    'repositorio_url' => '',
+    'ruta_local' => '',
+    'url_servidor' => '',
+    'id_especificacion' => '',
+    'responsable' => '',
+    'observaciones' => '',
+];
+
+?>
+
 <form
-    id="form-proyecto"
+    id="<?= $modo === 'editar' ? 'form-editar-proyecto' : 'form-proyecto' ?>"
     method="post"
     action="#"
     autocomplete="off"

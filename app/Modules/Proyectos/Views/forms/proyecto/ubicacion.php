@@ -20,6 +20,7 @@
                 type="url"
                 id="repositorio"
                 name="repositorio_url"
+                value="<?= esc($proyecto['repositorio_url'] ?? '', 'attr') ?>"
                 placeholder="https://github.com/usuario/repositorio"
             >
 
@@ -35,6 +36,7 @@
                 type="text"
                 id="ruta_local"
                 name="ruta_local"
+                value="<?= esc($proyecto['ruta_local'] ?? '', 'attr') ?>"
                 placeholder="C:\laragon\www\Proyecto"
             >
 
@@ -50,6 +52,7 @@
                 type="url"
                 id="url_servidor"
                 name="url_servidor"
+                value="<?= esc($proyecto['url_servidor'] ?? '', 'attr') ?>"
                 placeholder="https://misistema.com"
             >
 

@@ -22,17 +22,19 @@
                     id="especificacion-tecnica"
                     name="id_especificacion"
                 >
-                    <option value="">
-                        Selecciona una especificación
-                    </option>
+                    <option
+    value="1"
+    <?= ($proyecto['id_especificacion'] ?? '') === '1' ? 'selected' : '' ?>
+>
+    ET-01
+</option>
 
-                    <option value="1">
-                        ET-01
-                    </option>
-
-                    <option value="2">
-                        ET-02
-                    </option>
+<option
+    value="2"
+    <?= ($proyecto['id_especificacion'] ?? '') === '2' ? 'selected' : '' ?>
+>
+    ET-02
+</option>
 
                 </select>
 

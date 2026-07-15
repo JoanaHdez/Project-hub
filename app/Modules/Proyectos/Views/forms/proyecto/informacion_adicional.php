@@ -33,11 +33,10 @@
             </label>
 
             <textarea
-                id="proyecto-observaciones"
-                name="observaciones"
-                rows="4"
-                placeholder="Agrega notas técnicas, pendientes o información relevante"
-            ></textarea>
+    id="proyecto-observaciones"
+    name="observaciones"
+    rows="4"
+><?= esc($proyecto['observaciones'] ?? '') ?></textarea>
         </div>
 
     </div>

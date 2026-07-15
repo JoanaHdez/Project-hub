@@ -14,14 +14,8 @@
                 Nombre del proyecto
             </label>
 
-            <input
-                type="text"
-                id="proyecto-nombre"
-                name="nombre"
-                placeholder="Ej. Sistema de Eventos"
-                maxlength="150"
-                required
-            >
+            <input type="text" id="proyecto-nombre" name="nombre" value="<?= esc($proyecto['nombre'] ?? '', 'attr') ?>"
+                placeholder="Ej. Sistema de Eventos" maxlength="150" required>
         </div>
 
         <div class="form-grupo">
@@ -29,16 +23,15 @@
                 Estado
             </label>
 
-            <select
-                id="proyecto-estado"
-                name="estado"
-                required
-            >
+            <select id="proyecto-estado" name="estado" required>
                 <option value="">Selecciona una opción</option>
-                <option value="Producción">Producción</option>
-                <option value="Desarrollo">Desarrollo</option>
-                <option value="Detenido">Detenido</option>
-                <option value="Mantenimiento">Mantenimiento</option>
+
+                <?php foreach (['Producción', 'Desarrollo', 'Detenido', 'Mantenimiento'] as $estado): ?>
+                <option value="<?= esc($estado, 'attr') ?>"
+                    <?= ($proyecto['estado'] ?? '') === $estado ? 'selected' : '' ?>>
+                    <?= esc($estado) ?>
+                </option>
+                <?php endforeach; ?>
             </select>
         </div>
 
@@ -47,15 +40,15 @@
                 Origen
             </label>
 
-            <select
-                id="proyecto-origen"
-                name="origen"
-            >
+            <select id="proyecto-origen" name="origen">
                 <option value="">Selecciona una opción</option>
-                <option value="Trabajo">Trabajo</option>
-                <option value="Personal">Personal</option>
-                <option value="Práctica">Práctica</option>
-                <option value="Otro">Otro</option>
+
+                <?php foreach (['Trabajo', 'Personal', 'Práctica', 'Otro'] as $origen): ?>
+                <option value="<?= esc($origen, 'attr') ?>"
+                    <?= ($proyecto['origen'] ?? '') === $origen ? 'selected' : '' ?>>
+                    <?= esc($origen) ?>
+                </option>
+                <?php endforeach; ?>
             </select>
         </div>
 
@@ -64,12 +57,8 @@
                 Descripción
             </label>
 
-            <textarea
-                id="proyecto-descripcion"
-                name="descripcion"
-                rows="4"
-                placeholder="Describe brevemente el propósito y alcance del proyecto"
-            ></textarea>
+            <textarea id="proyecto-descripcion" name="descripcion" rows="4"
+                placeholder="Describe brevemente el propósito y alcance del proyecto"><?= esc($proyecto['descripcion'] ?? '') ?></textarea>
         </div>
 
     </div>
