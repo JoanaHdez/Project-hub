@@ -18,10 +18,11 @@ $acciones .= view('components/ui/boton_accion', [
 ]);
 
 $acciones .= view('components/ui/boton_accion', [
-    'icono'  => '🗑️',
+    'icono'   => '🗑️',
     'mensaje' => 'Eliminar proyecto',
     'url'     => '#',
     'tipo'    => 'eliminar',
+    'modalId' => 'modal-eliminar-proyecto',
 ]);
 
 $acciones .= view('components/ui/boton_accion', [

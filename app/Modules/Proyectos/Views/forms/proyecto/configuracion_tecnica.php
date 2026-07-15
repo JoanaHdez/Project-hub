@@ -18,23 +18,14 @@
 
             <div class="configuracion-tecnica">
 
-                <select
-                    id="especificacion-tecnica"
-                    name="id_especificacion"
-                >
-                    <option
-    value="1"
-    <?= ($proyecto['id_especificacion'] ?? '') === '1' ? 'selected' : '' ?>
->
-    ET-01
-</option>
+                <select id="especificacion-tecnica" name="id_especificacion">
+                    <option value="1" <?= ($proyecto['id_especificacion'] ?? '') === '1' ? 'selected' : '' ?>>
+                        ET-01
+                    </option>
 
-<option
-    value="2"
-    <?= ($proyecto['id_especificacion'] ?? '') === '2' ? 'selected' : '' ?>
->
-    ET-02
-</option>
+                    <option value="2" <?= ($proyecto['id_especificacion'] ?? '') === '2' ? 'selected' : '' ?>>
+                        ET-02
+                    </option>
 
                 </select>
 
@@ -46,12 +37,11 @@
                         'tipo'  => 'secundario',
                     ]) ?>
 
-                    <?= view('components/ui/boton', [
-                        'texto' => 'Nueva',
-                        'url'   => '#',
-                        'tipo'  => 'primario',
-                        'icono' => '+',
-                    ]) ?>
+                    <button type="button" class="boton boton--primario" disabled aria-disabled="true"
+                        title="El módulo de Especificaciones Técnicas aún no está disponible">
+                        <span class="boton__icono">+</span>
+                        <span>Nueva</span>
+                    </button>
 
                 </div>
 

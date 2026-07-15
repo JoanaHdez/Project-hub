@@ -91,3 +91,25 @@
     gap: 12px;
     border-top: 1px solid #d9dee5;
 }
+
+.confirmacion-eliminar {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.confirmacion-eliminar__icono {
+    flex-shrink: 0;
+    font-size: 2rem;
+}
+
+.confirmacion-eliminar strong {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.confirmacion-eliminar p {
+    margin: 0;
+    color: #667085;
+    line-height: 1.6;
+}
