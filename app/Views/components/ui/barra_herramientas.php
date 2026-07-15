@@ -8,6 +8,7 @@ $iconoBoton         = $iconoBoton ?? '+';
 $modalId            = $modalId ?? null;
 $urlBoton            = $urlBoton ?? '#';
 $mostrarBoton       = $mostrarBoton ?? true;
+$tablaObjetivo = $tablaObjetivo ?? null;
 
 ?>
 
@@ -16,8 +17,7 @@ $mostrarBoton       = $mostrarBoton ?? true;
     <div class="barra-listado__busqueda">
         <label
             for="<?= esc($idBusqueda, 'attr') ?>"
-            class="sr-only"
-        >
+            class="sr-only">
             <?= esc($placeholder) ?>
         </label>
 
@@ -27,7 +27,9 @@ $mostrarBoton       = $mostrarBoton ?? true;
             name="<?= esc($nombreBusqueda, 'attr') ?>"
             placeholder="<?= esc($placeholder, 'attr') ?>"
             class="barra-listado__input"
-        >
+            <?php if ($tablaObjetivo): ?>
+            data-tabla-busqueda="<?= esc($tablaObjetivo, 'attr') ?>"
+            <?php endif; ?>>
     </div>
 
 </div>

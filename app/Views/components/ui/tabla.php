@@ -6,6 +6,7 @@ $mensajeVacio = $mensajeVacio ?? 'No hay registros disponibles.';
 $descripcionVacia = $descripcionVacia ?? '';
 $iconoVacio = $iconoVacio ?? '📂';
 $claseAdicional = $claseAdicional ?? '';
+$idTabla = $idTabla ?? 'tabla-registros';
 
 $totalRegistros = $totalRegistros ?? count($filas);
 $paginaActual = $paginaActual ?? 1;
@@ -21,7 +22,9 @@ $totalColumnas = count($columnas);
 
     <div class="tabla-contenedor <?= esc($claseAdicional, 'attr') ?>">
 
-        <table class="tabla">
+        <table
+            id="<?= esc($idTabla, 'attr') ?>"
+            class="tabla">
 
             <thead>
                 <tr>
@@ -82,14 +85,12 @@ $totalColumnas = count($columnas);
 
             <nav
                 class="tabla-paginacion"
-                aria-label="Paginación de registros"
-            >
+                aria-label="Paginación de registros">
                 <button
                     type="button"
                     class="tabla-paginacion__boton"
                     <?= $paginaActual <= 1 ? 'disabled' : '' ?>
-                    aria-label="Página anterior"
-                >
+                    aria-label="Página anterior">
                     ‹
                 </button>
 
@@ -101,8 +102,7 @@ $totalColumnas = count($columnas);
                             <?= $pagina === $paginaActual
                                 ? 'tabla-paginacion__boton--activo'
                                 : '' ?>"
-                        aria-current="<?= $pagina === $paginaActual ? 'page' : 'false' ?>"
-                    >
+                        aria-current="<?= $pagina === $paginaActual ? 'page' : 'false' ?>">
                         <?= esc($pagina) ?>
                     </button>
 
@@ -112,8 +112,7 @@ $totalColumnas = count($columnas);
                     type="button"
                     class="tabla-paginacion__boton"
                     <?= $paginaActual >= $totalPaginas ? 'disabled' : '' ?>
-                    aria-label="Página siguiente"
-                >
+                    aria-label="Página siguiente">
                     ›
                 </button>
             </nav>

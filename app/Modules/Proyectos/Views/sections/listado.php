@@ -89,22 +89,21 @@ $filas = [
         'idBusqueda'     => 'buscar-proyecto',
         'nombreBusqueda' => 'buscar_proyecto',
         'placeholder'    => 'Buscar proyecto...',
-
+        'tablaObjetivo'  => 'tabla-proyectos',
     ]) ?>
 
     <?= view('components/ui/tabla', [
-    'columnas'           => $columnas,
-    'filas'              => $filas,
-    'mensajeVacio'       => 'Aún no hay proyectos registrados',
-    'descripcionVacia'   => 'Los proyectos aparecerán cuando exista información.',
-    'iconoVacio'         => '📁',
-
-    // Datos temporales de paginación
-    'totalRegistros'     => 1,
-    'paginaActual'       => 1,
-    'totalPaginas'       => 1,
-    'inicioRegistro'     => 1,
-    'finRegistro'        => 1,
-]) ?>
+        'idTabla'           => 'tabla-proyectos',
+        'columnas'          => $columnas,
+        'filas'             => $filas,
+        'mensajeVacio'      => 'Aún no hay proyectos registrados',
+        'descripcionVacia'  => 'Los proyectos aparecerán cuando exista información.',
+        'iconoVacio'        => '📁',
+        'totalRegistros'    => 1,
+        'paginaActual'      => 1,
+        'totalPaginas'      => 1,
+        'inicioRegistro'    => 1,
+        'finRegistro'       => 1,
+    ]) ?>
 
 </section>

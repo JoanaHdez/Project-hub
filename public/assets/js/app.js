@@ -39,3 +39,39 @@ document.addEventListener('keydown', (event) => {
         document.body.style.overflow = '';
     }
 });
+
+document.addEventListener('input', (event) => {
+    const buscador = event.target.closest('[data-tabla-busqueda]');
+
+    if (!buscador) {
+        return;
+    }
+
+    const tablaId = buscador.dataset.tablaBusqueda;
+    const tabla = document.getElementById(tablaId);
+
+    if (!tabla) {
+        return;
+    }
+
+    const termino = buscador.value
+        .trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+
+    const filas = tabla.querySelectorAll('tbody tr');
+
+    filas.forEach((fila) => {
+        if (fila.querySelector('.tabla-vacia')) {
+            return;
+        }
+
+        const contenido = fila.textContent
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+
+        fila.hidden = !contenido.includes(termino);
+    });
+});
