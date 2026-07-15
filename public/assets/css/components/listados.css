@@ -1,0 +1,46 @@
+/*==================================================
+=               BARRA DE LISTADO                   =
+==================================================*/
+
+.barra-listado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.barra-listado__busqueda {
+    flex: 1;
+    max-width: 420px;
+}
+
+.barra-listado__input {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #1f2937;
+    font: inherit;
+}
+
+.barra-listado__input:focus {
+    outline: 2px solid #cbd5e1;
+    border-color: #94a3b8;
+}
+
+@media (max-width: 575px) {
+    .barra-listado {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .barra-listado__busqueda {
+        max-width: none;
+    }
+
+    .barra-listado .boton {
+        width: 100%;
+    }
+}

@@ -21,19 +21,3 @@ $columnas   = $columnas ?? 1;
     </td>
 </tr>
 
-<!-- En el listado de Proyectos reemplaza esto: -->
-
-<!-- <tr>
-    <td colspan="6" class="tabla__vacio">
-        Aún no hay proyectos registrados.
-    </td>
-</tr> -->
-
-<!-- Por esto: -->
-
-<!-- <?= view('components/ui/tabla_vacia', [
-    'icono' => '📁',
-    'titulo' => 'Aún no hay proyectos registrados',
-    'descripcion' => 'Los proyectos aparecerán en esta tabla cuando exista información.',
-    'columnas' => 6,
-]) ?> -->

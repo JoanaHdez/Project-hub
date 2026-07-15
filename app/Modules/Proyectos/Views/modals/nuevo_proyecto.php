@@ -1,6 +1,10 @@
 <?php
 
-$contenido = view('App\Modules\Proyectos\Views\forms\proyecto');
+$contenido = view(
+    'App\Modules\Proyectos\Views\forms\proyecto',
+    [],
+    ['saveData' => false]
+);
 
 $acciones = '
     <button
@@ -12,7 +16,8 @@ $acciones = '
     </button>
 
     <button
-        type="button"
+        type="submit"
+        form="form-proyecto"
         class="boton boton--primario"
     >
         Guardar
@@ -27,4 +32,6 @@ $acciones = '
     'tamano'    => 'grande',
     'contenido' => $contenido,
     'acciones'  => $acciones,
+], [
+    'saveData' => false,
 ]) ?>

@@ -1,0 +1,23 @@
+/*==================================================
+=              ENCABEZADO DE MÓDULO                =
+==================================================*/
+
+.encabezado-modulo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.encabezado-modulo__contenido h2 {
+    margin: 0 0 6px;
+}
+
+.encabezado-modulo__contenido p {
+    margin: 0;
+    color: #667085;
+}
+
+
+
+
