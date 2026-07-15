@@ -7,53 +7,119 @@ $descripcionVacia = $descripcionVacia ?? '';
 $iconoVacio = $iconoVacio ?? '📂';
 $claseAdicional = $claseAdicional ?? '';
 
+$totalRegistros = $totalRegistros ?? count($filas);
+$paginaActual = $paginaActual ?? 1;
+$totalPaginas = $totalPaginas ?? 1;
+$inicioRegistro = $inicioRegistro ?? ($totalRegistros > 0 ? 1 : 0);
+$finRegistro = $finRegistro ?? $totalRegistros;
+
 $totalColumnas = count($columnas);
 
 ?>
 
-<div class="tabla-contenedor <?= esc($claseAdicional, 'attr') ?>">
+<div class="tabla-componente">
 
-    <table class="tabla">
+    <div class="tabla-contenedor <?= esc($claseAdicional, 'attr') ?>">
 
-        <thead>
-            <tr>
-                <?php foreach ($columnas as $columna): ?>
-                    <th>
-                        <?= esc($columna) ?>
-                    </th>
-                <?php endforeach; ?>
-            </tr>
-        </thead>
+        <table class="tabla">
 
-        <tbody>
+            <thead>
+                <tr>
+                    <?php foreach ($columnas as $columna): ?>
+                        <th>
+                            <?= esc($columna) ?>
+                        </th>
+                    <?php endforeach; ?>
+                </tr>
+            </thead>
 
-            <?php if (empty($filas)): ?>
+            <tbody>
 
-                <?= view('components/ui/tabla_vacia', [
-                    'icono'      => $iconoVacio,
-                    'titulo'     => $mensajeVacio,
-                    'descripcion' => $descripcionVacia,
-                    'columnas'   => $totalColumnas,
-                ]) ?>
+                <?php if (empty($filas)): ?>
 
-            <?php else: ?>
+                    <?= view('components/ui/tabla_vacia', [
+                        'icono'       => $iconoVacio,
+                        'titulo'      => $mensajeVacio,
+                        'descripcion' => $descripcionVacia,
+                        'columnas'    => $totalColumnas,
+                    ]) ?>
 
-                <?php foreach ($filas as $fila): ?>
-                    <tr>
+                <?php else: ?>
 
-                        <?php foreach ($fila as $celda): ?>
-                            <td>
-                                <?= $celda ?>
-                            </td>
-                        <?php endforeach; ?>
+                    <?php foreach ($filas as $fila): ?>
+                        <tr>
 
-                    </tr>
-                <?php endforeach; ?>
+                            <?php foreach ($fila as $celda): ?>
+                                <td>
+                                    <?= $celda ?>
+                                </td>
+                            <?php endforeach; ?>
 
-            <?php endif; ?>
+                        </tr>
+                    <?php endforeach; ?>
 
-        </tbody>
+                <?php endif; ?>
 
-    </table>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <?php if ($totalRegistros > 0): ?>
+
+        <div class="tabla-pie">
+
+            <p class="tabla-pie__contador">
+                Mostrando
+                <strong><?= esc($inicioRegistro) ?></strong>
+                a
+                <strong><?= esc($finRegistro) ?></strong>
+                de
+                <strong><?= esc($totalRegistros) ?></strong>
+                registros
+            </p>
+
+            <nav
+                class="tabla-paginacion"
+                aria-label="Paginación de registros"
+            >
+                <button
+                    type="button"
+                    class="tabla-paginacion__boton"
+                    <?= $paginaActual <= 1 ? 'disabled' : '' ?>
+                    aria-label="Página anterior"
+                >
+                    ‹
+                </button>
+
+                <?php for ($pagina = 1; $pagina <= $totalPaginas; $pagina++): ?>
+
+                    <button
+                        type="button"
+                        class="tabla-paginacion__boton
+                            <?= $pagina === $paginaActual
+                                ? 'tabla-paginacion__boton--activo'
+                                : '' ?>"
+                        aria-current="<?= $pagina === $paginaActual ? 'page' : 'false' ?>"
+                    >
+                        <?= esc($pagina) ?>
+                    </button>
+
+                <?php endfor; ?>
+
+                <button
+                    type="button"
+                    class="tabla-paginacion__boton"
+                    <?= $paginaActual >= $totalPaginas ? 'disabled' : '' ?>
+                    aria-label="Página siguiente"
+                >
+                    ›
+                </button>
+            </nav>
+
+        </div>
+
+    <?php endif; ?>
 
 </div>

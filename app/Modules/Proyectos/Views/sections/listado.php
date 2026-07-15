@@ -93,11 +93,18 @@ $filas = [
     ]) ?>
 
     <?= view('components/ui/tabla', [
-        'columnas' => $columnas,
-        'filas'    => $filas,
-        'mensajeVacio' => 'Aún no hay proyectos registrados',
-        'descripcionVacia' => 'Los proyectos aparecerán cuando exista información.',
-        'iconoVacio' => '📁',
-    ]) ?>
+    'columnas'           => $columnas,
+    'filas'              => $filas,
+    'mensajeVacio'       => 'Aún no hay proyectos registrados',
+    'descripcionVacia'   => 'Los proyectos aparecerán cuando exista información.',
+    'iconoVacio'         => '📁',
+
+    // Datos temporales de paginación
+    'totalRegistros'     => 1,
+    'paginaActual'       => 1,
+    'totalPaginas'       => 1,
+    'inicioRegistro'     => 1,
+    'finRegistro'        => 1,
+]) ?>
 
 </section>
