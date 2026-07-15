@@ -15,6 +15,9 @@ $acciones .= view('components/ui/boton_accion', [
     'url'     => '#',
     'tipo'    => 'editar',
     'modalId' => 'modal-editar-proyecto',
+    [
+        'saveData' => false,
+    ]
 ]);
 
 $acciones .= view('components/ui/boton_accion', [
@@ -23,14 +26,25 @@ $acciones .= view('components/ui/boton_accion', [
     'url'     => '#',
     'tipo'    => 'eliminar',
     'modalId' => 'modal-eliminar-proyecto',
+    [
+        'saveData' => false,
+    ]
 ]);
 
 $acciones .= view('components/ui/boton_accion', [
-    'icono'         => '🌐',
-    'mensaje'       => 'Abrir sistema',
-    'url'           => 'https://cepyc.seguridadneza.gob.mx/ExtorsionF/public/',
-    'tipo'          => 'sistema',
-    'nuevaPestana'  => true,
+
+    'icono' => '🌐',
+
+    'mensaje' => 'Ver sistemas asociados',
+
+    'url' => '#',
+
+    'tipo' => 'sistema',
+
+    'modalId' => 'modal-sistemas-asociados',
+
+], [
+    'saveData' => false,
 ]);
 
 $acciones .= view('components/ui/boton_accion', [
@@ -39,6 +53,9 @@ $acciones .= view('components/ui/boton_accion', [
     'url'           => '#',
     'tipo'          => 'repositorio',
     'nuevaPestana'  => true,
+    [
+        'saveData' => false,
+    ]
 ]);
 
 $acciones .= view('components/ui/boton_accion', [
@@ -47,6 +64,9 @@ $acciones .= view('components/ui/boton_accion', [
     'url'     => '#',
     'tipo'    => 'ficha',
     'modalId' => 'modal-ficha-tecnica',
+    [
+        'saveData' => false,
+    ]
 ]);
 
 $acciones .= '

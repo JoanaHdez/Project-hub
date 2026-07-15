@@ -1,10 +1,11 @@
 <?php
 
-$nombre = $nombre ?? 'Proyecto';
-$estado = $estado ?? 'Sin estado';
-$tipoEstado = $tipoEstado ?? 'neutral';
-$codigoEt = $codigoEt ?? 'Sin especificación';
-$urlFicha = $urlFicha ?? '#';
+$nombre       = $nombre ?? 'Proyecto';
+$estado       = $estado ?? 'Sin estado';
+$tipoEstado   = $tipoEstado ?? 'neutral';
+$codigoEt     = $codigoEt ?? 'Sin especificación';
+$urlFicha     = $urlFicha ?? '#';
+$modalFichaId = $modalFichaId ?? null;
 
 ?>
 
@@ -15,6 +16,8 @@ $urlFicha = $urlFicha ?? '#';
         <?= view('components/ui/estado', [
             'texto' => $estado,
             'tipo'  => $tipoEstado,
+        ], [
+            'saveData' => false,
         ]) ?>
     </div>
 
@@ -23,7 +26,13 @@ $urlFicha = $urlFicha ?? '#';
             <?= esc($codigoEt) ?>
         </span>
 
-        <a href="<?= esc($urlFicha) ?>" class="tarjeta-proyecto__enlace">
+        <a
+            href="<?= esc($urlFicha, 'attr') ?>"
+            class="tarjeta-proyecto__enlace"
+            <?php if ($modalFichaId): ?>
+                data-modal-abrir="<?= esc($modalFichaId, 'attr') ?>"
+            <?php endif; ?>
+        >
             Ver ficha técnica
         </a>
     </div>

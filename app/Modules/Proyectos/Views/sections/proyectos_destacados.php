@@ -15,6 +15,7 @@
             'tipoEstado' => 'produccion',
             'codigoEt'   => 'ET-01',
             'urlFicha'   => '#',
+            'modalFichaId' => 'modal-ficha-tecnica',
         ]) ?>
 
         <?= view('components/ui/tarjeta_proyecto', [
@@ -23,6 +24,7 @@
             'tipoEstado' => 'produccion',
             'codigoEt'   => 'ET-01',
             'urlFicha'   => '#',
+            'modalFichaId' => 'modal-ficha-tecnica',
         ]) ?>
 
         <?= view('components/ui/tarjeta_proyecto', [
@@ -31,6 +33,7 @@
             'tipoEstado' => 'desarrollo',
             'codigoEt'   => 'ET-01',
             'urlFicha'   => '#',
+            'modalFichaId' => 'modal-ficha-tecnica',
         ]) ?>
 
         <?= view('components/ui/tarjeta_proyecto', [
@@ -39,6 +42,7 @@
             'tipoEstado' => 'detenido',
             'codigoEt'   => 'ET-02',
             'urlFicha'   => '#',
+            'modalFichaId' => 'modal-ficha-tecnica',
         ]) ?>
 
     </div>

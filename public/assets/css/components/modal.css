@@ -113,3 +113,67 @@
     color: #667085;
     line-height: 1.6;
 }
+
+/*=========================================
+=     SISTEMAS ASOCIADOS                  =
+=========================================*/
+
+.sistemas-asociados{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.sistemas-asociados hr{
+    border:none;
+    border-top:1px solid #E5E7EB;
+}
+
+.sistemas-asociados__encabezado p{
+    margin-top:4px;
+    color:#667085;
+}
+
+.sistemas-asociados__lista{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.sistema-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.sistema-item div{
+    display:flex;
+    flex-direction:column;
+}
+
+.sistema-item small{
+    color:#667085;
+}
+
+.sistemas-asociados__pie{
+    text-align:right;
+    color:#344054;
+}
+
+.sistemas-asociados__proyecto {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 20px;
+}
+
+.sistemas-asociados__proyecto span {
+    color: #667085;
+    font-size: 0.85rem;
+}
+
+.sistemas-asociados__proyecto strong {
+    color: #1f2937;
+    font-size: 1.05rem;
+}
