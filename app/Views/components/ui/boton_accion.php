@@ -1,10 +1,11 @@
 <?php
 
-$icono   = $icono ?? '';
-$mensaje = $mensaje ?? 'Acción';
-$url     = $url ?? '#';
-$tipo    = $tipo ?? 'neutral';
-$nuevaPestana = $nuevaPestana ?? false;
+$icono         = $icono ?? '';
+$mensaje       = $mensaje ?? 'Acción';
+$url           = $url ?? '#';
+$tipo          = $tipo ?? 'neutral';
+$nuevaPestana  = $nuevaPestana ?? false;
+$modalId       = $modalId ?? null;
 
 ?>
 
@@ -12,8 +13,14 @@ $nuevaPestana = $nuevaPestana ?? false;
     href="<?= esc($url) ?>"
     class="boton-accion boton-accion--<?= esc($tipo) ?>"
     aria-label="<?= esc($mensaje) ?>"
+
+    <?php if ($modalId): ?>
+        data-modal-abrir="<?= esc($modalId) ?>"
+    <?php endif; ?>
+
     <?= $nuevaPestana ? 'target="_blank" rel="noopener noreferrer"' : '' ?>
 >
+
     <span class="boton-accion__icono">
         <?= esc($icono) ?>
     </span>
@@ -21,4 +28,5 @@ $nuevaPestana = $nuevaPestana ?? false;
     <span class="boton-accion__mensaje">
         <?= esc($mensaje) ?>
     </span>
+
 </a>

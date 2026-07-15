@@ -10,10 +10,11 @@ $acciones = '
 ';
 
 $acciones .= view('components/ui/boton_accion', [
-    'icono'  => '✏️',
+    'icono'   => '✏️',
     'mensaje' => 'Editar proyecto',
     'url'     => '#',
     'tipo'    => 'editar',
+    'modalId' => 'modal-editar-proyecto',
 ]);
 
 $acciones .= view('components/ui/boton_accion', [

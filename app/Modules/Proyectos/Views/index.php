@@ -13,5 +13,6 @@
 </div>
 
 <?= $this->include('App\Modules\Proyectos\Views\modals\nuevo_proyecto') ?>
+<?= $this->include('App\Modules\Proyectos\Views\modals\editar_proyecto') ?>
 
 <?= $this->endSection() ?>
