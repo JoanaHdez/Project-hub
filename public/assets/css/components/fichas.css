@@ -1,0 +1,63 @@
+/*==================================================
+=                 FICHA TÉCNICA                    =
+==================================================*/
+
+.ficha-tecnica {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.ficha-tecnica__encabezado {
+    padding-bottom: 18px;
+    border-bottom: 1px solid #e4e7ec;
+}
+
+.ficha-tecnica__codigo {
+    display: inline-flex;
+    margin-bottom: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background-color: #f2f4f7;
+    color: #344054;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.ficha-tecnica__encabezado p {
+    margin: 0;
+    color: #667085;
+}
+
+.ficha-tecnica__datos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0;
+}
+
+.ficha-tecnica__fila {
+    padding: 16px;
+    border: 1px solid #e4e7ec;
+    border-radius: 10px;
+    background-color: #f8fafc;
+}
+
+.ficha-tecnica__fila dt {
+    margin-bottom: 6px;
+    color: #667085;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.ficha-tecnica__fila dd {
+    margin: 0;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+@media (max-width: 575px) {
+    .ficha-tecnica__datos {
+        grid-template-columns: 1fr;
+    }
+}

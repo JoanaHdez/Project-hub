@@ -41,10 +41,11 @@ $acciones .= view('components/ui/boton_accion', [
 ]);
 
 $acciones .= view('components/ui/boton_accion', [
-    'icono'  => '📄',
+    'icono'   => '📄',
     'mensaje' => 'Ver ficha técnica',
     'url'     => '#',
     'tipo'    => 'ficha',
+    'modalId' => 'modal-ficha-tecnica',
 ]);
 
 $acciones .= '
