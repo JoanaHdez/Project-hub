@@ -111,6 +111,15 @@
                     </p>
                 </div>
 
+                <div
+    id="visor-sistema-cargando"
+    class="sistemas-visor__cargando"
+    hidden
+>
+    <span>⏳</span>
+    <strong>Cargando sistema...</strong>
+</div>
+
                 <iframe
                     id="visor-sistema-frame"
                     class="sistemas-visor__iframe"

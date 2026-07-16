@@ -137,6 +137,26 @@
     background-color: #ffffff;
 }
 
+.sistemas-visor__vacio[hidden],
+.sistemas-visor__iframe[hidden] {
+    display: none;
+}
+
+.sistemas-visor__cargando {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 10px;
+    background-color: #f8fafc;
+}
+
+.sistemas-visor__cargando[hidden] {
+    display: none;
+}
+
 @media (max-width: 991px) {
     .sistemas-integrador {
         grid-template-columns: 1fr;

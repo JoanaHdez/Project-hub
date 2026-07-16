@@ -21,7 +21,7 @@ class Sistemas_Controller extends BaseController
                 'nombre'   => '8.º Congreso',
                 'proyecto' => 'Eventos',
                 'estado'   => 'Producción',
-                'url'      => 'https://congreso.seguridadneza.gob.mx/2026/',
+                'url'      => 'https://congreso.seguridadneza.gob.mx/Eventos/public/eventos/8vo-congreso',
             ],
             [
                 'id'       => 3,

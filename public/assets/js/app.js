@@ -76,6 +76,10 @@ document.addEventListener('input', (event) => {
     });
 });
 
+/*==================================================
+=                     SISTEMAS                      =
+==================================================*/
+
 const selectoresSistema = document.querySelectorAll('.sistema-selector');
 const visorFrame = document.getElementById('visor-sistema-frame');
 const visorVacio = document.getElementById('visor-sistema-vacio');
@@ -88,8 +92,12 @@ let sistemaUrlActual = '';
 
 selectoresSistema.forEach((selector) => {
     selector.addEventListener('click', () => {
-        const nombre = selector.dataset.sistemaNombre;
-        const url = selector.dataset.sistemaUrl;
+        const nombre = selector.dataset.sistemaNombre ?? '';
+        const url = selector.dataset.sistemaUrl ?? '';
+
+        if (!url) {
+            return;
+        }
 
         sistemaUrlActual = url;
 
@@ -99,16 +107,27 @@ selectoresSistema.forEach((selector) => {
 
         selector.classList.add('sistema-selector--activo');
 
-        visorNombre.textContent = nombre;
+        if (visorNombre) {
+            visorNombre.textContent = nombre;
+        }
 
-        visorVacio.hidden = true;
-        visorFrame.hidden = false;
-        visorFrame.src = url;
+        if (visorVacio) {
+            visorVacio.hidden = true;
+        }
 
-        botonRecargar.disabled = false;
+        if (visorFrame) {
+            visorFrame.hidden = false;
+            visorFrame.src = url;
+        }
 
-        enlaceExterno.href = url;
-        enlaceExterno.setAttribute('aria-disabled', 'false');
+        if (botonRecargar) {
+            botonRecargar.disabled = false;
+        }
+
+        if (enlaceExterno) {
+            enlaceExterno.href = url;
+            enlaceExterno.setAttribute('aria-disabled', 'false');
+        }
     });
 });
 
@@ -117,7 +136,11 @@ botonRecargar?.addEventListener('click', () => {
         return;
     }
 
-    visorFrame.src = sistemaUrlActual;
+    visorFrame.src = 'about:blank';
+
+    window.setTimeout(() => {
+        visorFrame.src = sistemaUrlActual;
+    }, 100);
 });
 
 buscadorSistema?.addEventListener('input', () => {
@@ -135,4 +158,43 @@ buscadorSistema?.addEventListener('input', () => {
 
         selector.hidden = !contenido.includes(termino);
     });
+});
+
+const visorCargando = document.getElementById('visor-sistema-cargando');
+
+selectoresSistema.forEach((selector) => {
+    selector.addEventListener('click', () => {
+        const nombre = selector.dataset.sistemaNombre ?? '';
+        const url = selector.dataset.sistemaUrl ?? '';
+
+        if (!url) {
+            return;
+        }
+
+        sistemaUrlActual = url;
+
+        selectoresSistema.forEach((elemento) => {
+            elemento.classList.remove('sistema-selector--activo');
+        });
+
+        selector.classList.add('sistema-selector--activo');
+
+        visorNombre.textContent = nombre;
+        visorVacio.hidden = true;
+        visorCargando.hidden = false;
+        visorFrame.hidden = true;
+        visorFrame.src = url;
+
+        botonRecargar.disabled = false;
+        enlaceExterno.href = url;
+        enlaceExterno.setAttribute('aria-disabled', 'false');
+    });
+});
+
+visorFrame?.addEventListener('load', () => {
+    if (visorCargando) {
+        visorCargando.hidden = true;
+    }
+
+    visorFrame.hidden = false;
 });
