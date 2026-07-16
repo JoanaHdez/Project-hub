@@ -75,3 +75,64 @@ document.addEventListener('input', (event) => {
         fila.hidden = !contenido.includes(termino);
     });
 });
+
+const selectoresSistema = document.querySelectorAll('.sistema-selector');
+const visorFrame = document.getElementById('visor-sistema-frame');
+const visorVacio = document.getElementById('visor-sistema-vacio');
+const visorNombre = document.getElementById('visor-sistema-nombre');
+const botonRecargar = document.getElementById('recargar-sistema');
+const enlaceExterno = document.getElementById('abrir-sistema-externo');
+const buscadorSistema = document.getElementById('buscar-sistema');
+
+let sistemaUrlActual = '';
+
+selectoresSistema.forEach((selector) => {
+    selector.addEventListener('click', () => {
+        const nombre = selector.dataset.sistemaNombre;
+        const url = selector.dataset.sistemaUrl;
+
+        sistemaUrlActual = url;
+
+        selectoresSistema.forEach((elemento) => {
+            elemento.classList.remove('sistema-selector--activo');
+        });
+
+        selector.classList.add('sistema-selector--activo');
+
+        visorNombre.textContent = nombre;
+
+        visorVacio.hidden = true;
+        visorFrame.hidden = false;
+        visorFrame.src = url;
+
+        botonRecargar.disabled = false;
+
+        enlaceExterno.href = url;
+        enlaceExterno.setAttribute('aria-disabled', 'false');
+    });
+});
+
+botonRecargar?.addEventListener('click', () => {
+    if (!sistemaUrlActual || !visorFrame) {
+        return;
+    }
+
+    visorFrame.src = sistemaUrlActual;
+});
+
+buscadorSistema?.addEventListener('input', () => {
+    const termino = buscadorSistema.value
+        .trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+
+    selectoresSistema.forEach((selector) => {
+        const contenido = selector.textContent
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+
+        selector.hidden = !contenido.includes(termino);
+    });
+});

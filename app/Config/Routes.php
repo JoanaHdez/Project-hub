@@ -6,3 +6,4 @@ use CodeIgniter\Router\RouteCollection;
 
 require APPPATH . 'Modules/Dashboard/Routes.php';
 require APPPATH . 'Modules/Proyectos/Routes.php';
+require APPPATH . 'Modules/Sistemas/Routes.php';

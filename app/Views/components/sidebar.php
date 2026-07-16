@@ -5,10 +5,10 @@
         </a>
 
         <a href="<?= site_url('proyectos') ?>" class="app-sidebar__link">
-    Proyectos
-</a>
+            Proyectos
+        </a>
 
-        <a href="#" class="app-sidebar__link">
+        <a href="<?= site_url('sistemas') ?>" class="app-sidebar__link">
             Sistemas
         </a>
 
@@ -19,5 +19,7 @@
         <a href="#" class="app-sidebar__link">
             Documentación
         </a>
+
+        
     </nav>
 </aside>
