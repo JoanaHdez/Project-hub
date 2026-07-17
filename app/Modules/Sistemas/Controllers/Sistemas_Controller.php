@@ -36,7 +36,7 @@ class Sistemas_Controller extends BaseController
                 'nombre'              => 'Project Hub',
                 'proyecto'            => 'Project Hub',
                 'estado'              => 'Desarrollo',
-                'modo_visualizacion'  => 'registro',
+                'modo_visualizacion'  => 'externo',
                 'url'                 => '',
                 'repositorio'         => 'https://github.com/JoanaHdez/Project-hub.git',
                 'ruta_local'          => 'C:\\laragon\\www\\ProjectHub',
