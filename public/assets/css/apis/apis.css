@@ -1,0 +1,56 @@
+/*==================================================
+=                DOCUMENTACIÓN API                 =
+==================================================*/
+
+.documentacion-api{
+    display:flex;
+    flex-direction:column;
+    gap:1.5rem;
+    min-width:0;
+}
+
+.documentacion-api__encabezado{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:1rem;
+}
+
+.documentacion-api__contenido{
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+}
+
+.documentacion-seccion{
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+
+    padding:1.5rem;
+
+    border:1px solid var(--color-borde);
+    border-radius:var(--radio-md);
+    background:var(--color-superficie);
+
+    min-width:0;
+}
+
+.documentacion-datos{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:1rem;
+}
+
+.endpoint-api{
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    flex-wrap:wrap;
+}
+
+.endpoint-api__url,
+.endpoint-api__ruta{
+    overflow-wrap:anywhere;
+    word-break:break-word;
+}

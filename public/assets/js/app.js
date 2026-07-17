@@ -395,43 +395,81 @@ const apiUrl = document.getElementById("api-url");
 
 const botonFichaApi = document.getElementById("btn-ficha-api");
 
+const fichaApiProyecto = document.getElementById("ficha-api-proyecto");
+const fichaApiEstado = document.getElementById("ficha-api-estado");
+const fichaApiRepositorio = document.getElementById("ficha-api-repositorio");
+const fichaApiRuta = document.getElementById("ficha-api-ruta");
+const fichaApiServidor = document.getElementById("ficha-api-servidor");
+
 selectoresApi.forEach((selector) => {
-
-    selector.addEventListener("click", () => {
-
-        selectoresApi.forEach((elemento) => {
-            elemento.classList.remove("selector--activo");
-        });
-
-        selector.classList.add("selector--activo");
-
-        const nombre = selector.dataset.apiNombre ?? "";
-        const metodo = selector.dataset.apiMetodo ?? "";
-        const descripcion = selector.dataset.apiDescripcion ?? "";
-
-        const proyecto = selector.dataset.apiProyecto ?? "";
-        const estado = selector.dataset.apiEstado ?? "";
-        const autenticacion = selector.dataset.apiAutenticacion ?? "";
-
-        const endpoint = selector.dataset.apiEndpoint ?? "";
-        const url = selector.dataset.apiUrl ?? "";
-
-        apiNombre.textContent = nombre;
-        apiMetodo.textContent = metodo;
-        apiDescripcion.textContent = descripcion;
-
-        apiProyecto.textContent = proyecto;
-        apiEstado.textContent = estado;
-        apiAutenticacion.textContent = autenticacion;
-
-        apiEndpointMetodo.textContent = metodo;
-        apiEndpoint.textContent = endpoint;
-        apiUrl.textContent = url;
-
-        if (botonFichaApi) {
-            botonFichaApi.disabled = false;
-        }
-
+  selector.addEventListener("click", () => {
+    selectoresApi.forEach((elemento) => {
+      elemento.classList.remove("selector--activo");
     });
 
+    selector.classList.add("selector--activo");
+
+    const nombre = selector.dataset.apiNombre ?? "";
+    const metodo = selector.dataset.apiMetodo ?? "";
+    const descripcion = selector.dataset.apiDescripcion ?? "";
+
+    const proyecto = selector.dataset.apiProyecto ?? "";
+    const estado = selector.dataset.apiEstado ?? "";
+    const autenticacion = selector.dataset.apiAutenticacion ?? "";
+
+    const endpoint = selector.dataset.apiEndpoint ?? "";
+    const url = selector.dataset.apiUrl ?? "";
+
+    const repositorio = selector.dataset.apiRepositorio ?? "";
+    const ruta = selector.dataset.apiRuta ?? "";
+    const servidor = selector.dataset.apiServidor ?? "";
+
+    apiNombre.textContent = nombre;
+    apiMetodo.textContent = metodo;
+    apiDescripcion.textContent = descripcion;
+
+    apiProyecto.textContent = proyecto;
+    apiEstado.textContent = estado;
+    apiAutenticacion.textContent = autenticacion;
+
+    apiEndpointMetodo.textContent = metodo;
+    apiEndpoint.textContent = endpoint;
+    apiUrl.textContent = url;
+
+    if (botonFichaApi) {
+      botonFichaApi.disabled = false;
+    }
+
+    if (fichaApiProyecto) {
+      fichaApiProyecto.textContent = proyecto || "—";
+    }
+
+    if (fichaApiEstado) {
+      fichaApiEstado.textContent = estado || "—";
+    }
+
+    if (fichaApiRepositorio) {
+      fichaApiRepositorio.textContent = repositorio || "—";
+    }
+
+    if (fichaApiRuta) {
+      fichaApiRuta.textContent = ruta || "—";
+    }
+
+    if (fichaApiServidor) {
+      fichaApiServidor.textContent = servidor || "—";
+    }
+
+    if (fichaApiRepositorio) {
+      fichaApiRepositorio.textContent = repositorio || "—";
+    }
+
+    if (fichaApiRuta) {
+      fichaApiRuta.textContent = ruta || "—";
+    }
+
+    if (fichaApiServidor) {
+      fichaApiServidor.textContent = servidor || "—";
+    }
+  });
 });

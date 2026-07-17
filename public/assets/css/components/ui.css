@@ -7,5 +7,5 @@
 @import url("./encabezados.css");
 @import url("./listados.css");
 @import url("./fichas.css");
-@import url("components/selector.css");
-@import url("components/dato.css");
+@import url("./selector.css");
+@import url("./dato.css");

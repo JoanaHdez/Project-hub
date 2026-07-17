@@ -26,25 +26,22 @@
                 'badgeClase' => 'badge badge--success',
 
                 'atributos' => [
+    'class' => 'api-selector',
 
-                    'class' => 'api-selector',
+    'data-api-id' => $api['id'],
+    'data-api-nombre' => $api['nombre'],
+    'data-api-proyecto' => $api['proyecto'],
+    'data-api-descripcion' => $api['descripcion'],
+    'data-api-estado' => $api['estado'],
+    'data-api-metodo' => $api['metodo'],
+    'data-api-endpoint' => $api['endpoint'],
+    'data-api-url' => $api['url'],
+    'data-api-autenticacion' => $api['autenticacion'],
 
-                    'data-api-id' => $api['id'],
-                    'data-api-nombre' => $api['nombre'],
-                    'data-api-proyecto' => $api['proyecto'],
-                    'data-api-descripcion' => $api['descripcion'],
-                    'data-api-metodo' => $api['metodo'],
-                    'data-api-endpoint' => $api['endpoint'],
-                    'data-api-url' => $api['url'],
-                    'data-api-autenticacion' => $api['autenticacion'],
-
-                    'data-api-repositorio' => $api['repositorio'],
-                    'data-api-ruta' => $api['ruta_local'],
-                    'data-api-servidor' => $api['servidor'],
-
-                    'data-api-estado' => $api['estado'],
-
-                ],
+    'data-api-repositorio' => $api['repositorio'],
+    'data-api-ruta' => $api['ruta_local'],
+    'data-api-servidor' => $api['servidor'],
+],
 
             ]) ?>
 
