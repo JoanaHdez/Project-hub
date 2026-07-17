@@ -56,8 +56,63 @@
     font-weight: 600;
 }
 
+
 @media (max-width: 575px) {
     .ficha-tecnica__datos {
         grid-template-columns: 1fr;
     }
+}
+
+/*==================================================
+=                     FICHA                        =
+==================================================*/
+
+.ficha{
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+}
+
+.ficha + .ficha{
+    margin-top:2rem;
+}
+
+.ficha__titulo{
+    margin:0;
+    padding-bottom:.75rem;
+    border-bottom:1px solid var(--gris-200);
+    font-size:1rem;
+    font-weight:600;
+}
+
+.ficha__contenido{
+    display:flex;
+    flex-direction:column;
+}
+
+.ficha__item{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:2rem;
+    padding:.75rem 0;
+
+    border-bottom:1px solid var(--gris-100);
+}
+
+.ficha__item:last-child{
+    border-bottom:none;
+}
+
+.ficha__etiqueta{
+    color:var(--gris-600);
+}
+
+.ficha__valor{
+    max-width:60%;
+    text-align:right;
+    font-weight:600;
+    color:var(--gris-900);
+    overflow-wrap:anywhere;
+    word-break:break-word;
 }

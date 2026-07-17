@@ -2,9 +2,9 @@
 =                     MODALES                       =
 ==================================================*/
 
-document.addEventListener('click', (event) => {
-    const botonAbrir = event.target.closest('[data-modal-abrir]');
-    const botonCerrar = event.target.closest('[data-modal-cerrar]');
+document.addEventListener("click", (event) => {
+    const botonAbrir = event.target.closest("[data-modal-abrir]");
+    const botonCerrar = event.target.closest("[data-modal-cerrar]");
 
     if (botonAbrir) {
         event.preventDefault();
@@ -17,44 +17,43 @@ document.addEventListener('click', (event) => {
         const modal = document.getElementById(modalId);
 
         if (modal) {
-            modal.classList.add('modal--visible');
-            modal.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden';
+            modal.classList.add("modal--visible");
+            modal.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
         }
     }
 
     if (botonCerrar) {
-        const modal = botonCerrar.closest('.modal');
+        const modal = botonCerrar.closest(".modal");
 
         if (modal) {
-            modal.classList.remove('modal--visible');
-            modal.setAttribute('aria-hidden', 'true');
-            document.body.style.overflow = '';
+            modal.classList.remove("modal--visible");
+            modal.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
         }
     }
 });
 
-document.addEventListener('keydown', (event) => {
-    if (event.key !== 'Escape') {
+document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") {
         return;
     }
 
-    const modalVisible = document.querySelector('.modal.modal--visible');
+    const modalVisible = document.querySelector(".modal.modal--visible");
 
     if (modalVisible) {
-        modalVisible.classList.remove('modal--visible');
-        modalVisible.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
+        modalVisible.classList.remove("modal--visible");
+        modalVisible.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
     }
 });
-
 
 /*==================================================
 =              BÚSQUEDA EN TABLAS                  =
 ==================================================*/
 
-document.addEventListener('input', (event) => {
-    const buscador = event.target.closest('[data-tabla-busqueda]');
+document.addEventListener("input", (event) => {
+    const buscador = event.target.closest("[data-tabla-busqueda]");
 
     if (!buscador) {
         return;
@@ -68,10 +67,10 @@ document.addEventListener('input', (event) => {
     }
 
     const termino = normalizarTexto(buscador.value);
-    const filas = tabla.querySelectorAll('tbody tr');
+    const filas = tabla.querySelectorAll("tbody tr");
 
     filas.forEach((fila) => {
-        if (fila.querySelector('.tabla-vacia')) {
+        if (fila.querySelector(".tabla-vacia")) {
             return;
         }
 
@@ -81,43 +80,55 @@ document.addEventListener('input', (event) => {
     });
 });
 
-
 /*==================================================
 =                     SISTEMAS                      =
 ==================================================*/
 
-const selectoresSistema = document.querySelectorAll('.sistema-selector');
+const selectoresSistema = document.querySelectorAll(".sistema-selector");
 
-const visorFrame = document.getElementById('visor-sistema-frame');
-const visorVacio = document.getElementById('visor-sistema-vacio');
-const visorCargando = document.getElementById('visor-sistema-cargando');
-const visorNombre = document.getElementById('visor-sistema-nombre');
+const visorFrame = document.getElementById("visor-sistema-frame");
+const visorVacio = document.getElementById("visor-sistema-vacio");
+const visorCargando = document.getElementById("visor-sistema-cargando");
+const visorNombre = document.getElementById("visor-sistema-nombre");
 
-const botonRecargar = document.getElementById('recargar-sistema');
-const enlaceExterno = document.getElementById('abrir-sistema-externo');
-const botonFichaUbicacion = document.getElementById(
-    'btn-ficha-ubicacion'
-);
+const botonRecargar = document.getElementById("recargar-sistema");
+const enlaceExterno = document.getElementById("abrir-sistema-externo");
+const botonFichaUbicacion = document.getElementById("btn-ficha-ubicacion");
 
-const buscadorSistema = document.getElementById('buscar-sistema');
+const fichaProyecto = document.getElementById("ficha-proyecto");
+const fichaEstado = document.getElementById("ficha-estado");
+const fichaRepositorio = document.getElementById("ficha-repositorio");
+const fichaRuta = document.getElementById("ficha-ruta");
+const fichaServidor = document.getElementById("ficha-servidor");
 
-let sistemaUrlActual = '';
+const buscadorSistema = document.getElementById("buscar-sistema");
+
+let sistemaUrlActual = "";
 
 selectoresSistema.forEach((selector) => {
-    selector.addEventListener('click', () => {
-        const nombre = selector.dataset.sistemaNombre ?? '';
-        const url = selector.dataset.sistemaUrl ?? '';
+    selector.addEventListener("click", () => {
+        const nombre = selector.dataset.sistemaNombre ?? "";
+        const url = selector.dataset.sistemaUrl ?? "";
+
+        const modoVisualizacion =
+            selector.dataset.modoVisualizacion ?? 'registro';
+
+        const proyecto = selector.dataset.proyecto ?? "";
+        const estado = selector.dataset.estado ?? "";
+        const repositorio = selector.dataset.repositorio ?? "";
+        const ruta = selector.dataset.ruta ?? "";
+        const servidor = selector.dataset.servidor ?? "";
 
         sistemaUrlActual = url;
 
         selectoresSistema.forEach((elemento) => {
-            elemento.classList.remove('sistema-selector--activo');
+            elemento.classList.remove("sistema-selector--activo");
         });
 
-        selector.classList.add('sistema-selector--activo');
+        selector.classList.add("sistema-selector--activo");
 
         if (visorNombre) {
-            visorNombre.textContent = nombre || 'Sistema seleccionado';
+            visorNombre.textContent = nombre || "Sistema seleccionado";
         }
 
         /*
@@ -128,25 +139,92 @@ selectoresSistema.forEach((selector) => {
             botonFichaUbicacion.disabled = false;
         }
 
+        if (fichaProyecto) {
+            fichaProyecto.textContent = proyecto || "—";
+        }
+
+        if (fichaEstado) {
+            fichaEstado.textContent = estado || "—";
+        }
+
+        if (fichaRepositorio) {
+            fichaRepositorio.textContent = repositorio || "—";
+        }
+
+        if (fichaRuta) {
+            fichaRuta.textContent = ruta || "—";
+        }
+
+        if (fichaServidor) {
+            fichaServidor.textContent = servidor || "—";
+        }
+
         /*
          * Si no existe una URL, no se intenta cargar
          * el sistema dentro del iframe.
          */
-        if (!url) {
-            mostrarVisorSinUrl();
+        /*
+     /*
+ * CASO 1:
+ * Visualización integrada y sí existe URL.
+ */
+        if (modoVisualizacion === "integrado" && url) {
+            cargarSistemaEnVisor(url);
             return;
         }
 
-        cargarSistemaEnVisor(url);
+        /*
+         * CASO 2:
+         * Visualización integrada, pero todavía no existe URL.
+         */
+        if (modoVisualizacion === "integrado" && !url) {
+            mostrarEstadoVisor({
+                titulo: "Sistema pendiente de publicación",
+                descripcion:
+                    "Este sistema está configurado para visualizarse dentro de Project Hub, pero todavía no cuenta con una URL de servidor.",
+                permitirRecarga: false,
+                permitirAbrirExterno: false,
+            });
+
+            return;
+        }
+
+        /*
+         * CASO 3:
+         * No se integra mediante iframe, pero puede abrirse externamente.
+         */
+        if (modoVisualizacion === "externo" && url) {
+            mostrarEstadoVisor({
+                titulo: "Visualización externa",
+                descripcion:
+                    "Este sistema no se mostrará dentro de Project Hub. Puedes abrirlo en una pestaña nueva.",
+                permitirRecarga: false,
+                permitirAbrirExterno: true,
+                url,
+            });
+
+            return;
+        }
+
+        /*
+         * CASO 4:
+         * El sistema únicamente está registrado.
+         */
+        mostrarEstadoVisor({
+            titulo: "Sistema registrado en Project Hub",
+            descripcion:
+                "Este sistema no cuenta con visualización integrada ni con una URL de servidor disponible.",
+            permitirRecarga: false,
+            permitirAbrirExterno: false,
+        });
     });
 });
-
 
 /*==================================================
 =              RECARGAR SISTEMA                    =
 ==================================================*/
 
-botonRecargar?.addEventListener('click', () => {
+botonRecargar?.addEventListener("click", () => {
     if (!sistemaUrlActual || !visorFrame) {
         return;
     }
@@ -160,26 +238,25 @@ botonRecargar?.addEventListener('click', () => {
     }
 
     visorFrame.hidden = true;
-    visorFrame.src = 'about:blank';
+    visorFrame.src = "about:blank";
 
     window.setTimeout(() => {
         visorFrame.src = sistemaUrlActual;
     }, 100);
 });
 
-
 /*==================================================
 =                CARGA DEL IFRAME                  =
 ==================================================*/
 
-visorFrame?.addEventListener('load', () => {
+visorFrame?.addEventListener("load", () => {
     /*
      * Evita mostrar el iframe cuando está usando
      * about:blank durante el proceso de recarga.
      */
     if (
-        visorFrame.getAttribute('src') === 'about:blank' ||
-        visorFrame.src === 'about:blank'
+        visorFrame.getAttribute("src") === "about:blank" ||
+        visorFrame.src === "about:blank"
     ) {
         return;
     }
@@ -191,12 +268,11 @@ visorFrame?.addEventListener('load', () => {
     visorFrame.hidden = false;
 });
 
-
 /*==================================================
 =             BÚSQUEDA DE SISTEMAS                 =
 ==================================================*/
 
-buscadorSistema?.addEventListener('input', () => {
+buscadorSistema?.addEventListener("input", () => {
     const termino = normalizarTexto(buscadorSistema.value);
 
     selectoresSistema.forEach((selector) => {
@@ -206,20 +282,17 @@ buscadorSistema?.addEventListener('input', () => {
     });
 });
 
-
 /*==================================================
 =          ABRIR SISTEMA EN OTRA PESTAÑA           =
 ==================================================*/
 
-enlaceExterno?.addEventListener('click', (event) => {
-    const deshabilitado =
-        enlaceExterno.getAttribute('aria-disabled') === 'true';
+enlaceExterno?.addEventListener("click", (event) => {
+    const deshabilitado = enlaceExterno.getAttribute("aria-disabled") === "true";
 
     if (deshabilitado || !sistemaUrlActual) {
         event.preventDefault();
     }
 });
-
 
 /*==================================================
 =                 FUNCIONES AUXILIARES              =
@@ -245,7 +318,7 @@ function cargarSistemaEnVisor(url) {
 
     if (enlaceExterno) {
         enlaceExterno.href = url;
-        enlaceExterno.setAttribute('aria-disabled', 'false');
+        enlaceExterno.setAttribute("aria-disabled", "false");
     }
 }
 
@@ -256,22 +329,22 @@ function mostrarVisorSinUrl() {
 
     if (visorFrame) {
         visorFrame.hidden = true;
-        visorFrame.removeAttribute('src');
+        visorFrame.removeAttribute("src");
     }
 
     if (visorVacio) {
         visorVacio.hidden = false;
 
-        const titulo = visorVacio.querySelector('strong');
-        const descripcion = visorVacio.querySelector('p');
+        const titulo = visorVacio.querySelector("strong");
+        const descripcion = visorVacio.querySelector("p");
 
         if (titulo) {
-            titulo.textContent = 'Sistema no disponible en servidor';
+            titulo.textContent = "Sistema no disponible en servidor";
         }
 
         if (descripcion) {
             descripcion.textContent =
-                'Este sistema aún no cuenta con una dirección de servidor registrada. Consulta su ficha de ubicación para conocer dónde está almacenado.';
+                "Este sistema aún no cuenta con una dirección de servidor registrada. Consulta su ficha de ubicación para conocer dónde está almacenado.";
         }
     }
 
@@ -280,15 +353,61 @@ function mostrarVisorSinUrl() {
     }
 
     if (enlaceExterno) {
-        enlaceExterno.href = '#';
-        enlaceExterno.setAttribute('aria-disabled', 'true');
+        enlaceExterno.href = "#";
+        enlaceExterno.setAttribute("aria-disabled", "true");
     }
 }
 
 function normalizarTexto(texto) {
-    return String(texto ?? '')
+    return String(texto ?? "")
         .trim()
         .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+}
+
+function mostrarEstadoVisor({
+  titulo,
+  descripcion,
+  permitirRecarga = false,
+  permitirAbrirExterno = false,
+  url = "",
+}) {
+  if (visorCargando) {
+    visorCargando.hidden = true;
+  }
+
+  if (visorFrame) {
+    visorFrame.hidden = true;
+    visorFrame.removeAttribute("src");
+  }
+
+  if (visorVacio) {
+    visorVacio.hidden = false;
+
+    const tituloVisor = visorVacio.querySelector("strong");
+    const descripcionVisor = visorVacio.querySelector("p");
+
+    if (tituloVisor) {
+      tituloVisor.textContent = titulo;
+    }
+
+    if (descripcionVisor) {
+      descripcionVisor.textContent = descripcion;
+    }
+  }
+
+  if (botonRecargar) {
+    botonRecargar.disabled = !permitirRecarga;
+  }
+
+  if (enlaceExterno) {
+    if (permitirAbrirExterno && url) {
+      enlaceExterno.href = url;
+      enlaceExterno.setAttribute("aria-disabled", "false");
+    } else {
+      enlaceExterno.href = "#";
+      enlaceExterno.setAttribute("aria-disabled", "true");
+    }
+  }
 }
