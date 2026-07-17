@@ -1,0 +1,28 @@
+/*==================================================
+=                  COMPONENTE DATO                 =
+==================================================*/
+
+.dato{
+
+    display:flex;
+    flex-direction:column;
+    gap:.35rem;
+
+}
+
+.dato__etiqueta{
+
+    font-size:.80rem;
+    color:var(--color-texto-secundario);
+
+}
+
+.dato__valor{
+
+    font-weight:600;
+    color:var(--color-texto);
+
+    overflow-wrap:anywhere;
+    word-break:break-word;
+
+}

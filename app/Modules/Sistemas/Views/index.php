@@ -28,18 +28,15 @@
 
                 <?php foreach ($sistemas as $sistema): ?>
 
-                <button
-    type="button"
-    class="sistema-selector"
-    data-sistema-nombre="<?= esc($sistema['nombre'], 'attr') ?>"
-    data-sistema-url="<?= esc($sistema['url'] ?? '', 'attr') ?>"
-    data-modo-visualizacion="<?= esc($sistema['modo_visualizacion'] ?? 'registro', 'attr') ?>"
-    data-proyecto="<?= esc($sistema['proyecto'] ?? '', 'attr') ?>"
-    data-estado="<?= esc($sistema['estado'] ?? '', 'attr') ?>"
-    data-repositorio="<?= esc($sistema['repositorio'] ?? '', 'attr') ?>"
-    data-ruta="<?= esc($sistema['ruta_local'] ?? '', 'attr') ?>"
-    data-servidor="<?= esc($sistema['servidor'] ?? '', 'attr') ?>"
->
+                <button type="button" class="sistema-selector"
+                    data-sistema-nombre="<?= esc($sistema['nombre'], 'attr') ?>"
+                    data-sistema-url="<?= esc($sistema['url'] ?? '', 'attr') ?>"
+                    data-modo-visualizacion="<?= esc($sistema['modo_visualizacion'] ?? 'registro', 'attr') ?>"
+                    data-proyecto="<?= esc($sistema['proyecto'] ?? '', 'attr') ?>"
+                    data-estado="<?= esc($sistema['estado'] ?? '', 'attr') ?>"
+                    data-repositorio="<?= esc($sistema['repositorio'] ?? '', 'attr') ?>"
+                    data-ruta="<?= esc($sistema['ruta_local'] ?? '', 'attr') ?>"
+                    data-servidor="<?= esc($sistema['servidor'] ?? '', 'attr') ?>">
                     <span class="sistema-selector__nombre">
                         <?= esc($sistema['nombre']) ?>
                     </span>

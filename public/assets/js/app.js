@@ -374,3 +374,64 @@ function mostrarEstadoVisor({
     }
   }
 }
+
+/*==================================================
+=                       APIs                        =
+==================================================*/
+
+const selectoresApi = document.querySelectorAll(".api-selector");
+
+const apiNombre = document.getElementById("api-nombre");
+const apiMetodo = document.getElementById("api-metodo");
+const apiDescripcion = document.getElementById("api-descripcion");
+
+const apiProyecto = document.getElementById("api-proyecto");
+const apiEstado = document.getElementById("api-estado");
+const apiAutenticacion = document.getElementById("api-autenticacion");
+
+const apiEndpointMetodo = document.getElementById("api-endpoint-metodo");
+const apiEndpoint = document.getElementById("api-endpoint");
+const apiUrl = document.getElementById("api-url");
+
+const botonFichaApi = document.getElementById("btn-ficha-api");
+
+selectoresApi.forEach((selector) => {
+
+    selector.addEventListener("click", () => {
+
+        selectoresApi.forEach((elemento) => {
+            elemento.classList.remove("selector--activo");
+        });
+
+        selector.classList.add("selector--activo");
+
+        const nombre = selector.dataset.apiNombre ?? "";
+        const metodo = selector.dataset.apiMetodo ?? "";
+        const descripcion = selector.dataset.apiDescripcion ?? "";
+
+        const proyecto = selector.dataset.apiProyecto ?? "";
+        const estado = selector.dataset.apiEstado ?? "";
+        const autenticacion = selector.dataset.apiAutenticacion ?? "";
+
+        const endpoint = selector.dataset.apiEndpoint ?? "";
+        const url = selector.dataset.apiUrl ?? "";
+
+        apiNombre.textContent = nombre;
+        apiMetodo.textContent = metodo;
+        apiDescripcion.textContent = descripcion;
+
+        apiProyecto.textContent = proyecto;
+        apiEstado.textContent = estado;
+        apiAutenticacion.textContent = autenticacion;
+
+        apiEndpointMetodo.textContent = metodo;
+        apiEndpoint.textContent = endpoint;
+        apiUrl.textContent = url;
+
+        if (botonFichaApi) {
+            botonFichaApi.disabled = false;
+        }
+
+    });
+
+});
