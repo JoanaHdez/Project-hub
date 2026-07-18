@@ -1,30 +1,17 @@
-<header class="modulo-header">
+<?= view('components/ui/encabezado_modulo', [
 
-    <div class="modulo-header__contenido">
+    'titulo' => 'APIs',
 
-        <div>
+    'descripcion' => 'Documentación técnica de las APIs registradas en Project Hub.',
 
-            <h1 class="modulo-header__titulo">
-                APIs
-            </h1>
+    'accion' => view('components/ui/boton', [
+        'texto' => 'Nueva API',
+        'url'   => '#',
+        'tipo'  => 'primario',
+        'icono' => '+',
+        'atributos' => [
+            'id' => 'btn-nueva-api',
+        ],
+    ]),
 
-            <p class="modulo-header__descripcion">
-                Documentación técnica de las APIs registradas en Project Hub.
-            </p>
-
-        </div>
-
-        <div class="modulo-header__acciones">
-
-            <button
-                type="button"
-                class="boton boton--primario"
-            >
-                Nueva API
-            </button>
-
-        </div>
-
-    </div>
-
-</header>
+]) ?>

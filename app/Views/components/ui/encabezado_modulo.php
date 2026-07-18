@@ -22,15 +22,3 @@ $accion      = $accion ?? null;
     <?php endif; ?>
 </section>
 
-<!-- Ejemplo en proyectos -->
-
-<!-- <?= view('components/ui/encabezado_modulo', [
-    'titulo' => 'Proyectos',
-    'descripcion' => 'Administra los proyectos registrados dentro de Project Hub.',
-    'accion' => view('components/ui/boton', [
-        'texto' => 'Nuevo proyecto',
-        'url'   => '#',
-        'tipo'  => 'primario',
-        'icono' => '+',
-    ]),
-]) ?> -->

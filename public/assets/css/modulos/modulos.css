@@ -2,32 +2,40 @@
 =                LAYOUT DE MÓDULOS                 =
 ==================================================*/
 
-.modulo-grid{
-    display:grid;
-    grid-template-columns:340px minmax(0, 1fr);
-    gap:1.5rem;
-    align-items:start;
+.modulo-grid {
+    display: grid;
+    grid-template-columns: minmax(280px, 320px) 1fr;
+    gap: 20px;
 }
 
 /*==================================================
-=                     CATÁLOGO                      =
+=                    CATÁLOGO                      =
 ==================================================*/
 
-.catalogo{
-    display:flex;
-    flex-direction:column;
-    gap:1rem;
-    min-width:0;
+.catalogo {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    min-width: 0;
+    padding: 20px;
+
+    background-color: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
 }
 
-.catalogo__buscador{
-    position:sticky;
-    top:0;
-    z-index:2;
+.catalogo__buscador {
+    width: 100%;
 }
 
-.catalogo__lista{
-    display:flex;
-    flex-direction:column;
-    gap:.75rem;
+.catalogo__buscador .input {
+    width: 100%;
+}
+
+.catalogo__lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }

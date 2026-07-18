@@ -1,0 +1,103 @@
+/*==================================================
+=                API SELECTOR                      =
+==================================================*/
+
+.api-selector{
+    width:100%;
+
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+
+    padding:16px;
+
+    background:#fff;
+    border:1px solid transparent;
+    border-radius:12px;
+
+    cursor:pointer;
+    text-align:left;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .15s ease;
+}
+
+.api-selector:hover{
+    border-color:#D0D5DD;
+    box-shadow:0 4px 12px rgba(16,24,40,.08);
+}
+
+.api-selector--activo{
+    border-color:#175CD3;
+    box-shadow:0 0 0 3px rgba(23,92,211,.10);
+}
+
+.api-selector__encabezado{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+}
+
+.api-selector__titulo{
+    margin:0;
+    font-size:.95rem;
+    font-weight:600;
+    color:#101828;
+}
+
+.api-selector__pie{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+}
+
+.api-selector__proyecto{
+    font-size:.82rem;
+    color:#667085;
+}
+
+/*==========================
+=      HTTP METHODS        =
+==========================*/
+
+.api-selector__metodo{
+    padding:4px 10px;
+    border-radius:999px;
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.04em;
+}
+
+.api-selector__metodo--get{
+    background:#E0F2FE;
+    color:#0369A1;
+}
+
+.api-selector__metodo--post{
+    background:#DCFCE7;
+    color:#15803D;
+}
+
+.api-selector__metodo--put{
+    background:#FEF3C7;
+    color:#B45309;
+}
+
+.api-selector__metodo--patch{
+    background:#F3E8FF;
+    color:#7E22CE;
+}
+
+.api-selector__metodo--delete{
+    background:#FEE2E2;
+    color:#B42318;
+}
+
+.api-selector__metodo--default{
+    background:#F2F4F7;
+    color:#475467;
+}

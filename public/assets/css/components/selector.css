@@ -1,55 +1,63 @@
 /*==================================================
-=                 COMPONENTE SELECTOR              =
+=                    SELECTOR                      =
 ==================================================*/
 
-.selector{
-    width:100%;
+.selector {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
 
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:1rem;
+    padding: 14px 16px;
 
-    padding:1rem;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 10px;
 
-    border:1px solid var(--color-borde);
-    border-radius:var(--radio-md);
-
-    background:var(--color-superficie);
-
-    cursor:pointer;
+    color: inherit;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
 
     transition:
-        background .2s ease,
-        border-color .2s ease,
-        transform .15s ease;
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-.selector:hover{
-    border-color:var(--color-primario);
-    background:var(--color-superficie-hover);
+.selector:hover {
+    background-color: #f8fafc;
+    border-color: #e4e7ec;
 }
 
-.selector--activo{
-    border-color:var(--color-primario);
-    background:var(--color-primario-suave);
+.selector--activo {
+    background-color: #ffffff;
+    border-color: #98a2b3;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
 }
 
-.selector__contenido{
-    display:flex;
-    flex-direction:column;
-    align-items:flex-start;
-    gap:.25rem;
-
-    min-width:0;
+.selector__informacion {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-.selector__titulo{
-    font-weight:600;
-    color:var(--color-texto);
+.selector__titulo {
+    margin: 0;
+    color: #101828;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.35;
 }
 
-.selector__subtitulo{
-    font-size:.875rem;
-    color:var(--color-texto-secundario);
+.selector__subtitulo {
+    color: #667085;
+    font-size: 0.8rem;
+    line-height: 1.35;
+}
+
+.selector__estado {
+    flex-shrink: 0;
 }

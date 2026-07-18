@@ -59,11 +59,26 @@ class APIs_Controller extends BaseController
 
                 'autenticacion' => 'API Token',
 
+                'parametros' => [
+                    [
+                        'nombre' => 'id',
+                        'tipo' => 'integer',
+                        'obligatorio' => true,
+                        'descripcion' => 'Identificador del registro.',
+                    ],
+                    [
+                        'nombre' => 'correo',
+                        'tipo' => 'string',
+                        'obligatorio' => true,
+                        'descripcion' => 'Correo electrónico del destinatario.',
+                    ],
+                ],
+
                 'repositorio' => 'https://github.com/JoanaHdez/Extorsi-n',
                 'ruta_local' => 'C:\LaragonNuevo\laragon\www\ExtorsionF',
                 'servidor' => 'https://cepyc.seguridadneza.gob.mx/ExtorsionF/public',
             ],
-
+            
             [
                 'id' => 4,
                 'nombre' => 'API Cuestionario',
