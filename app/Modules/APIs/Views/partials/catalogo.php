@@ -2,11 +2,7 @@
 
     <div class="catalogo__buscador">
 
-        <input
-            type="search"
-            id="buscar-api"
-            class="input"
-            placeholder="Buscar API...">
+        <input type="search" id="buscar-api" class="input" placeholder="Buscar API...">
 
     </div>
 
@@ -17,9 +13,9 @@
             <?= view('App\Modules\APIs\Views\components\api_selector', [
 
                 'titulo'   => $api['nombre'],
-'proyecto' => $api['proyecto'],
-'estado'   => $api['estado'],
-'metodo'   => $api['metodo'],
+                'proyecto' => $api['proyecto'],
+                'estado'   => $api['estado'],
+                'metodo'   => $api['metodo'],
 
                 'badgeClase' => 'badge badge--success',
 
@@ -39,6 +35,26 @@
                     'data-api-repositorio' => $api['repositorio'],
                     'data-api-ruta' => $api['ruta_local'],
                     'data-api-servidor' => $api['servidor'],
+
+                    'data-api-headers' => json_encode(
+                        $api['headers'] ?? [],
+                        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                    ),
+
+                    'data-api-parametros' => json_encode(
+                        $api['parametros'] ?? [],
+                        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                    ),
+
+                    'data-api-ejemplo' => json_encode(
+                        $api['ejemplo'] ?? [],
+                        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                    ),
+
+                    'data-api-respuestas' => json_encode(
+                        $api['respuestas'] ?? [],
+                        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                    ),
                 ],
 
             ]) ?>

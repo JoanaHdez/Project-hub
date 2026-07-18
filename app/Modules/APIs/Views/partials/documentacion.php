@@ -36,19 +36,19 @@
                 <div class="documentacion-datos">
 
                     <?= view('components/ui/dato', [
-                    'etiqueta' => 'Proyecto',
-                    'id' => 'api-proyecto',
-                ]) ?>
+                        'etiqueta' => 'Proyecto',
+                        'id' => 'api-proyecto',
+                    ]) ?>
 
                     <?= view('components/ui/dato', [
-                    'etiqueta' => 'Estado',
-                    'id' => 'api-estado',
-                ]) ?>
+                        'etiqueta' => 'Estado',
+                        'id' => 'api-estado',
+                    ]) ?>
 
                     <?= view('components/ui/dato', [
-                    'etiqueta' => 'Autenticación',
-                    'id' => 'api-autenticacion',
-                ]) ?>
+                        'etiqueta' => 'Autenticación',
+                        'id' => 'api-autenticacion',
+                    ]) ?>
 
                 </div>
 
@@ -88,40 +88,112 @@
 
             <section class="documentacion-seccion">
 
-                <h3 class="documentacion-seccion__titulo">
-                    Parámetros
-                </h3>
+                <div class="documentacion-seccion__encabezado">
+                    <h3>Parámetros</h3>
+                    <p>
+                        Parámetros requeridos para consumir la API.
+                    </p>
+                </div>
 
-                <div class="estado-vacio">
-                    Los parámetros se agregarán en el siguiente paso.
+                <div class="tabla-contenedor" id="api-parametros-contenedor" hidden>
+
+                    <table class="tabla">
+
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Obligatorio</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="api-parametros"></tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="estado-vacio" id="api-parametros-vacio">
+                    Selecciona una API para consultar sus parámetros.
                 </div>
 
             </section>
 
             <section class="documentacion-seccion">
 
-                <h3 class="documentacion-seccion__titulo">
-                    Ejemplo de consumo
-                </h3>
+                <div class="documentacion-seccion__encabezado">
+                    <h3>Ejemplo de consumo</h3>
+                    <p>
+                        Ejemplo de petición para consumir la API.
+                    </p>
+                </div>
 
-                <div class="estado-vacio">
-                    El ejemplo de petición se agregará más adelante.
+                <div id="api-ejemplo-contenedor" hidden>
+
+    <div class="codigo-api__acciones">
+
+        <button
+            type="button"
+            class="boton boton--secundario boton--sm"
+            id="copiar-ejemplo">
+
+            Copiar
+
+        </button>
+
+    </div>
+
+    <div class="codigo-api__encabezado">
+
+    <span
+        id="api-ejemplo-metodo"
+        class="badge-metodo">
+
+        POST
+
+    </span>
+
+</div>
+
+<pre class="codigo-api">
+    <code id="api-ejemplo"></code>
+</pre>
+
+</div>
+
+                <div id="api-ejemplo-vacio" class="estado-vacio">
+
+                    Esta API no tiene un ejemplo documentado.
+
                 </div>
 
             </section>
 
             <section class="documentacion-seccion">
 
-                <h3 class="documentacion-seccion__titulo">
-                    Respuestas esperadas
-                </h3>
+                <div class="documentacion-seccion__encabezado">
+                    <h3>Respuestas esperadas</h3>
+                    <p>
+                        Posibles respuestas que devuelve la API.
+                    </p>
+                </div>
 
-                <div class="estado-vacio">
-                    Las respuestas de la API se agregarán más adelante.
+                <div id="api-respuestas-contenedor" hidden>
+
+                    <div id="api-respuestas"></div>
+
+                </div>
+
+                <div
+                    id="api-respuestas-vacio"
+                    class="estado-vacio">
+
+                    Esta API no tiene respuestas documentadas.
+
                 </div>
 
             </section>
-
 
         </div>
     </div>

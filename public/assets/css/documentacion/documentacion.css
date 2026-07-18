@@ -1,0 +1,93 @@
+/*======================================
+=            Código JSON              =
+======================================*/
+
+.codigo-api{
+    background:#0f172a;
+    color:#e2e8f0;
+    padding:16px;
+    border-radius:10px;
+    overflow:auto;
+}
+
+.codigo-api__acciones{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:12px;
+}
+
+.boton--sm{
+    padding:.45rem .85rem;
+    font-size:.85rem;
+}
+
+.codigo-api__encabezado{
+    display:flex;
+    justify-content:flex-start;
+    margin-bottom:12px;
+}
+
+.badge-metodo{
+    color:#fff;
+    font-size:.85rem;
+    font-weight:600;
+    padding:.45rem .9rem;
+    border-radius:999px;
+}
+
+.badge-metodo--post{
+    background:#16a34a;
+}
+
+.badge-metodo--get{
+    background:#2563eb;
+}
+
+.badge-metodo--put{
+    background:#ea580c;
+}
+
+.badge-metodo--delete{
+    background:#dc2626;
+}
+
+.badge-metodo--patch{
+    background:#9333ea;
+}
+
+.respuesta-api{
+    margin-bottom:24px;
+}
+
+.respuesta-api__encabezado{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:10px;
+}
+
+.respuesta-http{
+
+    color:#fff;
+    font-weight:600;
+    border-radius:999px;
+    padding:.35rem .8rem;
+    font-size:.8rem;
+
+}
+
+.respuesta-http--success{
+    background:#16a34a;
+}
+
+.respuesta-http--redirect{
+    background:#2563eb;
+}
+
+.respuesta-http--warning{
+    background:#ea580c;
+}
+
+.respuesta-http--error{
+    background:#dc2626;
+}
