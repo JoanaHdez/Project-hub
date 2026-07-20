@@ -58,7 +58,6 @@
                 ],
 
             ]) ?>
-
         <?php endforeach; ?>
 
     </div>

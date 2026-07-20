@@ -566,18 +566,15 @@ function renderEjemplo(ejemplo) {
 
   apiEjemploMetodo.className = `badge-metodo badge-metodo--${metodo.toLowerCase()}`;
 
-  const contenido = `${url}
+  apiEjemploCodigo.innerHTML = `${url}
 
-${JSON.stringify(body, null, 2)}`;
-
-  apiEjemploCodigo.textContent = contenido;
+${resaltarJson(body)}`;
 
   apiEjemploContenedor.hidden = false;
   apiEjemploVacio.hidden = true;
 }
 
 function obtenerClaseRespuesta(codigo) {
-
   if (codigo >= 200 && codigo < 300) {
     return "respuesta-http respuesta-http--success";
   }
@@ -591,7 +588,33 @@ function obtenerClaseRespuesta(codigo) {
   }
 
   return "respuesta-http respuesta-http--error";
+}
 
+function resaltarJson(json) {
+  json = JSON.stringify(json, null, 2);
+
+  json = json.replace(
+    /("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*")(\s*:)?|\b(true|false|null)\b|-?\d+(\.\d+)?/g,
+    function (match) {
+      let clase = "json-numero";
+
+      if (/^"/.test(match)) {
+        if (/:$/.test(match)) {
+          clase = "json-clave";
+        } else {
+          clase = "json-string";
+        }
+      } else if (/true|false/.test(match)) {
+        clase = "json-boolean";
+      } else if (/null/.test(match)) {
+        clase = "json-null";
+      }
+
+      return `<span class="${clase}">${match}</span>`;
+    },
+  );
+
+  return json;
 }
 
 function renderRespuestas(respuestas) {
@@ -612,7 +635,7 @@ function renderRespuestas(respuestas) {
 
     const clase = obtenerClaseRespuesta(respuesta.codigo);
 
-tarjeta.innerHTML = `
+    tarjeta.innerHTML = `
 
 <div class="respuesta-api__encabezado">
 
@@ -625,7 +648,7 @@ tarjeta.innerHTML = `
 </div>
 
 <pre class="codigo-api">
-<code>${JSON.stringify(respuesta.body ?? {}, null, 2)}</code>
+<code>${resaltarJson(respuesta.body ?? {})}</code>
 </pre>
 
 `;
@@ -661,3 +684,12 @@ function obtenerJson(valor) {
     return [];
   }
 }
+
+
+
+
+
+
+
+
+

@@ -15,6 +15,6 @@
 
 </div>
 
-<?= view('App\Modules\APIs\Views\modals\ficha_ubicacion') ?>
+<?= view('App\Modules\APIs\Views\modals\ficha_tecnica') ?>
 
 <?= $this->endSection() ?>

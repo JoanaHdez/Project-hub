@@ -18,9 +18,11 @@
                 </p>
             </div>
 
-            <button type="button" class="boton boton--secundario" id="btn-ficha-api" data-modal-abrir="modal-ficha-api"
-                disabled>
-                Ficha de ubicación
+            <button
+                type="button"
+                id="abrir-ficha-tecnica"
+                class="boton boton--secundario">
+                Ficha técnica
             </button>
 
         </div>
@@ -131,36 +133,31 @@
 
                 <div id="api-ejemplo-contenedor" hidden>
 
-    <div class="codigo-api__acciones">
+                    <div class="codigo-api__acciones">
 
-        <button
-            type="button"
-            class="boton boton--secundario boton--sm"
-            id="copiar-ejemplo">
+                        <button type="button" class="boton boton--secundario boton--sm" id="copiar-ejemplo">
 
-            Copiar
+                            Copiar
 
-        </button>
+                        </button>
 
-    </div>
+                    </div>
 
-    <div class="codigo-api__encabezado">
+                    <div class="codigo-api__encabezado">
 
-    <span
-        id="api-ejemplo-metodo"
-        class="badge-metodo">
+                        <span id="api-ejemplo-metodo" class="badge-metodo">
 
-        POST
+                            POST
 
-    </span>
+                        </span>
 
-</div>
+                    </div>
 
-<pre class="codigo-api">
-    <code id="api-ejemplo"></code>
-</pre>
+                    <pre class="codigo-api">
+                        <code id="api-ejemplo"></code>
+                    </pre>
 
-</div>
+                </div>
 
                 <div id="api-ejemplo-vacio" class="estado-vacio">
 
@@ -185,9 +182,7 @@
 
                 </div>
 
-                <div
-                    id="api-respuestas-vacio"
-                    class="estado-vacio">
+                <div id="api-respuestas-vacio" class="estado-vacio">
 
                     Esta API no tiene respuestas documentadas.
 
