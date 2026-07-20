@@ -8,6 +8,8 @@
     <title><?= $title ?? 'Project Hub' ?></title>
 
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
+
+    <link rel="stylesheet" href="<?= base_url('assets/css/apis/ficha_tecnica.css') ?>">
 </head>
 
 <body>

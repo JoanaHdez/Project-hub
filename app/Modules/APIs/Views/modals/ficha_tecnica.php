@@ -1,47 +1,66 @@
-<div
-    id="modal-ficha-tecnica"
-    class="modal-ficha"
-    aria-hidden="true"
->
-    <div
-        class="modal-ficha__fondo"
-        data-cerrar-ficha
-    ></div>
+<div id="modal-ficha-tecnica" class="modal-ficha" aria-hidden="true">
+    <div class="modal-ficha__fondo" data-cerrar-ficha></div>
 
-    <section
-        class="modal-ficha__contenedor"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="titulo-ficha-tecnica"
-    >
+    <section class="modal-ficha__contenedor" role="dialog" aria-modal="true" aria-labelledby="titulo-ficha-tecnica">
 
         <header class="modal-ficha__encabezado">
 
-            <div class="modal-ficha__titulo-contenedor">
+            <div class="modal-ficha__identidad">
 
-                <span class="modal-ficha__etiqueta">
-                    Ficha técnica
-                </span>
+                <div class="modal-ficha__titulo-contenedor">
 
-                <h2
-                    id="titulo-ficha-tecnica"
-                    class="modal-ficha__titulo"
-                >
-                    API de Constancias
-                </h2>
+                    <span class="modal-ficha__etiqueta">
+                        Componente FT · Ficha técnica
+                    </span>
 
-                <p class="modal-ficha__subtitulo">
-                    Proyecto Extorsión
-                </p>
+                    <h2 id="titulo-ficha-tecnica" class="modal-ficha__titulo">
+                        API de Constancias
+                    </h2>
+
+                    <p class="modal-ficha__subtitulo">
+                        Proyecto Extorsión
+                    </p>
+
+                </div>
+
+                <div class="ficha-badges" aria-label="Resumen técnico de la API">
+
+                    <span class="ficha-badge ficha-badge--metodo">
+                        POST
+                    </span>
+
+                    <span class="ficha-badge">
+                        v1.2
+                    </span>
+
+                    <span class="ficha-badge ficha-badge--produccion">
+                        <span class="ficha-badge__indicador" aria-hidden="true"></span>
+
+                        Producción
+                    </span>
+
+                    <span class="ficha-badge ficha-badge--tecnologia">
+                        SMTP
+                    </span>
+
+                    <span class="ficha-badge ficha-badge--tecnologia">
+                        Token
+                    </span>
+
+                    <span class="ficha-badge ficha-badge--tecnologia">
+                        CI4
+                    </span>
+
+                    <span class="ficha-badge ficha-badge--tecnologia">
+                        MySQL
+                    </span>
+
+                </div>
 
             </div>
 
-            <button
-                type="button"
-                id="cerrar-ficha-tecnica"
-                class="modal-ficha__cerrar"
-                aria-label="Cerrar ficha técnica"
-            >
+            <button type="button" id="cerrar-ficha-tecnica" class="modal-ficha__cerrar"
+                aria-label="Cerrar ficha técnica">
                 ×
             </button>
 
@@ -51,61 +70,34 @@
 
             <aside class="modal-ficha__sidebar">
 
-                <nav
-                    class="ficha-nav"
-                    aria-label="Secciones de la ficha técnica"
-                >
+                <nav class="ficha-nav" aria-label="Secciones de la ficha técnica">
 
-                    <button
-                        type="button"
-                        class="ficha-nav__item ficha-nav__item--activo"
-                        data-ficha-seccion="general"
-                    >
+                    <button type="button" class="ficha-nav__item ficha-nav__item--activo" data-ficha-seccion="general">
                         <span class="ficha-nav__numero">01</span>
                         <span>General</span>
                     </button>
 
-                    <button
-                        type="button"
-                        class="ficha-nav__item"
-                        data-ficha-seccion="ubicacion"
-                    >
+                    <button type="button" class="ficha-nav__item" data-ficha-seccion="ubicacion">
                         <span class="ficha-nav__numero">02</span>
                         <span>Ubicación</span>
                     </button>
 
-                    <button
-                        type="button"
-                        class="ficha-nav__item"
-                        data-ficha-seccion="arquitectura"
-                    >
+                    <button type="button" class="ficha-nav__item" data-ficha-seccion="arquitectura">
                         <span class="ficha-nav__numero">03</span>
                         <span>Arquitectura</span>
                     </button>
 
-                    <button
-                        type="button"
-                        class="ficha-nav__item"
-                        data-ficha-seccion="dependencias"
-                    >
+                    <button type="button" class="ficha-nav__item" data-ficha-seccion="dependencias">
                         <span class="ficha-nav__numero">04</span>
                         <span>Dependencias</span>
                     </button>
 
-                    <button
-                        type="button"
-                        class="ficha-nav__item"
-                        data-ficha-seccion="observaciones"
-                    >
+                    <button type="button" class="ficha-nav__item" data-ficha-seccion="observaciones">
                         <span class="ficha-nav__numero">05</span>
                         <span>Observaciones</span>
                     </button>
 
-                    <button
-                        type="button"
-                        class="ficha-nav__item"
-                        data-ficha-seccion="historial"
-                    >
+                    <button type="button" class="ficha-nav__item" data-ficha-seccion="historial">
                         <span class="ficha-nav__numero">06</span>
                         <span>Historial</span>
                     </button>
@@ -139,10 +131,7 @@
 
             <main class="modal-ficha__contenido">
 
-                <section
-                    class="ficha-seccion ficha-seccion--activa"
-                    data-ficha-contenido="general"
-                >
+                <section class="ficha-seccion ficha-seccion--activa" data-ficha-contenido="general">
 
                     <div class="ficha-seccion__encabezado">
 
@@ -197,10 +186,7 @@
 
                 </section>
 
-                <section
-                    class="ficha-seccion"
-                    data-ficha-contenido="ubicacion"
-                >
+                <section class="ficha-seccion" data-ficha-contenido="ubicacion">
 
                     <div class="ficha-seccion__encabezado">
 
@@ -252,163 +238,259 @@
 
                 </section>
 
-                <section
-                    class="ficha-seccion"
-                    data-ficha-contenido="arquitectura"
-                >
-
+                <section class="ficha-seccion" data-ficha-contenido="arquitectura">
                     <div class="ficha-seccion__encabezado">
-
-                        <span class="ficha-seccion__numero">
-                            03
-                        </span>
+                        <span class="ficha-seccion__numero">03</span>
 
                         <div>
                             <h3>Arquitectura</h3>
-
-                            <p>
-                                Componentes internos relacionados con la API.
-                            </p>
+                            <p>Componentes internos relacionados con la API.</p>
                         </div>
-
                     </div>
 
-                    <div class="ficha-lista">
+                    <div class="ficha-arbol">
 
-                        <div class="ficha-lista__item">
-                            <small>Módulo</small>
-                            <strong>ConstanciaAPI</strong>
+                        <div class="ficha-arbol__raiz">
+                            <span class="ficha-arbol__icono" aria-hidden="true">📦</span>
+
+                            <div>
+                                <small>Módulo</small>
+                                <strong>ConstanciaAPI</strong>
+                            </div>
                         </div>
 
-                        <div class="ficha-lista__item">
-                            <small>Controlador</small>
-                            <strong>ConstanciaAPI_Controller</strong>
-                        </div>
+                        <div class="ficha-arbol__contenido">
 
-                        <div class="ficha-lista__item">
-                            <small>Servicio</small>
-                            <strong>ConstanciaCorreoService</strong>
-                        </div>
+                            <div class="ficha-arbol__grupo">
+                                <div class="ficha-arbol__carpeta">
+                                    <span class="ficha-arbol__icono" aria-hidden="true">📂</span>
+                                    <strong>Controllers</strong>
+                                </div>
 
-                        <div class="ficha-lista__item">
-                            <small>Modelo</small>
-                            <strong>RegistroModel</strong>
-                        </div>
+                                <div class="ficha-arbol__archivo">
+                                    <span class="ficha-arbol__linea" aria-hidden="true"></span>
+                                    <span class="ficha-arbol__icono" aria-hidden="true">📄</span>
+                                    <code>ConstanciaAPI_Controller.php</code>
+                                </div>
+                            </div>
 
-                        <div class="ficha-lista__item">
-                            <small>Vista</small>
-                            <strong>correo_constancia.php</strong>
-                        </div>
+                            <div class="ficha-arbol__grupo">
+                                <div class="ficha-arbol__carpeta">
+                                    <span class="ficha-arbol__icono" aria-hidden="true">📂</span>
+                                    <strong>Services</strong>
+                                </div>
 
+                                <div class="ficha-arbol__archivo">
+                                    <span class="ficha-arbol__linea" aria-hidden="true"></span>
+                                    <span class="ficha-arbol__icono" aria-hidden="true">📄</span>
+                                    <code>ConstanciaCorreoService.php</code>
+                                </div>
+                            </div>
+
+                            <div class="ficha-arbol__grupo">
+                                <div class="ficha-arbol__carpeta">
+                                    <span class="ficha-arbol__icono" aria-hidden="true">📂</span>
+                                    <strong>Models</strong>
+                                </div>
+
+                                <div class="ficha-arbol__archivo">
+                                    <span class="ficha-arbol__linea" aria-hidden="true"></span>
+                                    <span class="ficha-arbol__icono" aria-hidden="true">📄</span>
+                                    <code>RegistroModel.php</code>
+                                </div>
+                            </div>
+
+                            <div class="ficha-arbol__grupo">
+                                <div class="ficha-arbol__carpeta">
+                                    <span class="ficha-arbol__icono" aria-hidden="true">📂</span>
+                                    <strong>Views</strong>
+                                </div>
+
+                                <div class="ficha-arbol__archivo">
+                                    <span class="ficha-arbol__linea" aria-hidden="true"></span>
+                                    <span class="ficha-arbol__icono" aria-hidden="true">📄</span>
+                                    <code>correo_constancia.php</code>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-
                 </section>
 
                 <section
                     class="ficha-seccion"
-                    data-ficha-contenido="dependencias"
-                >
-
+                    data-ficha-contenido="dependencias">
                     <div class="ficha-seccion__encabezado">
-
-                        <span class="ficha-seccion__numero">
-                            04
-                        </span>
+                        <span class="ficha-seccion__numero">04</span>
 
                         <div>
                             <h3>Dependencias</h3>
-
-                            <p>
-                                Servicios y recursos necesarios para funcionar.
-                            </p>
+                            <p>Servicios y recursos necesarios para funcionar.</p>
                         </div>
-
                     </div>
 
-                    <div class="ficha-lista">
+                    <div class="ficha-dependencias">
 
-                        <div class="ficha-lista__item">
-                            <small>Base de datos</small>
-                            <strong>extorsion</strong>
-                        </div>
+                        <article class="ficha-dependencia">
+                            <div class="ficha-dependencia__icono" aria-hidden="true">
+                                🗄️
+                            </div>
 
-                        <div class="ficha-lista__item">
-                            <small>Tabla</small>
-                            <strong>registros</strong>
-                        </div>
+                            <div class="ficha-dependencia__contenido">
+                                <small>Base de datos</small>
+                                <strong>MySQL</strong>
+                                <span>Base de datos principal del sistema.</span>
+                            </div>
 
-                        <div class="ficha-lista__item">
-                            <small>SMTP</small>
-                            <strong>
-                                eventos-capacitaciones-cgsc@seguridadneza.gob.mx
-                            </strong>
-                        </div>
+                            <span class="ficha-dependencia__estado">
+                                Activa
+                            </span>
+                        </article>
 
-                        <div class="ficha-lista__item">
-                            <small>Configuración</small>
-                            <strong>correoConstancia</strong>
-                        </div>
+                        <article class="ficha-dependencia">
+                            <div class="ficha-dependencia__icono" aria-hidden="true">
+                                ✉️
+                            </div>
 
-                        <div class="ficha-lista__item">
-                            <small>Autenticación</small>
-                            <strong>API Token</strong>
-                        </div>
+                            <div class="ficha-dependencia__contenido">
+                                <small>Servicio de correo</small>
+                                <strong>SMTP</strong>
+                                <span>Responsable del envío de constancias.</span>
+                            </div>
 
+                            <span class="ficha-dependencia__estado">
+                                Activa
+                            </span>
+                        </article>
+
+                        <article class="ficha-dependencia">
+                            <div class="ficha-dependencia__icono" aria-hidden="true">
+                                ⚙️
+                            </div>
+
+                            <div class="ficha-dependencia__contenido">
+                                <small>Framework</small>
+                                <strong>CodeIgniter 4</strong>
+                                <span>Base de desarrollo y estructura modular.</span>
+                            </div>
+
+                            <span class="ficha-dependencia__estado">
+                                Activa
+                            </span>
+                        </article>
+
+                        <article class="ficha-dependencia">
+                            <div class="ficha-dependencia__icono" aria-hidden="true">
+                                🔑
+                            </div>
+
+                            <div class="ficha-dependencia__contenido">
+                                <small>Autenticación</small>
+                                <strong>API Token</strong>
+                                <span>Valida las solicitudes recibidas por la API.</span>
+                            </div>
+
+                            <span class="ficha-dependencia__estado">
+                                Requerida
+                            </span>
+                        </article>
+
+                        <article class="ficha-dependencia">
+                            <div class="ficha-dependencia__icono" aria-hidden="true">
+                                📄
+                            </div>
+
+                            <div class="ficha-dependencia__contenido">
+                                <small>Configuración</small>
+                                <strong>Archivo .env</strong>
+                                <span>Almacena las credenciales y parámetros sensibles.</span>
+                            </div>
+
+                            <span class="ficha-dependencia__estado">
+                                Requerida
+                            </span>
+                        </article>
+
+                        <article class="ficha-dependencia">
+                            <div class="ficha-dependencia__icono" aria-hidden="true">
+                                🧩
+                            </div>
+
+                            <div class="ficha-dependencia__contenido">
+                                <small>Servicio interno</small>
+                                <strong>ConstanciaCorreoService</strong>
+                                <span>Construye y procesa el correo de constancia.</span>
+                            </div>
+
+                            <span class="ficha-dependencia__estado">
+                                Interna
+                            </span>
+                        </article>
                     </div>
-
                 </section>
 
-                <section
-                    class="ficha-seccion"
-                    data-ficha-contenido="observaciones"
-                >
+                <section class="ficha-seccion" data-ficha-contenido="observaciones">
+                    <section
+                        class="ficha-seccion"
+                        data-ficha-contenido="observaciones">
 
-                    <div class="ficha-seccion__encabezado">
 
-                        <span class="ficha-seccion__numero">
-                            05
-                        </span>
+                        <div class="ficha-alertas">
 
-                        <div>
-                            <h3>Observaciones</h3>
+                            <article class="ficha-alerta ficha-alerta--info">
 
-                            <p>
-                                Consideraciones importantes para mantenimiento.
-                            </p>
+                                <div class="ficha-alerta__encabezado">
+
+                                    <span class="ficha-alerta__punto"></span>
+
+                                    <strong>Información</strong>
+
+                                </div>
+
+                                <p>
+                                    La API únicamente acepta solicitudes mediante el método HTTP <strong>POST</strong>.
+                                </p>
+
+                            </article>
+
+                            <article class="ficha-alerta ficha-alerta--warning">
+
+                                <div class="ficha-alerta__encabezado">
+
+                                    <span class="ficha-alerta__punto"></span>
+
+                                    <strong>Recomendación</strong>
+
+                                </div>
+
+                                <p>
+                                    Verificar la configuración SMTP antes de desplegar el servicio en producción.
+                                </p>
+
+                            </article>
+
+                            <article class="ficha-alerta ficha-alerta--danger">
+
+                                <div class="ficha-alerta__encabezado">
+
+                                    <span class="ficha-alerta__punto"></span>
+
+                                    <strong>Importante</strong>
+
+                                </div>
+
+                                <p>
+                                    El API Token debe permanecer en el archivo <strong>.env</strong> y nunca exponerse desde aplicaciones cliente.
+                                </p>
+
+                            </article>
+
                         </div>
-
-                    </div>
-
-                    <ul class="ficha-observaciones">
-
-                        <li>
-                            Solo acepta peticiones mediante el método POST.
-                        </li>
-
-                        <li>
-                            Requiere un token válido para autorizar la solicitud.
-                        </li>
-
-                        <li>
-                            El correo debe estar registrado en la base de datos.
-                        </li>
-
-                        <li>
-                            Utiliza el correo SMTP institucional.
-                        </li>
-
-                        <li>
-                            El identificador se concatena en la URL de destino.
-                        </li>
-
-                    </ul>
-
+                    </section>
                 </section>
 
-                <section
-                    class="ficha-seccion"
-                    data-ficha-contenido="historial"
-                >
+
+                <section class="ficha-seccion" data-ficha-contenido="historial">
 
                     <div class="ficha-seccion__encabezado">
 
