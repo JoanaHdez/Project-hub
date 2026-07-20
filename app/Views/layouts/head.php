@@ -36,6 +36,10 @@
 
     <script src="<?= base_url('assets/js/apis/ficha_tecnica.js') ?>" defer></script>
 
+    <script src="<?= base_url('assets/js/apis/sistemas.js') ?>" defer></script>
+    
+    <script src="<?= base_url('assets/js/apis/documentacion.js') ?>" defer></script>
+
     <script src="<?= base_url('assets/js/app.js') ?>"></script>
 </body>
 
