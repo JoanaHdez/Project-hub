@@ -11,12 +11,12 @@
         <a href="<?= site_url('sistemas') ?>" class="app-sidebar__link">
             Sistemas
         </a>
-        
+
         <a href="<?= site_url('apis') ?>" class="app-sidebar__link">
             APIs
         </a>
 
-        <a href="#" class="app-sidebar__link">
+        <a href="<?= base_url('modulos') ?>" class="app-sidebar__link">
             Módulos
         </a>
 
@@ -24,6 +24,6 @@
             Documentación
         </a>
 
-        
+
     </nav>
 </aside>
