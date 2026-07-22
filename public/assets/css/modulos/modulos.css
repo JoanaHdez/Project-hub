@@ -134,15 +134,17 @@
 ======================================*/
 
 .sistema-card{
+    position:relative;
     overflow:hidden;
     border:1px solid #e2e8f0;
     border-radius:18px;
-    background:#ffffff;
+    background:#fff;
     cursor:pointer;
+
     transition:
-        transform .2s ease,
-        box-shadow .2s ease,
-        border-color .2s ease;
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
 }
 
 .sistema-card:hover{
@@ -363,6 +365,76 @@
     color:#2563eb;
     font-size:.82rem;
     font-weight:700;
+}
+
+/*======================================
+=             Indicador              =
+======================================*/
+
+.sistema-card__estado{
+
+    position:absolute;
+
+    top:18px;
+
+    right:18px;
+
+    width:14px;
+
+    height:14px;
+
+    border-radius:50%;
+
+    z-index:20;
+
+    transition:all .25s ease;
+
+    box-shadow:0 0 0 4px rgba(255,255,255,.85);
+
+}
+
+/*======================================
+=                 Color              =
+======================================*/
+
+.sistema-card__estado--verde{
+
+    background:#22c55e;
+
+}
+
+.sistema-card__estado--azul{
+
+    background:#2563eb;
+
+}
+
+.sistema-card__estado--morado{
+
+    background:#9333ea;
+
+}
+
+.sistema-card__estado--naranja{
+
+    background:#f97316;
+
+}
+
+.sistema-card__estado--gris{
+
+    background:#94a3b8;
+
+}
+
+/*======================================
+=             Animación              =
+======================================*/
+
+.sistema-card:hover .sistema-card__estado{
+
+    transform:scale(1.35);
+
 }
 
 /*======================================

@@ -67,6 +67,8 @@ Módulos | Project Hub
             <article class="sistema-card" data-sistema="extorsion" tabindex="0" role="button"
                 aria-label="Explorar Registro de Pláticas">
 
+                    <span class="sistema-card__estado sistema-card__estado--azul"></span>
+
                 <div class="sistema-card__imagen">
 
                     <div class="sistema-card__placeholder">
@@ -100,6 +102,8 @@ Módulos | Project Hub
             <article class="sistema-card" data-sistema="eventos" tabindex="0" role="button"
                 aria-label="Explorar Sistema de Eventos">
 
+                <span class="sistema-card__estado sistema-card__estado--morado"></span>
+                
                 <div class="sistema-card__imagen">
 
                     <div class="sistema-card__placeholder">
@@ -133,7 +137,9 @@ Módulos | Project Hub
             <article class="sistema-card" data-sistema="optica" tabindex="0" role="button"
                 aria-label="Explorar Gestión Óptica">
 
-                <div class="sistema-card__imagen">
+                    <span class="sistema-card__estado sistema-card__estado--morado"></span>
+
+                    <div class="sistema-card__imagen">
 
                     <div class="sistema-card__placeholder">
                         OPT
