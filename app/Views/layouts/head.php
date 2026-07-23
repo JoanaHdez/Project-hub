@@ -26,22 +26,20 @@
 
     <?= $this->include('components/footer') ?>
 
-    <script src="<?= base_url('assets/js/core/utils.js') ?>" defer></script>
-
-    <script src="<?= base_url('assets/js/core/modales.js') ?>" defer></script>
-
-    <script src="<?= base_url('assets/js/core/tablas.js') ?>" defer></script>
-
-    <script src="<?= base_url('assets/js/sistemas/sistemas.js') ?>" defer></script>
-
     <script src="<?= base_url('assets/js/apis/documentacion.js') ?>" defer></script>
 
     <script src="<?= base_url('assets/js/apis/ficha_tecnica.js') ?>" defer></script>
 
-    <script src="<?= base_url('assets/js/apis/sistemas.js') ?>" defer></script>
+    <script src="<?= base_url('assets/js/core/modales.js') ?>" defer></script>
     
-    <script src="<?= base_url('assets/js/apis/documentacion.js') ?>" defer></script>
+    <script src="<?= base_url('assets/js/core/tablas.js') ?>" defer></script>
+    
+    <script src="<?= base_url('assets/js/core/util.js') ?>" defer></script>
 
+    <script src="<?= base_url('assets/js/modulos/modulos.js') ?>" defer></script>
+
+    <script src="<?= base_url('assets/js/sistemas/sistemas.js') ?>" defer></script>
+    
     <script src="<?= base_url('assets/js/app.js') ?>"></script>
 </body>
 

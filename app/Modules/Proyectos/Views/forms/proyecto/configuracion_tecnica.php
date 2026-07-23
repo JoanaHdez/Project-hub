@@ -35,6 +35,7 @@
                         'texto' => 'Ver ficha',
                         'url'   => '#',
                         'tipo'  => 'secundario',
+                        'modalId'  => 'modal-ficha-tecnica',
                     ]) ?>
 
                     <button type="button" class="boton boton--primario" disabled aria-disabled="true"

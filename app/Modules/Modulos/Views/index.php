@@ -67,12 +67,18 @@ Módulos | Project Hub
             <article class="sistema-card" data-sistema="extorsion" tabindex="0" role="button"
                 aria-label="Explorar Registro de Pláticas">
 
-                    <span class="sistema-card__estado sistema-card__estado--azul"></span>
+                <span class="sistema-card__estado sistema-card__estado--azul"></span>
 
-                <div class="sistema-card__imagen">
+                <div class="sistema-card__imagen sistema-card__imagen--extorsion">
 
-                    <div class="sistema-card__placeholder">
-                        EXT
+                    <div class="sistema-card__overlay"></div>
+
+                    <div class="sistema-card__titulo-banner">
+
+                        <span>
+                            EXTORSIÓN
+                        </span>
+
                     </div>
 
                 </div>
@@ -103,11 +109,17 @@ Módulos | Project Hub
                 aria-label="Explorar Sistema de Eventos">
 
                 <span class="sistema-card__estado sistema-card__estado--morado"></span>
-                
-                <div class="sistema-card__imagen">
 
-                    <div class="sistema-card__placeholder">
-                        EVT
+                <div class="sistema-card__imagen sistema-card__imagen--extorsion">
+
+                    <div class="sistema-card__overlay"></div>
+
+                    <div class="sistema-card__titulo-banner">
+
+                        <span>
+                            EVENTOS
+                        </span>
+
                     </div>
 
                 </div>
@@ -137,12 +149,18 @@ Módulos | Project Hub
             <article class="sistema-card" data-sistema="optica" tabindex="0" role="button"
                 aria-label="Explorar Gestión Óptica">
 
-                    <span class="sistema-card__estado sistema-card__estado--morado"></span>
+                <span class="sistema-card__estado sistema-card__estado--morado"></span>
 
-                    <div class="sistema-card__imagen">
+                <div class="sistema-card__imagen sistema-card__imagen--extorsion">
 
-                    <div class="sistema-card__placeholder">
-                        OPT
+                    <div class="sistema-card__overlay"></div>
+
+                    <div class="sistema-card__titulo-banner">
+
+                        <span>
+                            ÓPTICA
+                        </span>
+
                     </div>
 
                 </div>

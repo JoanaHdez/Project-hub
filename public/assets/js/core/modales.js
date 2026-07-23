@@ -1,3 +1,4 @@
+console.log("modales.js cargado");
 document.addEventListener("click", (event) => {
   const botonAbrir = event.target.closest("[data-modal-abrir]");
   const botonCerrar = event.target.closest("[data-modal-cerrar]");
