@@ -22,6 +22,7 @@
                 name="repositorio_url"
                 value="<?= esc($proyecto['repositorio_url'] ?? '', 'attr') ?>"
                 placeholder="https://github.com/usuario/repositorio"
+                
             >
 
         </div>

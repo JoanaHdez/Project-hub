@@ -15,18 +15,28 @@ $proyecto = $proyecto ?? [
     'observaciones' => '',
 ];
 
+$esDetalle = $modo === 'detalle';
+
+$idFormulario = match ($modo) {
+    'editar' => 'form-editar-proyecto',
+    'detalle' => 'form-detalle-proyecto',
+    default => 'form-proyecto',
+};
+
 ?>
 
 <form
-    id="<?= $modo === 'editar' ? 'form-editar-proyecto' : 'form-proyecto' ?>"
+    id="<?= esc($idFormulario) ?>"
     method="post"
     action="#"
     autocomplete="off"
+    data-modo="<?= esc($modo) ?>"
 >
     <div class="formulario-proyecto">
 
         <?= $this->include(
             'App\Modules\Proyectos\Views\forms\proyecto\informacion_general'
+            
         ) ?>
 
         <?= $this->include(

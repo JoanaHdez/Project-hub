@@ -32,7 +32,7 @@ foreach ($proyectos as $proyecto) {
         'mensaje' => 'Ver detalle del proyecto',
         'url'     => '#',
         'tipo'    => 'ficha',
-        'modalId' => 'modal-ficha-tecnica',
+        'modalId' => 'modal-detalle-proyecto',
     ], [
         'saveData' => false,
     ]);

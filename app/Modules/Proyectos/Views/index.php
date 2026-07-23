@@ -14,6 +14,7 @@
 
 <?= $this->include('App\Modules\Proyectos\Views\modals\nuevo_proyecto') ?>
 <?= $this->include('App\Modules\Proyectos\Views\modals\editar_proyecto') ?>
+<?= $this->include('App\Modules\Proyectos\Views\modals\detalle_proyecto') ?>
 <?= $this->include('App\Modules\Proyectos\Views\modals\ficha_tecnica') ?>
 <?= $this->include('App\Modules\Proyectos\Views\modals\eliminar_proyecto') ?>
 <?= $this->include('App\Modules\Proyectos\Views\modals\sistemas_asociados') ?>
