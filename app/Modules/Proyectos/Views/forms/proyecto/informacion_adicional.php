@@ -1,3 +1,9 @@
+<?php
+
+$esDetalle = ($modo ?? 'crear') === 'detalle';
+
+?>
+
 <fieldset class="form-bloque">
 
     <legend class="form-bloque__titulo">
@@ -15,12 +21,8 @@
                 Responsable
             </label>
 
-            <input
-                type="text"
-                id="proyecto-responsable"
-                name="responsable"
-                placeholder="Nombre de la persona responsable"
-            >
+            <input type="text" id="proyecto-responsable" name="responsable"
+                placeholder="Nombre de la persona responsable" <?= $esDetalle ? 'readonly' : '' ?>>
 
             <small class="form-ayuda">
                 Este campo se relacionará con usuarios cuando se implemente el sistema de permisos.
@@ -32,11 +34,8 @@
                 Observaciones
             </label>
 
-            <textarea
-    id="proyecto-observaciones"
-    name="observaciones"
-    rows="4"
-><?= esc($proyecto['observaciones'] ?? '') ?></textarea>
+            <textarea id="proyecto-observaciones" name="observaciones"
+                rows="4" <?= $esDetalle ? 'readonly' : '' ?>><?= esc($proyecto['observaciones'] ?? '') ?></textarea>
         </div>
 
     </div>

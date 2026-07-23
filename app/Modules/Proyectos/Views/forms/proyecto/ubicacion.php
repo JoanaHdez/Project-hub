@@ -1,3 +1,9 @@
+<?php
+
+$esDetalle = ($modo ?? 'crear') === 'detalle';
+
+?>
+
 <fieldset class="form-bloque">
 
     <legend class="form-bloque__titulo">
@@ -22,7 +28,7 @@
                 name="repositorio_url"
                 value="<?= esc($proyecto['repositorio_url'] ?? '', 'attr') ?>"
                 placeholder="https://github.com/usuario/repositorio"
-                
+                <?= $esDetalle ? 'readonly' : '' ?>
             >
 
         </div>
@@ -39,6 +45,7 @@
                 name="ruta_local"
                 value="<?= esc($proyecto['ruta_local'] ?? '', 'attr') ?>"
                 placeholder="C:\laragon\www\Proyecto"
+                <?= $esDetalle ? 'readonly' : '' ?>
             >
 
         </div>
@@ -55,7 +62,7 @@
                 name="url_servidor"
                 value="<?= esc($proyecto['url_servidor'] ?? '', 'attr') ?>"
                 placeholder="https://misistema.com"
-            >
+                <?= $esDetalle ? 'readonly' : '' ?>
 
         </div>
 

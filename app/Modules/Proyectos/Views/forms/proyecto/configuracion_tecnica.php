@@ -1,3 +1,9 @@
+<?php
+
+$esDetalle = ($modo ?? 'crear') === 'detalle';
+
+?>
+
 <fieldset class="form-bloque">
 
     <legend class="form-bloque__titulo">
@@ -18,7 +24,7 @@
 
             <div class="configuracion-tecnica">
 
-                <select id="especificacion-tecnica" name="id_especificacion">
+                <select id="especificacion-tecnica" name="id_especificacion" <?= $esDetalle ? 'disabled' : '' ?>>
                     <option value="1" <?= ($proyecto['id_especificacion'] ?? '') === '1' ? 'selected' : '' ?>>
                         ET-01
                     </option>

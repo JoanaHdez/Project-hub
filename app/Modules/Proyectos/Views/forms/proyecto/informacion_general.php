@@ -63,7 +63,6 @@ $esDetalle = ($modo ?? 'crear') === 'detalle';
             <label for="proyecto-descripcion">
                 Descripción
             </label>
-
             <textarea id="proyecto-descripcion" name="descripcion" rows="4"
                 placeholder="Describe brevemente el propósito y alcance del proyecto" <?= $esDetalle ? 'readonly' : '' ?>>
                 <?= esc($proyecto['descripcion'] ?? '') ?></textarea>
