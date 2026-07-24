@@ -18,11 +18,11 @@ $esDetalle = ($modo ?? 'crear') === 'detalle';
 
         <div class="form-grupo">
             <label for="proyecto-responsable">
-                Responsable
+                Responsable <span class="campo-obligatorio">*</span>
             </label>
 
             <input type="text" id="proyecto-responsable" name="responsable"
-                placeholder="Nombre de la persona responsable" <?= $esDetalle ? 'readonly' : '' ?>>
+                placeholder="Nombre de la persona responsable" <?= $esDetalle ? 'readonly' : '' ?> required>
 
             <small class="form-ayuda">
                 Este campo se relacionará con usuarios cuando se implemente el sistema de permisos.

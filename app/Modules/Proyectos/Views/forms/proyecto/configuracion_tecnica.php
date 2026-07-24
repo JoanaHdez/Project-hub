@@ -1,7 +1,10 @@
 <?php
 
-$esDetalle = ($modo ?? 'crear') === 'detalle';
+$modo = $modo ?? 'crear';
 
+$esDetalle = $modo === 'detalle';
+$esEdicion = $modo === 'editar';
+$esCreacion = $modo === 'crear';
 ?>
 
 <fieldset class="form-bloque">
@@ -44,11 +47,29 @@ $esDetalle = ($modo ?? 'crear') === 'detalle';
                         'modalId'  => 'modal-ficha-tecnica',
                     ]) ?>
 
-                    <button type="button" class="boton boton--primario" disabled aria-disabled="true"
-                        title="El módulo de Especificaciones Técnicas aún no está disponible">
-                        <span class="boton__icono">+</span>
-                        <span>Nueva</span>
-                    </button>
+                    <?php if ($esCreacion): ?>
+
+                        <?= view('components/ui/boton', [
+                            'texto'   => 'Nueva',
+                            'tipo'    => 'primario',
+                            'icono'   => '',
+                            'url'     => '#',
+                            'modalId' => 'modal-nueva-ficha-tecnica',
+                        ]) ?>
+
+                    <?php else: ?>
+
+                        <button
+                            type="button"
+                            class="boton boton--primario"
+                            disabled
+                            aria-disabled="true"
+                            title="Solo es posible crear una nueva ficha al registrar un proyecto.">
+                            <span class="boton__icono">+</span>
+                            <span>Nueva</span>
+                        </button>
+
+                    <?php endif; ?>
 
                 </div>
 

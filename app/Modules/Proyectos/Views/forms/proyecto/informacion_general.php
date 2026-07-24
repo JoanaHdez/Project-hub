@@ -17,20 +17,20 @@ $esDetalle = ($modo ?? 'crear') === 'detalle';
 
         <div class="form-grupo form-grupo--completo">
             <label for="proyecto-nombre">
-                Nombre del proyecto
+                Nombre del proyecto <span class="campo-obligatorio">*</span>
             </label>
 
             <input type="text" id="proyecto-nombre" name="nombre" value="<?= esc($proyecto['nombre'] ?? '', 'attr') ?>"
                 placeholder="Ej. Sistema de Eventos" maxlength="150"
-                <?= $esDetalle ? 'readonly' : '' ?>>
+                <?= $esDetalle ? 'readonly' : '' ?> required>
         </div>
 
         <div class="form-grupo">
             <label for="proyecto-estado">
-                Estado
+                Estado <span class="campo-obligatorio">*</span>
             </label>
 
-            <select id="proyecto-estado" name="estado" <?= $esDetalle ? 'disabled' : '' ?>>
+            <select id="proyecto-estado" name="estado" <?= $esDetalle ? 'disabled' : '' ?> required>
                 <option value="">Selecciona una opción</option>
 
                 <?php foreach (['Producción', 'Desarrollo', 'Detenido', 'Mantenimiento'] as $estado): ?>
@@ -44,10 +44,10 @@ $esDetalle = ($modo ?? 'crear') === 'detalle';
 
         <div class="form-grupo">
             <label for="proyecto-origen">
-                Origen
+                Origen <span class="campo-obligatorio">*</span>
             </label>
 
-            <select id="proyecto-origen" name="origen" <?= $esDetalle ? 'disabled' : '' ?>>
+            <select id="proyecto-origen" name="origen" <?= $esDetalle ? 'disabled' : '' ?> required>
                 <option value="">Selecciona una opción</option>
 
                 <?php foreach (['Trabajo', 'Personal', 'Práctica', 'Otro'] as $origen): ?>
