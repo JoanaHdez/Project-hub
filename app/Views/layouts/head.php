@@ -32,6 +32,8 @@
 
     <script src="<?= base_url('assets/js/core/modales.js') ?>" defer></script>
     
+    <script src="<?= base_url('assets/js/proyectos/proyectos.js') ?>" defer></script>
+
     <script src="<?= base_url('assets/js/core/tablas.js') ?>" defer></script>
     
     <script src="<?= base_url('assets/js/core/util.js') ?>" defer></script>
