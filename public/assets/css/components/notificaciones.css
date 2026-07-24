@@ -1,0 +1,40 @@
+.notificacion-proyecto {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+
+    max-width: min(360px, calc(100vw - 48px));
+    padding: 14px 18px;
+
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+
+    font-size: 0.95rem;
+    font-weight: 600;
+
+    opacity: 0;
+    transform: translateY(-12px);
+    pointer-events: none;
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+.notificacion-proyecto--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notificacion-proyecto--exito {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.notificacion-proyecto--error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}

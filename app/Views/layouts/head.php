@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
 
     <link rel="stylesheet" href="<?= base_url('assets/css/apis/ficha_tecnica.css') ?>">
+
+    <link rel="stylesheet" href="<?= base_url('assets/css/components/notificaciones.css') ?>">
 </head>
 
 <body>
@@ -31,17 +33,17 @@
     <script src="<?= base_url('assets/js/apis/ficha_tecnica.js') ?>" defer></script>
 
     <script src="<?= base_url('assets/js/core/modales.js') ?>" defer></script>
-    
-    <script src="<?= base_url('assets/js/proyectos/proyectos.js') ?>" defer></script>
+
+    <script type="module" src="<?= base_url('assets/js/proyectos/proyectos.js') ?>"></script>
 
     <script src="<?= base_url('assets/js/core/tablas.js') ?>" defer></script>
-    
+
     <script src="<?= base_url('assets/js/core/util.js') ?>" defer></script>
 
     <script src="<?= base_url('assets/js/modulos/modulos.js') ?>" defer></script>
 
     <script src="<?= base_url('assets/js/sistemas/sistemas.js') ?>" defer></script>
-    
+
     <script src="<?= base_url('assets/js/app.js') ?>"></script>
 </body>
 
