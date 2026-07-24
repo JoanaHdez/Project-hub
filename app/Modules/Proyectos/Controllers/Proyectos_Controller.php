@@ -69,13 +69,8 @@ class Proyectos_Controller extends BaseController
 
         $estado = (string) ($datos['estado'] ?? '');
 
-        $estadoTipo = match ($estado) {
-            'Producción'    => 'produccion',
-            'Desarrollo'    => 'desarrollo',
-            'Detenido'      => 'detenido',
-            'Mantenimiento' => 'mantenimiento',
-            default         => 'inactivo',
-        };
+        $estado = (string) ($datos['estado'] ?? '');
+        $estadoTipo = $this->obtenerTipoEstado($estado);
 
         $proyecto = [
             'id_proyecto'      => time(),
@@ -102,5 +97,16 @@ class Proyectos_Controller extends BaseController
                 'proyecto' => $proyecto
             ]),
         ]);
+    }
+
+    private function obtenerTipoEstado(string $estado): string
+    {
+        return match ($estado) {
+            'Producción'    => 'produccion',
+            'Desarrollo'    => 'desarrollo',
+            'Detenido'      => 'detenido',
+            'Mantenimiento' => 'mantenimiento',
+            default         => 'inactivo',
+        };
     }
 }
