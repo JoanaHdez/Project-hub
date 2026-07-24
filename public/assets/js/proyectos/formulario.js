@@ -62,6 +62,7 @@ export function inicializarFormularioProyecto() {
       });
 
       const resultado = await respuesta.json();
+      console.log(resultado);
 
       if (!respuesta.ok || !resultado.ok) {
         throw new Error(
@@ -69,7 +70,7 @@ export function inicializarFormularioProyecto() {
         );
       }
 
-      agregarProyectoATabla(resultado.proyecto);
+      agregarProyectoATabla(resultado.fila_html);
 
       mostrarNotificacion({
         tipo: "success",

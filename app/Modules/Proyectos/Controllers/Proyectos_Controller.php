@@ -67,11 +67,21 @@ class Proyectos_Controller extends BaseController
                 ]);
         }
 
+        $estado = (string) ($datos['estado'] ?? '');
+
+        $estadoTipo = match ($estado) {
+            'Producción'    => 'produccion',
+            'Desarrollo'    => 'desarrollo',
+            'Detenido'      => 'detenido',
+            'Mantenimiento' => 'mantenimiento',
+            default         => 'inactivo',
+        };
+
         $proyecto = [
             'id_proyecto'      => time(),
             'nombre'           => trim((string) ($datos['nombre'] ?? '')),
             'estado'           => (string) ($datos['estado'] ?? ''),
-            'estado_tipo'      => 'activo',
+            'estado_tipo'      => $estadoTipo,
             'origen'           => (string) ($datos['origen'] ?? ''),
             'descripcion'      => trim((string) ($datos['descripcion'] ?? '')),
             'repositorio_url'  => trim((string) ($datos['repositorio_url'] ?? '')),
@@ -88,6 +98,9 @@ class Proyectos_Controller extends BaseController
             'ok' => true,
             'mensaje' => 'Proyecto recibido correctamente.',
             'proyecto' => $proyecto,
+            'fila_html' => view('components/ui/fila_proyecto', [
+                'proyecto' => $proyecto
+            ]),
         ]);
     }
 }
