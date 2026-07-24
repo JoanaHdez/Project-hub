@@ -42,7 +42,7 @@ export function inicializarFormularioProyecto() {
     return;
   }
 
-  formulario.addEventListener("submit", (event) => {
+  formulario.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     if (!validarFormulario(formulario)) {
@@ -51,19 +51,43 @@ export function inicializarFormularioProyecto() {
 
     const proyecto = construirProyecto(formulario);
 
-    agregarProyectoATabla(proyecto);
+    try {
+      const respuesta = await fetch("/proyectos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: JSON.stringify(proyecto),
+      });
 
-    console.log("Proyecto capturado:");
-    console.table(proyecto);
+      const resultado = await respuesta.json();
 
-    mostrarNotificacion({
-      tipo: "success",
-      titulo: "Proyecto registrado",
-      mensaje: "El proyecto se registró correctamente.",
-    });
+      if (!respuesta.ok || !resultado.ok) {
+        throw new Error(
+          resultado.mensaje || "No fue posible registrar el proyecto.",
+        );
+      }
 
-    cerrarModalNuevoProyecto();
+      agregarProyectoATabla(resultado.proyecto);
 
-    formulario.reset();
+      mostrarNotificacion({
+        tipo: "success",
+        titulo: "Proyecto registrado",
+        mensaje: resultado.mensaje,
+      });
+
+      cerrarModalNuevoProyecto();
+
+      formulario.reset();
+    } catch (error) {
+      console.error("Error al registrar el proyecto:", error);
+
+      mostrarNotificacion({
+        tipo: "error",
+        titulo: "No se pudo registrar",
+        mensaje: error.message,
+      });
+    }
   });
 }
