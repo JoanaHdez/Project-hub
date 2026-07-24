@@ -1,5 +1,6 @@
 import { validarFormulario } from "./validaciones.js";
 import { mostrarNotificacion } from "./notificaciones.js";
+import { agregarProyectoATabla } from "./tabla.js";
 
 function construirProyecto(formulario) {
   const datosFormulario = new FormData(formulario);
@@ -50,6 +51,8 @@ export function inicializarFormularioProyecto() {
 
     const proyecto = construirProyecto(formulario);
 
+    agregarProyectoATabla(proyecto);
+
     console.log("Proyecto capturado:");
     console.table(proyecto);
 
@@ -58,7 +61,7 @@ export function inicializarFormularioProyecto() {
       titulo: "Proyecto registrado",
       mensaje: "El proyecto se registró correctamente.",
     });
-    
+
     cerrarModalNuevoProyecto();
 
     formulario.reset();

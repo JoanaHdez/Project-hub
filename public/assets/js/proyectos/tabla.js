@@ -1,4 +1,7 @@
 export function inicializarTablaProyectos() {
-  // Próximamente:
-  // agregar, editar y eliminar proyectos de la tabla.
+  console.log("Tabla de proyectos inicializada");
+}
+
+export function agregarProyectoATabla(proyecto) {
+  console.log("Proyecto recibido por tabla.js:", proyecto);
 }
