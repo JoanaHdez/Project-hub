@@ -157,21 +157,59 @@ class Proyectos_Controller extends BaseController
 {
     $datos = $this->request->getJSON(true);
 
-    if (!$datos) {
+    if (!is_array($datos)) {
         return $this->response
             ->setStatusCode(400)
             ->setJSON([
-                'ok' => false,
-                'mensaje' => 'Datos inválidos.'
+                'ok'      => false,
+                'mensaje' => 'Los datos enviados no son válidos.',
             ]);
     }
 
-    // Por ahora simulamos la actualización
+    $proyectoExistente = null;
+
+    foreach ($this->obtenerProyectosSimulados() as $proyecto) {
+        if ((int) ($proyecto['id_proyecto'] ?? 0) === $id) {
+            $proyectoExistente = $proyecto;
+            break;
+        }
+    }
+
+    if ($proyectoExistente === null) {
+        return $this->response
+            ->setStatusCode(404)
+            ->setJSON([
+                'ok'      => false,
+                'mensaje' => 'El proyecto solicitado no existe.',
+            ]);
+    }
+
+    $estado = trim((string) ($datos['estado'] ?? ''));
+
+    $proyectoActualizado = array_merge($proyectoExistente, [
+        'id_proyecto'       => $id,
+        'nombre'            => trim((string) ($datos['nombre'] ?? '')),
+        'estado'            => $estado,
+        'estado_tipo'       => $this->obtenerTipoEstado($estado),
+        'origen'            => trim((string) ($datos['origen'] ?? '')),
+        'descripcion'       => trim((string) ($datos['descripcion'] ?? '')),
+        'repositorio_url'   => trim((string) ($datos['repositorio_url'] ?? '')),
+        'ruta_local'        => trim((string) ($datos['ruta_local'] ?? '')),
+        'url_servidor'      => trim((string) ($datos['url_servidor'] ?? '')),
+        'id_especificacion' => (string) ($datos['id_especificacion'] ?? ''),
+        'responsable'       => trim((string) ($datos['responsable'] ?? '')),
+        'observaciones'     => trim((string) ($datos['observaciones'] ?? '')),
+    ]);
+
+    $filaHtml = view('components/ui/fila_proyecto', [
+    'proyecto' => $proyectoActualizado,
+]);
 
     return $this->response->setJSON([
-        'ok' => true,
-        'mensaje' => 'Proyecto actualizado correctamente.',
-        'proyecto' => $datos
+        'ok'        => true,
+        'mensaje'   => 'Proyecto actualizado correctamente.',
+        'proyecto'  => $proyectoActualizado,
+        'fila_html' => $filaHtml,
     ]);
 }
 }

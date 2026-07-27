@@ -3,30 +3,26 @@ export function obtenerDatosFormulario(formulario) {
 
   return {
     nombre: String(datosFormulario.get("nombre") ?? "").trim(),
-    estado: String(datosFormulario.get("estado") ?? ""),
-    origen: String(datosFormulario.get("origen") ?? ""),
-    descripcion: String(datosFormulario.get("descripcion") ?? "").trim(),
-
+    estado: String(datosFormulario.get("estado") ?? "").trim(),
+    origen: String(datosFormulario.get("origen") ?? "").trim(),
+    descripcion: String(
+      datosFormulario.get("descripcion") ?? "",
+    ).trim(),
     repositorio_url: String(
       datosFormulario.get("repositorio_url") ?? "",
     ).trim(),
-
     ruta_local: String(
       datosFormulario.get("ruta_local") ?? "",
     ).trim(),
-
     url_servidor: String(
       datosFormulario.get("url_servidor") ?? "",
     ).trim(),
-
     id_especificacion: String(
       datosFormulario.get("id_especificacion") ?? "",
-    ),
-
+    ).trim(),
     responsable: String(
       datosFormulario.get("responsable") ?? "",
     ).trim(),
-
     observaciones: String(
       datosFormulario.get("observaciones") ?? "",
     ).trim(),

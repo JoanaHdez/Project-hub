@@ -13,16 +13,15 @@ function cerrarModalNuevoProyecto() {
   const botonCerrar = modal.querySelector("[data-modal-cerrar]");
 
   if (botonCerrar) {
+    botonCerrar.focus();
     botonCerrar.click();
   }
 }
 
 export function inicializarFormularioNuevo() {
-  console.log("Inicializando formulario nuevo");
-
   const formulario = document.getElementById("form-proyecto");
 
-  console.log(formulario);
+  console.log("Formulario nuevo encontrado:", formulario);
 
   if (!formulario) {
     return;
@@ -31,13 +30,36 @@ export function inicializarFormularioNuevo() {
   formulario.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    console.log("Entró al submit");
+    console.log("Entró al submit de nuevo proyecto");
 
     if (!validarFormulario(formulario)) {
+      console.log("El formulario no superó la validación.");
       return;
     }
 
     const proyecto = obtenerDatosFormulario(formulario);
+
+    console.log("Proyecto obtenido del formulario:", proyecto);
+
+    if (!proyecto || typeof proyecto !== "object") {
+      mostrarNotificacion({
+        tipo: "error",
+        titulo: "No se pudo registrar",
+        mensaje: "No fue posible obtener los datos del formulario.",
+      });
+
+      console.error(
+        "obtenerDatosFormulario() no devolvió un objeto:",
+        proyecto,
+      );
+
+      return;
+    }
+
+    const cuerpoPeticion = JSON.stringify(proyecto);
+
+    console.log("JSON que se enviará:", cuerpoPeticion);
+
     try {
       const respuesta = await fetch("/proyectos", {
         method: "POST",
@@ -45,10 +67,23 @@ export function inicializarFormularioNuevo() {
           "Content-Type": "application/json",
           "X-Requested-With": "XMLHttpRequest",
         },
-        body: JSON.stringify(proyecto),
+        body: cuerpoPeticion,
       });
 
-      const resultado = await respuesta.json();
+      const contenido = await respuesta.text();
+
+      console.log("Código HTTP:", respuesta.status);
+      console.log("Respuesta completa del servidor:", contenido);
+
+      let resultado;
+
+      try {
+        resultado = JSON.parse(contenido);
+      } catch (error) {
+        throw new Error(
+          `El servidor respondió con código ${respuesta.status}, pero no devolvió JSON.`,
+        );
+      }
 
       if (!respuesta.ok || !resultado.ok) {
         throw new Error(
@@ -72,7 +107,7 @@ export function inicializarFormularioNuevo() {
       mostrarNotificacion({
         tipo: "error",
         titulo: "No se pudo registrar",
-        mensaje: error.message,
+        mensaje: error.message || String(error),
       });
     }
   });

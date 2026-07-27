@@ -12,9 +12,14 @@ $columnas = [
 ];
 
 $filas = [];
+$atributosFilas = [];
 
 foreach ($proyectos as $proyecto) {
     $idProyecto = (int) ($proyecto['id_proyecto'] ?? 0);
+
+    $atributosFilas[] = [
+        'data-proyecto-id' => $idProyecto,
+    ];
 
     $estado = view('components/ui/estado', [
         'texto' => $proyecto['estado'] ?? 'Sin estado',
@@ -38,11 +43,13 @@ foreach ($proyectos as $proyecto) {
     ]);
 
     $acciones .= view('components/ui/boton_accion', [
-        'icono'   => '✏️',
-        'mensaje' => 'Editar proyecto',
-        'url'     => '#',
-        'tipo'    => 'editar',
-        'modalId' => 'modal-editar-proyecto',
+        'icono'      => '✏️',
+        'mensaje'    => 'Editar proyecto',
+        'url'        => '#',
+        'tipo'       => 'editar',
+        'accion'     => 'editar',
+        'modalId'    => 'modal-editar-proyecto',
+        'proyectoId' => $proyecto['id_proyecto'],
     ], [
         'saveData' => false,
     ]);
@@ -121,6 +128,7 @@ $totalProyectos = count($proyectos);
         'idTabla'          => 'tabla-proyectos',
         'columnas'         => $columnas,
         'filas'            => $filas,
+        'aributosFilas'    => $atributosFilas,
         'mensajeVacio'     => 'Aún no hay proyectos registrados',
         'descripcionVacia' => 'Los proyectos aparecerán cuando exista información.',
         'iconoVacio'       => '📁',

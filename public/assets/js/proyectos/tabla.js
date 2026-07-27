@@ -23,3 +23,35 @@ export function agregarProyectoATabla(filaHtml) {
 
   tbody.insertAdjacentHTML("afterbegin", filaHtml);
 }
+
+export function actualizarProyectoEnTabla(idProyecto, filaHtml) {
+  console.log("ID recibido:", idProyecto);
+  console.log("HTML recibido:", filaHtml);
+
+  const filaActual = document.querySelector(
+    `tr[data-proyecto-id="${idProyecto}"]`,
+  );
+
+  console.log("Fila encontrada:", filaActual);
+
+  if (!filaActual) {
+    return false;
+  }
+
+  const plantilla = document.createElement("template");
+  plantilla.innerHTML = filaHtml.trim();
+
+  const nuevaFila = plantilla.content.querySelector("tr");
+
+  console.log("Nueva fila:", nuevaFila);
+
+  if (!nuevaFila) {
+    return false;
+  }
+
+  filaActual.replaceWith(nuevaFila);
+
+  console.log("Fila reemplazada");
+
+  return true;
+}

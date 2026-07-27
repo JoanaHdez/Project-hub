@@ -9,4 +9,4 @@ export function validarFormulario(formulario) {
   }
 
   return true;
-}
+} 

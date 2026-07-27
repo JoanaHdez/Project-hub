@@ -66,7 +66,7 @@ if (!empty($proyecto['repositorio_url'])) {
 $acciones .= '</div>';
 ?>
 
-<tr data-id-proyecto="<?= esc($proyecto['id_proyecto'] ?? '', 'attr') ?>">
+<tr data-proyecto-id="<?= esc($proyecto['id_proyecto'] ?? '', 'attr') ?>">
     <td><?= esc($proyecto['nombre'] ?? 'Proyecto sin nombre') ?></td>
     <td><?= $estado ?></td>
     <td><?= esc($proyecto['origen'] ?? 'Sin especificar') ?></td>

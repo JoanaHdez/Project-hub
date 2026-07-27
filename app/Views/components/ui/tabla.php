@@ -2,6 +2,7 @@
 
 $columnas = $columnas ?? [];
 $filas = $filas ?? [];
+$atributosFilas = $atributosFilas ?? [];
 $mensajeVacio = $mensajeVacio ?? 'No hay registros disponibles.';
 $descripcionVacia = $descripcionVacia ?? '';
 $iconoVacio = $iconoVacio ?? '📂';
@@ -49,17 +50,26 @@ $totalColumnas = count($columnas);
 
                 <?php else: ?>
 
-                    <?php foreach ($filas as $fila): ?>
-                        <tr>
+                    <?php foreach ($filas as $indice => $fila): ?>
 
-                            <?php foreach ($fila as $celda): ?>
-                                <td>
-                                    <?= $celda ?>
-                                </td>
-                            <?php endforeach; ?>
+    <?php
+    $atributosFila = $atributosFilas[$indice] ?? [];
+    ?>
 
-                        </tr>
-                    <?php endforeach; ?>
+    <tr
+        <?php foreach ($atributosFila as $nombre => $valor): ?>
+            <?= esc($nombre, 'attr') ?>="<?= esc((string) $valor, 'attr') ?>"
+        <?php endforeach; ?>
+    >
+
+        <?php foreach ($fila as $celda): ?>
+            <td>
+                <?= $celda ?>
+            </td>
+        <?php endforeach; ?>
+
+    </tr>
+<?php endforeach; ?>
 
                 <?php endif; ?>
 
