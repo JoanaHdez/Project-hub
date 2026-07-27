@@ -20,11 +20,13 @@ $acciones .= view('components/ui/boton_accion', [
 ]);
 
 $acciones .= view('components/ui/boton_accion', [
-    'icono'   => '✏️',
-    'mensaje' => 'Editar proyecto',
-    'url'     => '#',
-    'tipo'    => 'editar',
-    'modalId' => 'modal-editar-proyecto',
+    'icono'      => '✏️',
+    'mensaje'    => 'Editar proyecto',
+    'url'        => '#',
+    'tipo'       => 'editar',
+    'accion'     => 'editar',
+    'modalId'    => 'modal-editar-proyecto',
+    'proyectoId' => $proyecto['id_proyecto'],
 ], [
     'saveData' => false,
 ]);

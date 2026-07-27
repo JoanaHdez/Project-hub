@@ -152,4 +152,26 @@ class Proyectos_Controller extends BaseController
             default         => 'inactivo',
         };
     }
+
+    public function actualizar(int $id)
+{
+    $datos = $this->request->getJSON(true);
+
+    if (!$datos) {
+        return $this->response
+            ->setStatusCode(400)
+            ->setJSON([
+                'ok' => false,
+                'mensaje' => 'Datos inválidos.'
+            ]);
+    }
+
+    // Por ahora simulamos la actualización
+
+    return $this->response->setJSON([
+        'ok' => true,
+        'mensaje' => 'Proyecto actualizado correctamente.',
+        'proyecto' => $datos
+    ]);
+}
 }

@@ -17,3 +17,5 @@ $routes->get(
     'proyectos/(:num)',
     '\App\Modules\Proyectos\Controllers\Proyectos_Controller::obtener/$1'
 );
+
+$routes->put('proyectos/(:num)', 'Proyectos_Controller::actualizar/$1');
