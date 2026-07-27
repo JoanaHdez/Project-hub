@@ -27,8 +27,36 @@ export function inicializarFormularioNuevo() {
     return;
   }
 
+  document.addEventListener("click", (event) => {
+    const botonNuevo = event.target.closest(
+      '[data-modal-abrir="modal-nuevo-proyecto"]',
+    );
+
+    if (!botonNuevo) {
+      return;
+    }
+
+    formulario.reset();
+    formulario.removeAttribute("data-proyecto-id");
+
+    formulario
+      .querySelectorAll("input, textarea, select")
+      .forEach((campo) => {
+        if (
+          campo instanceof HTMLInputElement &&
+          ["checkbox", "radio"].includes(campo.type)
+        ) {
+          campo.checked = false;
+          return;
+        }
+
+        campo.value = "";
+      });
+  });
+
   formulario.addEventListener("submit", async (event) => {
     event.preventDefault();
+    event.stopPropagation();
 
     console.log("Entró al submit de nuevo proyecto");
 
@@ -39,7 +67,7 @@ export function inicializarFormularioNuevo() {
 
     const proyecto = obtenerDatosFormulario(formulario);
 
-    console.log("Proyecto obtenido del formulario:", proyecto);
+    console.log("Proyecto obtenido:", proyecto);
 
     if (!proyecto || typeof proyecto !== "object") {
       mostrarNotificacion({
@@ -58,7 +86,8 @@ export function inicializarFormularioNuevo() {
 
     const cuerpoPeticion = JSON.stringify(proyecto);
 
-    console.log("JSON que se enviará:", cuerpoPeticion);
+    console.log("JSON enviado:", cuerpoPeticion);
+    console.log("Antes del fetch");
 
     try {
       const respuesta = await fetch("/proyectos", {
@@ -72,8 +101,8 @@ export function inicializarFormularioNuevo() {
 
       const contenido = await respuesta.text();
 
-      console.log("Código HTTP:", respuesta.status);
-      console.log("Respuesta completa del servidor:", contenido);
+      console.log("Status:", respuesta.status);
+      console.log("Respuesta:", contenido);
 
       let resultado;
 
@@ -101,6 +130,7 @@ export function inicializarFormularioNuevo() {
 
       cerrarModalNuevoProyecto();
       formulario.reset();
+      formulario.removeAttribute("data-proyecto-id");
     } catch (error) {
       console.error("Error al registrar el proyecto:", error);
 

@@ -1,11 +1,9 @@
 import { inicializarFormularioProyecto } from "./formulario.js";
 import { inicializarTablaProyectos } from "./tabla.js";
 
-export function inicializarProyectos() {
+function inicializarModuloProyectos() {
   inicializarFormularioProyecto();
   inicializarTablaProyectos();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  inicializarProyectos();
-});
+document.addEventListener("DOMContentLoaded", inicializarModuloProyectos);
