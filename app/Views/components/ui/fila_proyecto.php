@@ -14,7 +14,9 @@ $acciones .= view('components/ui/boton_accion', [
     'mensaje' => 'Ver detalle del proyecto',
     'url'     => '#',
     'tipo'    => 'detalle',
+    'accion'  => 'detalle',
     'modalId' => 'modal-detalle-proyecto',
+    'proyectoId' => $proyecto['id_proyecto'],
 ], [
     'saveData' => false,
 ]);

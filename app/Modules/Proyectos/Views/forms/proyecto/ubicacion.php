@@ -63,6 +63,7 @@ $esDetalle = ($modo ?? 'crear') === 'detalle';
                 value="<?= esc($proyecto['url_servidor'] ?? '', 'attr') ?>"
                 placeholder="https://misistema.com"
                 <?= $esDetalle ? 'readonly' : '' ?>
+            >
 
         </div>
 

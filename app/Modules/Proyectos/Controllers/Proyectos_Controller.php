@@ -8,7 +8,7 @@ class Proyectos_Controller extends BaseController
 {
     public function index()
     {
-        $proyectos = $this->obtenerProyectosSimulados();
+        $proyectos = $this->obtenerProyectos();
 
         return view('App\Modules\Proyectos\Views\index', [
             'title'     => 'Proyectos | Project Hub',
@@ -33,8 +33,10 @@ class Proyectos_Controller extends BaseController
         $estado = trim((string) ($datos['estado'] ?? ''));
         $estadoTipo = $this->obtenerTipoEstado($estado);
 
+        $proyectos = $this->obtenerProyectos();
+
         $proyecto = [
-            'id_proyecto'        => time(),
+            'id_proyecto'        => $this->generarIdProyecto($proyectos),
             'nombre'             => trim((string) ($datos['nombre'] ?? '')),
             'estado'             => $estado,
             'estado_tipo'        => $estadoTipo,
@@ -50,6 +52,9 @@ class Proyectos_Controller extends BaseController
             'fecha_creacion'     => date('d/m/Y'),
         ];
 
+        $proyectos[] = $proyecto;
+        $this->guardarProyectos($proyectos);
+
         return $this->response->setJSON([
             'ok'        => true,
             'mensaje'   => 'Proyecto recibido correctamente.',
@@ -62,7 +67,7 @@ class Proyectos_Controller extends BaseController
 
     public function obtener(int $idProyecto)
     {
-        $proyectos = $this->obtenerProyectosSimulados();
+        $proyectos = $this->obtenerProyectos();
 
         $proyectoEncontrado = null;
 
@@ -154,7 +159,7 @@ class Proyectos_Controller extends BaseController
     }
 
     public function actualizar(int $id)
-{
+    {
     $datos = $this->request->getJSON(true);
 
     if (!is_array($datos)) {
@@ -168,9 +173,13 @@ class Proyectos_Controller extends BaseController
 
     $proyectoExistente = null;
 
-    foreach ($this->obtenerProyectosSimulados() as $proyecto) {
+    $proyectos = $this->obtenerProyectos();
+    $indiceProyecto = null;
+
+    foreach ($proyectos as $indice => $proyecto) {
         if ((int) ($proyecto['id_proyecto'] ?? 0) === $id) {
             $proyectoExistente = $proyecto;
+            $indiceProyecto = $indice;
             break;
         }
     }
@@ -201,6 +210,9 @@ class Proyectos_Controller extends BaseController
         'observaciones'     => trim((string) ($datos['observaciones'] ?? '')),
     ]);
 
+    $proyectos[$indiceProyecto] = $proyectoActualizado;
+    $this->guardarProyectos($proyectos);
+
     $filaHtml = view('components/ui/fila_proyecto', [
     'proyecto' => $proyectoActualizado,
 ]);
@@ -211,5 +223,62 @@ class Proyectos_Controller extends BaseController
         'proyecto'  => $proyectoActualizado,
         'fila_html' => $filaHtml,
     ]);
-}
+    }
+
+    private function obtenerProyectos(): array
+    {
+        $rutaArchivo = $this->obtenerRutaArchivoProyectos();
+
+        if (!is_file($rutaArchivo)) {
+            $proyectos = $this->obtenerProyectosSimulados();
+            $this->guardarProyectos($proyectos);
+
+            return $proyectos;
+        }
+
+        $contenido = file_get_contents($rutaArchivo);
+
+        if ($contenido === false || trim($contenido) === '') {
+            return [];
+        }
+
+        $proyectos = json_decode($contenido, true);
+
+        if (!is_array($proyectos)) {
+            return $this->obtenerProyectosSimulados();
+        }
+
+        return $proyectos;
+    }
+
+    private function guardarProyectos(array $proyectos): void
+    {
+        $rutaArchivo = $this->obtenerRutaArchivoProyectos();
+        $directorio = dirname($rutaArchivo);
+
+        if (!is_dir($directorio)) {
+            mkdir($directorio, 0775, true);
+        }
+
+        file_put_contents(
+            $rutaArchivo,
+            json_encode($proyectos, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+            LOCK_EX
+        );
+    }
+
+    private function obtenerRutaArchivoProyectos(): string
+    {
+        return APPPATH . 'Modules/Proyectos/Data/proyectos.json';
+    }
+
+    private function generarIdProyecto(array $proyectos): int
+    {
+        $ids = array_map(
+            static fn (array $proyecto): int => (int) ($proyecto['id_proyecto'] ?? 0),
+            $proyectos
+        );
+
+        return empty($ids) ? 1 : max($ids) + 1;
+    }
 }
