@@ -94,5 +94,21 @@
         "observaciones": "",
         "total_sistemas": 0,
         "fecha_creacion": "11\/08\/2026"
+    },
+    {
+        "id_proyecto": 7,
+        "nombre": "prueba 2",
+        "estado": "Producción",
+        "estado_tipo": "produccion",
+        "origen": "Trabajo",
+        "descripcion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "id_especificacion": "",
+        "responsable": "joana",
+        "observaciones": "",
+        "total_sistemas": 0,
+        "fecha_creacion": "11\/08\/2026"
     }
 ]
