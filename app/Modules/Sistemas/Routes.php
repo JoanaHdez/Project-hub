@@ -7,3 +7,8 @@ use App\Modules\Sistemas\Controllers\Sistemas_Controller;
 /** @var RouteCollection $routes */
 
 $routes->get('sistemas', [Sistemas_Controller::class, 'index']);
+
+$routes->get(
+    'proyectos/(:num)/sistemas',
+    [Sistemas_Controller::class, 'obtenerPorProyecto']
+);

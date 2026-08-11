@@ -1,0 +1,44 @@
+[
+  {
+    "id_sistema": 1,
+    "id_proyecto": 1,
+    "nombre": "Extorsión",
+    "tipo": "Sistema",
+    "estado": "Producción",
+    "estado_tipo": "produccion",
+    "modo_visualizacion": "integrado",
+    "url": "https://cepyc.seguridadneza.gob.mx/ExtorsionF/public/",
+    "repositorio_url": "https://github.com/JoanaHdez/Extorsi-n.git",
+    "ruta_local": "Z:\\ExtorsionF",
+    "url_servidor": "https://cepyc.seguridadneza.gob.mx/ExtorsionF/public/",
+    "activo": true
+  },
+  {
+    "id_sistema": 2,
+    "id_proyecto": 2,
+    "nombre": "8.º Congreso",
+    "tipo": "Sistema",
+    "estado": "Producción",
+    "estado_tipo": "produccion",
+    "modo_visualizacion": "integrado",
+    "url": "https://congreso.seguridadneza.gob.mx/Eventos/public/eventos/8vo-congreso",
+    "repositorio_url": "",
+    "ruta_local": "Z:\\Eventos",
+    "url_servidor": "https://congreso.seguridadneza.gob.mx/Eventos/public/",
+    "activo": true
+  },
+  {
+    "id_sistema": 3,
+    "id_proyecto": null,
+    "nombre": "Project Hub",
+    "tipo": "Sistema",
+    "estado": "Desarrollo",
+    "estado_tipo": "desarrollo",
+    "modo_visualizacion": "externo",
+    "url": "",
+    "repositorio_url": "https://github.com/JoanaHdez/Project-hub.git",
+    "ruta_local": "C:\\laragon\\www\\ProjectHub",
+    "url_servidor": "",
+    "activo": true
+  }
+]
