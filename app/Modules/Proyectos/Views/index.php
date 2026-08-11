@@ -24,5 +24,7 @@
 <?= view('App\Modules\Sistemas\Views\modals\nuevo_sistema') ?>
 <?= view('App\Modules\Sistemas\Views\modals\detalle_sistema') ?>
 <?= view('App\Modules\Sistemas\Views\modals\editar_sistema') ?>
+<?= view('App\Modules\Sistemas\Views\modals\eliminar_sistema') ?>
+<?= view('App\Modules\Sistemas\Views\modals/confirmar_accion_sistema') ?>
 
 <?= $this->endSection() ?>

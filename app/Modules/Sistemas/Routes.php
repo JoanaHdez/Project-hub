@@ -15,3 +15,9 @@ $routes->post('sistemas', [Sistemas_Controller::class, 'guardar']);
 $routes->get('sistemas/(:num)', [Sistemas_Controller::class, 'obtener']);
 
 $routes->put('sistemas/(:num)', [Sistemas_Controller::class, 'actualizar']);
+
+$routes->patch('sistemas/(:num)/desactivar', [Sistemas_Controller::class, 'desactivar']);
+
+$routes->patch('sistemas/(:num)/activar', [Sistemas_Controller::class, 'activar']);
+
+$routes->delete('sistemas/(:num)', [Sistemas_Controller::class, 'eliminar']);

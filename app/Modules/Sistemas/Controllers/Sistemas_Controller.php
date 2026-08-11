@@ -210,6 +210,125 @@ class Sistemas_Controller extends BaseController
         ]);
     }
 
+    public function desactivar(int $idSistema)
+    {
+        $sistemas = $this->storage->obtenerTodos();
+
+        foreach ($sistemas as $indice => $sistema) {
+            if (
+                (int) ($sistema['id_sistema'] ?? 0)
+                !== $idSistema
+            ) {
+                continue;
+            }
+
+            $sistemas[$indice]['activo'] = false;
+
+            $this->storage->guardarTodos($sistemas);
+
+            return $this->response->setJSON([
+                'ok'       => true,
+                'mensaje'  => 'Sistema desactivado correctamente.',
+                'sistema'  => $sistemas[$indice],
+            ]);
+        }
+
+        return $this->response
+            ->setStatusCode(404)
+            ->setJSON([
+                'ok'      => false,
+                'mensaje' => 'No se encontró el sistema solicitado.',
+            ]);
+    }
+
+    public function activar(int $idSistema)
+    {
+        $sistemas = $this->storage->obtenerTodos();
+
+        foreach ($sistemas as $indice => $sistema) {
+            if (
+                (int) ($sistema['id_sistema'] ?? 0)
+                !== $idSistema
+            ) {
+                continue;
+            }
+
+            $sistemas[$indice]['activo'] = true;
+
+            $this->storage->guardarTodos($sistemas);
+
+            return $this->response->setJSON([
+                'ok'      => true,
+                'mensaje' => 'Sistema activado correctamente.',
+                'sistema' => $sistemas[$indice],
+            ]);
+        }
+
+        return $this->response
+            ->setStatusCode(404)
+            ->setJSON([
+                'ok'      => false,
+                'mensaje' => 'No se encontró el sistema solicitado.',
+            ]);
+    }
+
+    public function eliminar(int $idSistema)
+    {
+        $sistemas = $this->storage->obtenerTodos();
+
+        $sistemaEncontrado = null;
+
+        foreach ($sistemas as $sistema) {
+            if (
+                (int) ($sistema['id_sistema'] ?? 0)
+                === $idSistema
+            ) {
+                $sistemaEncontrado = $sistema;
+                break;
+            }
+        }
+
+        if ($sistemaEncontrado === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'No se encontró el sistema solicitado.',
+                ]);
+        }
+
+        $idProyecto = (int) (
+            $sistemaEncontrado['id_proyecto'] ?? 0
+        );
+
+        $sistemas = array_values(
+            array_filter(
+                $sistemas,
+                static fn(array $sistema): bool =>
+                (int) ($sistema['id_sistema'] ?? 0)
+                    !== $idSistema
+            )
+        );
+
+        $this->storage->guardarTodos($sistemas);
+
+        $totalSistemasProyecto = $idProyecto > 0
+            ? count(
+                $this->storage->obtenerPorProyecto(
+                    $idProyecto
+                )
+            )
+            : 0;
+
+        return $this->response->setJSON([
+            'ok'             => true,
+            'mensaje'        => 'Sistema eliminado correctamente.',
+            'id_sistema'     => $idSistema,
+            'id_proyecto'    => $idProyecto,
+            'total_sistemas' => $totalSistemasProyecto,
+        ]);
+    }
+
     private function obtenerTipoEstado(string $estado): string
     {
         return match ($estado) {
