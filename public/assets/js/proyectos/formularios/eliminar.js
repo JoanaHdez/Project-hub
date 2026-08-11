@@ -1,5 +1,11 @@
 import { mostrarNotificacion } from "../notificaciones.js";
 
+/*
+ * ==================================================
+ * PETICIONES AL BACKEND
+ * ==================================================
+ */
+
 async function cargarProyecto(idProyecto) {
   const respuesta = await fetch(`/proyectos/${idProyecto}`, {
     method: "GET",
@@ -35,7 +41,8 @@ async function desactivarProyecto(idProyecto) {
 
   if (!respuesta.ok || !resultado.ok) {
     throw new Error(
-      resultado.mensaje || "No fue posible desactivar el proyecto.",
+      resultado.mensaje ||
+        "No fue posible desactivar el proyecto.",
     );
   }
 
@@ -58,7 +65,8 @@ async function activarProyecto(idProyecto) {
 
   if (!respuesta.ok || !resultado.ok) {
     throw new Error(
-      resultado.mensaje || "No fue posible activar el proyecto.",
+      resultado.mensaje ||
+        "No fue posible activar el proyecto.",
     );
   }
 
@@ -77,25 +85,51 @@ async function eliminarProyecto(idProyecto) {
 
   if (!respuesta.ok || !resultado.ok) {
     throw new Error(
-      resultado.mensaje || "No fue posible eliminar el proyecto.",
+      resultado.mensaje ||
+        "No fue posible eliminar el proyecto.",
     );
   }
 
   return resultado;
 }
 
-function cerrarModalEliminarProyecto() {
-  const modal = document.getElementById("modal-eliminar-proyecto");
+/*
+ * ==================================================
+ * MODALES
+ * ==================================================
+ */
 
+function mostrarModal(modal) {
   if (!modal) {
     return;
   }
 
-  const botonCerrar = modal.querySelector("[data-modal-cerrar]");
+  modal.classList.add("modal--visible");
+  modal.setAttribute("aria-hidden", "false");
+
+  document.body.style.overflow = "hidden";
+}
+
+function cerrarModal(modal) {
+  if (!modal) {
+    return;
+  }
+
+  const botonCerrar = modal.querySelector(
+    "[data-modal-cerrar]",
+  );
 
   if (botonCerrar) {
     botonCerrar.click();
   }
+}
+
+function cerrarModalEliminarProyecto() {
+  const modal = document.getElementById(
+    "modal-eliminar-proyecto",
+  );
+
+  cerrarModal(modal);
 }
 
 function esperarActualizacionInterfaz() {
@@ -105,6 +139,12 @@ function esperarActualizacionInterfaz() {
     });
   });
 }
+
+/*
+ * ==================================================
+ * TABLA
+ * ==================================================
+ */
 
 function obtenerFilaProyecto(idProyecto) {
   return document.querySelector(
@@ -124,6 +164,130 @@ function eliminarFilaProyecto(idProyecto) {
   return true;
 }
 
+/*
+ * ==================================================
+ * MODAL DE CONFIRMACIÓN
+ * ==================================================
+ */
+
+function limpiarEstiloBotonConfirmar(botonConfirmar) {
+  if (!botonConfirmar) {
+    return;
+  }
+
+  botonConfirmar.classList.remove(
+    "boton--primario",
+    "boton--advertencia",
+    "boton--peligro",
+  );
+}
+
+function abrirModalConfirmacion({
+  accion,
+  idProyecto,
+  nombreProyecto,
+}) {
+  const modalConfirmacion = document.getElementById(
+    "modal-confirmar-accion-proyecto",
+  );
+
+  if (!modalConfirmacion) {
+    return;
+  }
+
+  const titulo = modalConfirmacion.querySelector(
+    "[data-confirmacion-titulo]",
+  );
+
+  const mensaje = modalConfirmacion.querySelector(
+    "[data-confirmacion-mensaje]",
+  );
+
+  const botonConfirmar = modalConfirmacion.querySelector(
+    "[data-confirmar-accion-proyecto]",
+  );
+
+  modalConfirmacion.dataset.accion = accion;
+  modalConfirmacion.dataset.proyectoId = idProyecto;
+  modalConfirmacion.dataset.proyectoNombre = nombreProyecto;
+
+  limpiarEstiloBotonConfirmar(botonConfirmar);
+
+  /*
+   * DESACTIVAR
+   */
+  if (accion === "desactivar") {
+    if (titulo) {
+      titulo.textContent = "Confirmar desactivación";
+    }
+
+    if (mensaje) {
+      mensaje.textContent =
+        `¿Confirmas que deseas desactivar el proyecto "${nombreProyecto}"? ` +
+        "El proyecto conservará su información y podrá reactivarse posteriormente.";
+    }
+
+    if (botonConfirmar) {
+      botonConfirmar.textContent = "Desactivar";
+      botonConfirmar.classList.add(
+        "boton--advertencia",
+      );
+    }
+  }
+
+  /*
+   * ACTIVAR
+   */
+  if (accion === "activar") {
+    if (titulo) {
+      titulo.textContent = "Confirmar activación";
+    }
+
+    if (mensaje) {
+      mensaje.textContent =
+        `¿Confirmas que deseas activar nuevamente el proyecto "${nombreProyecto}"? ` +
+        "El proyecto volverá a estar disponible como activo.";
+    }
+
+    if (botonConfirmar) {
+      botonConfirmar.textContent = "Activar";
+      botonConfirmar.classList.add(
+        "boton--primario",
+      );
+    }
+  }
+
+  /*
+   * ELIMINAR
+   */
+  if (accion === "eliminar") {
+    if (titulo) {
+      titulo.textContent = "Confirmar eliminación";
+    }
+
+    if (mensaje) {
+      mensaje.textContent =
+        `¿Confirmas que deseas eliminar definitivamente el proyecto "${nombreProyecto}"? ` +
+        "Esta acción no se podrá deshacer.";
+    }
+
+    if (botonConfirmar) {
+      botonConfirmar.textContent = "Eliminar";
+      botonConfirmar.classList.add(
+        "boton--peligro",
+      );
+    }
+  }
+
+  mostrarModal(modalConfirmacion);
+}
+
+/*
+ * ==================================================
+ * INICIALIZACIÓN
+ * ==================================================
+ */
+
 export function inicializarFormularioEliminar() {
   const modal = document.getElementById(
     "modal-eliminar-proyecto",
@@ -134,10 +298,11 @@ export function inicializarFormularioEliminar() {
   }
 
   /*
-   * ------------------------------------------------
-   * CARGAR PROYECTO AL ABRIR EL MODAL
-   * ------------------------------------------------
+   * ==================================================
+   * CARGAR EL PROYECTO AL ABRIR EL PRIMER MODAL
+   * ==================================================
    */
+
   document.addEventListener("click", async (event) => {
     const botonAccion = event.target.closest(
       '[data-accion="eliminar-desactivar"][data-proyecto-id]',
@@ -147,22 +312,26 @@ export function inicializarFormularioEliminar() {
       return;
     }
 
-    const idProyecto = botonAccion.dataset.proyectoId;
+    const idProyecto =
+      botonAccion.dataset.proyectoId;
 
     if (!idProyecto) {
       return;
     }
 
     try {
-      const proyecto = await cargarProyecto(idProyecto);
+      const proyecto =
+        await cargarProyecto(idProyecto);
 
       modal.dataset.proyectoId = idProyecto;
       modal.dataset.proyectoNombre =
         proyecto.nombre ?? "";
 
-      const estaActivo = proyecto.activo ?? true;
+      const estaActivo =
+        proyecto.activo ?? true;
 
-      modal.dataset.proyectoActivo = String(estaActivo);
+      modal.dataset.proyectoActivo =
+        String(estaActivo);
 
       const botonEstado = modal.querySelector(
         "[data-boton-estado-proyecto]",
@@ -173,12 +342,14 @@ export function inicializarFormularioEliminar() {
           botonEstado.dataset.proyectoAccion =
             "desactivar";
 
-          botonEstado.textContent = "Desactivar";
+          botonEstado.textContent =
+            "Desactivar";
         } else {
           botonEstado.dataset.proyectoAccion =
             "activar";
 
-          botonEstado.textContent = "Activar";
+          botonEstado.textContent =
+            "Activar";
         }
       }
 
@@ -205,14 +376,17 @@ export function inicializarFormularioEliminar() {
   });
 
   /*
-   * ------------------------------------------------
+   * ==================================================
+   * PRIMER MODAL:
    * ACTIVAR / DESACTIVAR / ELIMINAR
-   * ------------------------------------------------
+   * ==================================================
    */
+
   document.addEventListener("click", async (event) => {
-    const botonAccionProyecto = event.target.closest(
-      "[data-proyecto-accion]",
-    );
+    const botonAccionProyecto =
+      event.target.closest(
+        "[data-proyecto-accion]",
+      );
 
     if (!botonAccionProyecto) {
       return;
@@ -221,7 +395,8 @@ export function inicializarFormularioEliminar() {
     const accion =
       botonAccionProyecto.dataset.proyectoAccion;
 
-    const idProyecto = modal.dataset.proyectoId;
+    const idProyecto =
+      modal.dataset.proyectoId;
 
     const nombreProyecto =
       modal.dataset.proyectoNombre ||
@@ -238,25 +413,75 @@ export function inicializarFormularioEliminar() {
       return;
     }
 
-    /*
-     * --------------------------
-     * DESACTIVAR
-     * --------------------------
-     */
-    if (accion === "desactivar") {
-      cerrarModalEliminarProyecto();
+    if (
+      accion !== "activar" &&
+      accion !== "desactivar" &&
+      accion !== "eliminar"
+    ) {
+      return;
+    }
 
-      await esperarActualizacionInterfaz();
+    cerrarModalEliminarProyecto();
 
-      const confirmado = window.confirm(
-        `¿Confirmas que deseas desactivar el proyecto "${nombreProyecto}"?\n\nEl proyecto conservará su información y podrá reactivarse posteriormente.`,
+    await esperarActualizacionInterfaz();
+
+    abrirModalConfirmacion({
+      accion,
+      idProyecto,
+      nombreProyecto,
+    });
+  });
+
+  /*
+   * ==================================================
+   * SEGUNDO MODAL:
+   * CONFIRMAR LA ACCIÓN
+   * ==================================================
+   */
+
+  document.addEventListener("click", async (event) => {
+    const botonConfirmar =
+      event.target.closest(
+        "[data-confirmar-accion-proyecto]",
       );
 
-      if (!confirmado) {
-        return;
-      }
+    if (!botonConfirmar) {
+      return;
+    }
 
-      try {
+    const modalConfirmacion =
+      document.getElementById(
+        "modal-confirmar-accion-proyecto",
+      );
+
+    if (!modalConfirmacion) {
+      return;
+    }
+
+    const accion =
+      modalConfirmacion.dataset.accion;
+
+    const idProyecto =
+      modalConfirmacion.dataset.proyectoId;
+
+    if (!accion || !idProyecto) {
+      mostrarNotificacion({
+        tipo: "error",
+        titulo: "No se pudo continuar",
+        mensaje:
+          "Faltan datos para realizar la acción.",
+      });
+
+      return;
+    }
+
+    botonConfirmar.disabled = true;
+
+    try {
+      /*
+       * DESACTIVAR
+       */
+      if (accion === "desactivar") {
         const resultado =
           await desactivarProyecto(idProyecto);
 
@@ -274,41 +499,12 @@ export function inicializarFormularioEliminar() {
           titulo: "Proyecto desactivado",
           mensaje: resultado.mensaje,
         });
-      } catch (error) {
-        console.error(
-          "Error al desactivar el proyecto:",
-          error,
-        );
-
-        mostrarNotificacion({
-          tipo: "error",
-          titulo: "No se pudo desactivar",
-          mensaje: error.message,
-        });
       }
 
-      return;
-    }
-
-    /*
-     * --------------------------
-     * ACTIVAR
-     * --------------------------
-     */
-    if (accion === "activar") {
-      cerrarModalEliminarProyecto();
-
-      await esperarActualizacionInterfaz();
-
-      const confirmado = window.confirm(
-        `¿Confirmas que deseas activar nuevamente el proyecto "${nombreProyecto}"?\n\nEl proyecto volverá a estar disponible como activo.`,
-      );
-
-      if (!confirmado) {
-        return;
-      }
-
-      try {
+      /*
+       * ACTIVAR
+       */
+      if (accion === "activar") {
         const resultado =
           await activarProyecto(idProyecto);
 
@@ -326,41 +522,12 @@ export function inicializarFormularioEliminar() {
           titulo: "Proyecto activado",
           mensaje: resultado.mensaje,
         });
-      } catch (error) {
-        console.error(
-          "Error al activar el proyecto:",
-          error,
-        );
-
-        mostrarNotificacion({
-          tipo: "error",
-          titulo: "No se pudo activar",
-          mensaje: error.message,
-        });
       }
 
-      return;
-    }
-
-    /*
-     * --------------------------
-     * ELIMINAR
-     * --------------------------
-     */
-    if (accion === "eliminar") {
-      cerrarModalEliminarProyecto();
-
-      await esperarActualizacionInterfaz();
-
-      const confirmado = window.confirm(
-        `¿Confirmas que deseas eliminar definitivamente el proyecto "${nombreProyecto}"?\n\nEsta acción no se podrá deshacer.`,
-      );
-
-      if (!confirmado) {
-        return;
-      }
-
-      try {
+      /*
+       * ELIMINAR
+       */
+      if (accion === "eliminar") {
         const resultado =
           await eliminarProyecto(idProyecto);
 
@@ -369,7 +536,8 @@ export function inicializarFormularioEliminar() {
 
         if (!filaEliminada) {
           console.warn(
-            `El proyecto ${idProyecto} fue eliminado, pero no se encontró su fila en la tabla.`,
+            `El proyecto ${idProyecto} fue eliminado, ` +
+            "pero no se encontró su fila en la tabla.",
           );
         }
 
@@ -378,20 +546,35 @@ export function inicializarFormularioEliminar() {
           titulo: "Proyecto eliminado",
           mensaje: resultado.mensaje,
         });
-      } catch (error) {
-        console.error(
-          "Error al eliminar el proyecto:",
-          error,
-        );
-
-        mostrarNotificacion({
-          tipo: "error",
-          titulo: "No se pudo eliminar",
-          mensaje: error.message,
-        });
       }
 
-      return;
+      cerrarModal(modalConfirmacion);
+
+      modalConfirmacion.removeAttribute(
+        "data-accion",
+      );
+
+      modalConfirmacion.removeAttribute(
+        "data-proyecto-id",
+      );
+
+      modalConfirmacion.removeAttribute(
+        "data-proyecto-nombre",
+      );
+    } catch (error) {
+      console.error(
+        "Error al ejecutar la acción del proyecto:",
+        error,
+      );
+
+      mostrarNotificacion({
+        tipo: "error",
+        titulo:
+          "No se pudo realizar la acción",
+        mensaje: error.message,
+      });
+    } finally {
+      botonConfirmar.disabled = false;
     }
   });
 }

@@ -79,7 +79,7 @@
         "observaciones": "",
         "total_sistemas": 0,
         "fecha_creacion": "27\/07\/2026",
-        "activo": false
+        "activo": true
     },
     {
         "id_proyecto": 6,

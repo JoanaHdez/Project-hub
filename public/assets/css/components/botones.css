@@ -160,3 +160,14 @@
     opacity: 0.55;
     pointer-events: none;
 }
+
+.boton--advertencia {
+    background-color: #f59e0b;
+    color: #ffffff;
+    border: 1px solid #f59e0b;
+}
+
+.boton--advertencia:hover {
+    background-color: #d97706;
+    border-color: #d97706;
+}
