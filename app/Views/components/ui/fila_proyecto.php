@@ -2,6 +2,8 @@
 
 $proyecto = $proyecto ?? [];
 
+$estaActivo = (bool) ($proyecto['activo'] ?? true);
+
 $estado = view('components/ui/estado', [
     'texto' => $proyecto['estado'] ?? 'Sin estado',
     'tipo'  => $proyecto['estado_tipo'] ?? 'inactivo',
@@ -10,12 +12,12 @@ $estado = view('components/ui/estado', [
 $acciones = '<div class="acciones-proyecto">';
 
 $acciones .= view('components/ui/boton_accion', [
-    'icono'   => '📄',
-    'mensaje' => 'Ver detalle del proyecto',
-    'url'     => '#',
-    'tipo'    => 'detalle',
-    'accion'  => 'detalle',
-    'modalId' => 'modal-detalle-proyecto',
+    'icono'      => '📄',
+    'mensaje'    => 'Ver detalle del proyecto',
+    'url'        => '#',
+    'tipo'       => 'detalle',
+    'accion'     => 'detalle',
+    'modalId'    => 'modal-detalle-proyecto',
     'proyectoId' => $proyecto['id_proyecto'],
 ], [
     'saveData' => false,
@@ -34,11 +36,13 @@ $acciones .= view('components/ui/boton_accion', [
 ]);
 
 $acciones .= view('components/ui/boton_accion', [
-    'icono'   => '🗑️',
-    'mensaje' => 'Eliminar o desactivar proyecto',
-    'url'     => '#',
-    'tipo'    => 'eliminar',
-    'modalId' => 'modal-eliminar-proyecto',
+    'icono'      => '🗑️',
+    'mensaje'    => 'Eliminar o desactivar proyecto',
+    'url'        => '#',
+    'tipo'       => 'eliminar',
+    'accion'     => 'eliminar-desactivar',
+    'modalId'    => 'modal-eliminar-proyecto',
+    'proyectoId' => $proyecto['id_proyecto'],
 ], [
     'saveData' => false,
 ]);
@@ -68,7 +72,10 @@ if (!empty($proyecto['repositorio_url'])) {
 $acciones .= '</div>';
 ?>
 
-<tr data-proyecto-id="<?= esc($proyecto['id_proyecto'] ?? '', 'attr') ?>">
+<tr
+    data-proyecto-id="<?= esc($proyecto['id_proyecto'] ?? '', 'attr') ?>"
+    class="<?= !$estaActivo ? 'proyecto-fila--inactiva' : '' ?>"
+>
     <td><?= esc($proyecto['nombre'] ?? 'Proyecto sin nombre') ?></td>
     <td><?= $estado ?></td>
     <td><?= esc($proyecto['origen'] ?? 'Sin especificar') ?></td>

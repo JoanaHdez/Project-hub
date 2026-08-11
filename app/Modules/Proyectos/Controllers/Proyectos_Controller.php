@@ -181,6 +181,46 @@ class Proyectos_Controller extends BaseController
         ]);
     }
 
+    public function desactivar(int $idProyecto)
+    {
+        $proyecto = $this->storage->desactivar($idProyecto);
+
+        if ($proyecto === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'No se encontró el proyecto solicitado.',
+                ]);
+        }
+
+        return $this->response->setJSON([
+            'ok'       => true,
+            'mensaje'  => 'Proyecto desactivado correctamente.',
+            'proyecto' => $proyecto,
+        ]);
+    }
+
+    public function activar(int $idProyecto)
+    {
+        $proyecto = $this->storage->activar($idProyecto);
+
+        if ($proyecto === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'No se encontró el proyecto solicitado.',
+                ]);
+        }
+
+        return $this->response->setJSON([
+            'ok'       => true,
+            'mensaje'  => 'Proyecto activado correctamente.',
+            'proyecto' => $proyecto,
+        ]);
+    }
+
     /**
      * Convierte el estado visible en la clase utilizada por la interfaz.
      */
@@ -193,5 +233,24 @@ class Proyectos_Controller extends BaseController
             'Mantenimiento' => 'mantenimiento',
             default         => 'inactivo',
         };
+    }
+
+    public function eliminar(int $idProyecto)
+    {
+        $eliminado = $this->storage->eliminar($idProyecto);
+
+        if (!$eliminado) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'No se encontró el proyecto solicitado.',
+                ]);
+        }
+
+        return $this->response->setJSON([
+            'ok'      => true,
+            'mensaje' => 'Proyecto eliminado correctamente.',
+        ]);
     }
 }

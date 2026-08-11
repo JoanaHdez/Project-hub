@@ -55,12 +55,71 @@ class Proyecto_StorageService
     {
         $ids = array_map(
             static fn(array $proyecto): int =>
-                (int) ($proyecto['id_proyecto'] ?? 0),
+            (int) ($proyecto['id_proyecto'] ?? 0),
             $proyectos
         );
 
         return empty($ids)
             ? 1
             : max($ids) + 1;
+    }
+
+    public function desactivar(int $idProyecto): ?array
+    {
+        $proyectos = $this->obtenerTodos();
+
+        foreach ($proyectos as $indice => $proyecto) {
+            if ((int) ($proyecto['id_proyecto'] ?? 0) !== $idProyecto) {
+                continue;
+            }
+
+            $proyectos[$indice]['activo'] = false;
+
+            $this->guardarTodos($proyectos);
+
+            return $proyectos[$indice];
+        }
+
+        return null;
+    }
+
+    public function activar(int $idProyecto): ?array
+{
+    $proyectos = $this->obtenerTodos();
+
+    foreach ($proyectos as $indice => $proyecto) {
+        if ((int) ($proyecto['id_proyecto'] ?? 0) !== $idProyecto) {
+            continue;
+        }
+
+        $proyectos[$indice]['activo'] = true;
+
+        $this->guardarTodos($proyectos);
+
+        return $proyectos[$indice];
+    }
+
+    return null;
+}
+
+    public function eliminar(int $idProyecto): bool
+    {
+        $proyectos = $this->obtenerTodos();
+
+        $proyectosFiltrados = array_filter(
+            $proyectos,
+            static fn(array $proyecto): bool =>
+            (int) ($proyecto['id_proyecto'] ?? 0) !== $idProyecto
+        );
+
+        if (count($proyectosFiltrados) === count($proyectos)) {
+            return false;
+        }
+
+        $proyectosFiltrados = array_values($proyectosFiltrados);
+
+        $this->guardarTodos($proyectosFiltrados);
+
+        return true;
     }
 }

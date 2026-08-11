@@ -90,3 +90,17 @@
 .campo-obligatorio {
     color: #c62828;
 }
+
+.proyecto-fila--inactiva {
+    background-color: #f2f4f7;
+    color: #858366;
+}
+
+.proyecto-fila--inactiva td {
+    background-color: #f2f4f7;
+}
+
+.proyecto-fila--inactiva .estado,
+.proyecto-fila--inactiva .boton-accion {
+    opacity: 0.65;
+}
