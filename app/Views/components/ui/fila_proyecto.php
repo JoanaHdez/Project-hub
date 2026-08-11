@@ -81,7 +81,7 @@ $acciones .= '</div>';
     <td><?= esc($proyecto['nombre'] ?? 'Proyecto sin nombre') ?></td>
     <td><?= $estado ?></td>
     <td><?= esc($proyecto['origen'] ?? 'Sin especificar') ?></td>
-    <td><?= esc((string) ($proyecto['total_sistemas'] ?? 0)) ?></td>
+    <td data-total-sistemas><?= esc((string) ($proyecto['total_sistemas'] ?? 0)) ?></td>
     <td><?= esc($proyecto['fecha_creacion'] ?? 'Sin fecha') ?></td>
     <td><?= $acciones ?></td>
 </tr>

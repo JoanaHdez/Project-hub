@@ -12,3 +12,8 @@ $routes->get(
     'proyectos/(:num)/sistemas',
     [Sistemas_Controller::class, 'obtenerPorProyecto']
 );
+
+$routes->post(
+    'sistemas',
+    [Sistemas_Controller::class, 'guardar']
+);

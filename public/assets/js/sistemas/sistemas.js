@@ -1,3 +1,5 @@
+import { inicializarFormularioSistema } from "./formulario.js";
+
 /*==================================================
 =                     SISTEMAS                      =
 ==================================================*/
@@ -292,3 +294,4 @@ function mostrarEstadoVisor({
     }
   }
 }
+inicializarFormularioSistema();

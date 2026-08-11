@@ -1,5 +1,11 @@
 import { mostrarNotificacion } from "./notificaciones.js";
 
+/*
+ * ==================================================
+ * PETICIONES
+ * ==================================================
+ */
+
 async function cargarProyecto(idProyecto) {
   const respuesta = await fetch(`/proyectos/${idProyecto}`, {
     method: "GET",
@@ -41,6 +47,12 @@ async function cargarSistemasProyecto(idProyecto) {
 
   return resultado;
 }
+
+/*
+ * ==================================================
+ * TABLA DE SISTEMAS
+ * ==================================================
+ */
 
 function construirTablaSistemas(resultadoSistemas) {
   if (resultadoSistemas.total === 0) {
@@ -124,6 +136,118 @@ function construirTablaSistemas(resultadoSistemas) {
   `;
 }
 
+/*
+ * ==================================================
+ * MODALES
+ * ==================================================
+ */
+
+function cerrarModal(modal) {
+  if (!modal) {
+    return;
+  }
+
+  const botonCerrar = modal.querySelector(
+    "[data-modal-cerrar]",
+  );
+
+  if (botonCerrar) {
+    botonCerrar.click();
+  }
+}
+
+function mostrarModal(modal) {
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.add("modal--visible");
+  modal.setAttribute("aria-hidden", "false");
+
+  document.body.style.overflow = "hidden";
+}
+
+function esperarActualizacionInterfaz() {
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(resolve);
+    });
+  });
+}
+
+function abrirModalNuevoSistema({
+  idProyecto,
+  nombreProyecto,
+}) {
+  const modalNuevo = document.getElementById(
+    "modal-nuevo-sistema",
+  );
+
+  if (!modalNuevo) {
+    mostrarNotificacion({
+      tipo: "error",
+      titulo: "No se pudo abrir",
+      mensaje:
+        "No se encontró el formulario para registrar un sistema.",
+    });
+
+    return;
+  }
+
+  const formulario = modalNuevo.querySelector(
+    "#form-nuevo-sistema",
+  );
+
+  if (!formulario) {
+    mostrarNotificacion({
+      tipo: "error",
+      titulo: "No se pudo abrir",
+      mensaje:
+        "No se encontró el formulario de nuevo sistema.",
+    });
+
+    return;
+  }
+
+  /*
+   * Limpiar cualquier dato de una apertura anterior.
+   */
+  formulario.reset();
+
+  /*
+   * Asignar automáticamente el proyecto.
+   */
+  const campoIdProyecto =
+    formulario.elements.namedItem("id_proyecto");
+
+  const campoNombreProyecto =
+    formulario.elements.namedItem("proyecto_nombre");
+
+  if (campoIdProyecto) {
+    campoIdProyecto.value = idProyecto;
+  }
+
+  if (campoNombreProyecto) {
+    campoNombreProyecto.value = nombreProyecto;
+  }
+
+  /*
+   * Guardamos también el proyecto en el modal.
+   * Nos servirá cuando implementemos el POST.
+   */
+  modalNuevo.dataset.proyectoId = idProyecto;
+  modalNuevo.dataset.proyectoNombre =
+    nombreProyecto;
+
+  mostrarModal(modalNuevo);
+}
+
+/*
+ * ==================================================
+ * INICIALIZACIÓN
+ * ==================================================
+ */
+
 export function inicializarSistemasAsociados() {
   const modal = document.getElementById(
     "modal-sistemas-asociados",
@@ -132,6 +256,12 @@ export function inicializarSistemasAsociados() {
   if (!modal) {
     return;
   }
+
+  /*
+   * ==================================================
+   * ABRIR SISTEMAS ASOCIADOS
+   * ==================================================
+   */
 
   document.addEventListener("click", async (event) => {
     const botonSistemas = event.target.closest(
@@ -173,18 +303,23 @@ export function inicializarSistemasAsociados() {
         ]);
 
       /*
-       * Guardamos el proyecto seleccionado en el modal.
-       * Esto nos servirá después para "Agregar sistema".
+       * Guardar el proyecto seleccionado.
        */
       modal.dataset.proyectoId = idProyecto;
       modal.dataset.proyectoNombre =
         proyecto.nombre ?? "";
 
+      /*
+       * Mostrar nombre del proyecto.
+       */
       if (nombreProyecto) {
         nombreProyecto.textContent =
           proyecto.nombre ?? "Proyecto";
       }
 
+      /*
+       * Mostrar sistemas asociados.
+       */
       if (contenido) {
         contenido.innerHTML =
           construirTablaSistemas(resultadoSistemas);
@@ -215,5 +350,56 @@ export function inicializarSistemasAsociados() {
         mensaje: error.message,
       });
     }
+  });
+
+  /*
+   * ==================================================
+   * AGREGAR SISTEMA AL PROYECTO ACTUAL
+   * ==================================================
+   */
+
+  document.addEventListener("click", async (event) => {
+    const botonAgregar = event.target.closest(
+      "[data-agregar-sistema-proyecto]",
+    );
+
+    if (!botonAgregar) {
+      return;
+    }
+
+    const idProyecto =
+      modal.dataset.proyectoId;
+
+    const nombreProyecto =
+      modal.dataset.proyectoNombre ?? "";
+
+    if (!idProyecto) {
+      mostrarNotificacion({
+        tipo: "error",
+        titulo: "No se pudo continuar",
+        mensaje:
+          "No se encontró el proyecto seleccionado.",
+      });
+
+      return;
+    }
+
+    /*
+     * Primero cerramos Sistemas asociados.
+     */
+    cerrarModal(modal);
+
+    /*
+     * Esperamos a que termine visualmente el cierre.
+     */
+    await esperarActualizacionInterfaz();
+
+    /*
+     * Después abrimos Nuevo sistema.
+     */
+    abrirModalNuevoSistema({
+      idProyecto,
+      nombreProyecto,
+    });
   });
 }

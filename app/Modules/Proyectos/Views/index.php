@@ -19,5 +19,6 @@
 <?= $this->include('App\Modules\Proyectos\Views\modals\eliminar_proyecto') ?>
 <?= $this->include('App\Modules\Proyectos\Views\modals\confirmar_accion_proyecto') ?>
 <?= $this->include('App\Modules\Proyectos\Views\modals\sistemas_asociados') ?>
+<?= $this->include('App\Modules\Sistemas\Views\modals\nuevo_sistema') ?>
 
 <?= $this->endSection() ?>

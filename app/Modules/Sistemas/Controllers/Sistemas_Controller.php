@@ -67,45 +67,45 @@ class Sistemas_Controller extends BaseController
 
                 return [
                     'id' =>
-                        $sistema['id_sistema'] ?? null,
+                    $sistema['id_sistema'] ?? null,
 
                     'id_proyecto' =>
-                        $idProyecto,
+                    $idProyecto,
 
                     'nombre' =>
-                        $sistema['nombre']
+                    $sistema['nombre']
                         ?? 'Sistema sin nombre',
 
                     'proyecto' =>
-                        $idProyecto !== null
-                            ? (
-                                $nombresProyectos[$idProyecto]
-                                ?? 'Sin proyecto'
-                            )
-                            : 'Sin proyecto',
+                    $idProyecto !== null
+                        ? (
+                            $nombresProyectos[$idProyecto]
+                            ?? 'Sin proyecto'
+                        )
+                        : 'Sin proyecto',
 
                     'estado' =>
-                        $sistema['estado']
+                    $sistema['estado']
                         ?? 'Sin estado',
 
                     'modo_visualizacion' =>
-                        $sistema['modo_visualizacion']
+                    $sistema['modo_visualizacion']
                         ?? 'registro',
 
                     'url' =>
-                        $sistema['url']
+                    $sistema['url']
                         ?? '',
 
                     'repositorio' =>
-                        $sistema['repositorio_url']
+                    $sistema['repositorio_url']
                         ?? '',
 
                     'ruta_local' =>
-                        $sistema['ruta_local']
+                    $sistema['ruta_local']
                         ?? '',
 
                     'servidor' =>
-                        $sistema['url_servidor']
+                    $sistema['url_servidor']
                         ?? '',
                 ];
             },
@@ -122,15 +122,102 @@ class Sistemas_Controller extends BaseController
     }
 
     public function obtenerPorProyecto(int $idProyecto)
-{
-    $sistemas = $this->storage->obtenerPorProyecto(
-        $idProyecto
-    );
+    {
+        $sistemas = $this->storage->obtenerPorProyecto(
+            $idProyecto
+        );
 
-    return $this->response->setJSON([
-        'ok'       => true,
-        'sistemas' => $sistemas,
-        'total'    => count($sistemas),
-    ]);
-}
+        return $this->response->setJSON([
+            'ok'       => true,
+            'sistemas' => $sistemas,
+            'total'    => count($sistemas),
+        ]);
+    }
+
+    public function guardar()
+    {
+        $datos = $this->request->getJSON(true);
+
+        if (!is_array($datos)) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'Los datos enviados no son válidos.',
+                ]);
+        }
+
+        $idProyecto = (int) ($datos['id_proyecto'] ?? 0);
+
+        if ($idProyecto <= 0) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'No se encontró el proyecto asociado.',
+                ]);
+        }
+
+        $sistemas = $this->storage->obtenerTodos();
+
+        $estado = trim((string) ($datos['estado'] ?? ''));
+
+        $sistema = [
+            'id_sistema'         => $this->storage->generarNuevoId($sistemas),
+            'id_proyecto'        => $idProyecto,
+            'nombre'             => trim((string) ($datos['nombre'] ?? '')),
+            'tipo'               => trim((string) ($datos['tipo'] ?? 'Sistema')),
+            'estado'             => $estado,
+            'estado_tipo'        => $this->obtenerTipoEstado($estado),
+            'modo_visualizacion' => trim(
+                (string) ($datos['modo_visualizacion'] ?? 'registro')
+            ),
+            'descripcion'        => trim(
+                (string) ($datos['descripcion'] ?? '')
+            ),
+            'url'                => trim(
+                (string) ($datos['url'] ?? '')
+            ),
+            'repositorio_url'    => trim(
+                (string) ($datos['repositorio_url'] ?? '')
+            ),
+            'ruta_local'         => trim(
+                (string) ($datos['ruta_local'] ?? '')
+            ),
+            'url_servidor'       => trim(
+                (string) ($datos['url_servidor'] ?? '')
+            ),
+            'responsable'        => trim(
+                (string) ($datos['responsable'] ?? '')
+            ),
+            'observaciones'      => trim(
+                (string) ($datos['observaciones'] ?? '')
+            ),
+            'activo'             => true,
+        ];
+
+        $sistemas[] = $sistema;
+
+        $this->storage->guardarTodos($sistemas);
+
+        $totalSistemasProyecto = count($this->storage->obtenerPorProyecto($idProyecto));
+
+        return $this->response->setJSON([
+            'ok'             => true,
+            'mensaje'        => 'Sistema registrado correctamente.',
+            'sistema'        => $sistema,
+            'total_sistemas' => $totalSistemasProyecto,
+        ]);
+    }
+
+    private function obtenerTipoEstado(string $estado): string
+    {
+        return match ($estado) {
+            'Producción'    => 'produccion',
+            'Desarrollo'    => 'desarrollo',
+            'Detenido'      => 'detenido',
+            'Mantenimiento' => 'mantenimiento',
+            default         => 'inactivo',
+        };
+    }
 }
