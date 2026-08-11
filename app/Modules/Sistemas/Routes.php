@@ -8,12 +8,8 @@ use App\Modules\Sistemas\Controllers\Sistemas_Controller;
 
 $routes->get('sistemas', [Sistemas_Controller::class, 'index']);
 
-$routes->get(
-    'proyectos/(:num)/sistemas',
-    [Sistemas_Controller::class, 'obtenerPorProyecto']
-);
+$routes->get('proyectos/(:num)/sistemas', [Sistemas_Controller::class, 'obtenerPorProyecto']);
 
-$routes->post(
-    'sistemas',
-    [Sistemas_Controller::class, 'guardar']
-);
+$routes->post('sistemas', [Sistemas_Controller::class, 'guardar']);
+
+$routes->get('sistemas/(:num)', [Sistemas_Controller::class, 'obtener']);

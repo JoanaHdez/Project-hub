@@ -21,4 +21,7 @@
 <?= $this->include('App\Modules\Proyectos\Views\modals\sistemas_asociados') ?>
 <?= $this->include('App\Modules\Sistemas\Views\modals\nuevo_sistema') ?>
 
+<?= view('App\Modules\Sistemas\Views\modals\nuevo_sistema') ?>
+<?= view('App\Modules\Sistemas\Views\modals\detalle_sistema') ?>
+
 <?= $this->endSection() ?>

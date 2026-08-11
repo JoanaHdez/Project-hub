@@ -220,4 +220,43 @@ class Sistemas_Controller extends BaseController
             default         => 'inactivo',
         };
     }
+
+    public function obtener(int $idSistema)
+    {
+        $sistema = $this->storage->obtenerPorId($idSistema);
+
+        if ($sistema === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'No se encontró el sistema solicitado.',
+                ]);
+        }
+
+        $nombreProyecto = 'Sin proyecto';
+
+        $idProyecto = (int) ($sistema['id_proyecto'] ?? 0);
+
+        if ($idProyecto > 0) {
+            foreach ($this->proyectoStorage->obtenerTodos() as $proyecto) {
+                if (
+                    (int) ($proyecto['id_proyecto'] ?? 0)
+                    === $idProyecto
+                ) {
+                    $nombreProyecto =
+                        $proyecto['nombre'] ?? 'Sin proyecto';
+
+                    break;
+                }
+            }
+        }
+
+        $sistema['proyecto_nombre'] = $nombreProyecto;
+
+        return $this->response->setJSON([
+            'ok'      => true,
+            'sistema' => $sistema,
+        ]);
+    }
 }
