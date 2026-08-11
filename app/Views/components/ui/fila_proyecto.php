@@ -48,11 +48,13 @@ $acciones .= view('components/ui/boton_accion', [
 ]);
 
 $acciones .= view('components/ui/boton_accion', [
-    'icono'   => '🌐',
-    'mensaje' => 'Ver sistemas asociados',
-    'url'     => '#',
-    'tipo'    => 'sistema',
-    'modalId' => 'modal-sistemas-asociados',
+    'icono'     => '🌐',
+    'mensaje'   => 'Ver sistemas asociados',
+    'url'       => '#',
+    'tipo'      => 'sistema',
+    'accion'    => 'sistemas',
+    'modalId'   => 'modal-sistemas-asociados',
+    'proyectoId' => $proyecto['id_proyecto'],
 ], [
     'saveData' => false,
 ]);

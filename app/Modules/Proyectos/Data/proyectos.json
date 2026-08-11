@@ -49,7 +49,7 @@
     },
     {
         "id_proyecto": 4,
-        "nombre": "proyecto 12",
+        "nombre": "proyecto 1",
         "estado": "Detenido",
         "estado_tipo": "detenido",
         "origen": "Personal",
