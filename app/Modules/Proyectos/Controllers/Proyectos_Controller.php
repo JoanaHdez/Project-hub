@@ -182,7 +182,7 @@ public function __construct()
 
         $proyectoExistente = null;
 
-        $proyectos = $this->obtenerProyectos();
+        $proyectos = $this->storage->obtenerTodos();
         $indiceProyecto = null;
 
         foreach ($proyectos as $indice => $proyecto) {
@@ -220,7 +220,7 @@ public function __construct()
         ]);
 
         $proyectos[$indiceProyecto] = $proyectoActualizado;
-        $this->guardarProyectos($proyectos);
+        $this->storage->guardarTodos($proyectos);
 
         $filaHtml = view('components/ui/fila_proyecto', [
             'proyecto' => $proyectoActualizado,

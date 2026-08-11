@@ -81,9 +81,9 @@
     },
     {
         "id_proyecto": 6,
-        "nombre": "prueba2",
-        "estado": "Detenido",
-        "estado_tipo": "detenido",
+        "nombre": "prueba 1",
+        "estado": "Producción",
+        "estado_tipo": "produccion",
         "origen": "Trabajo",
         "descripcion": "",
         "repositorio_url": "",
