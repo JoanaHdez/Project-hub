@@ -3,9 +3,18 @@
 namespace App\Modules\Proyectos\Controllers;
 
 use App\Controllers\BaseController;
+use App\Modules\Proyectos\Services\Proyecto_StorageService;
 
 class Proyectos_Controller extends BaseController
 {
+
+private Proyecto_StorageService $storage;
+
+public function __construct()
+{
+    $this->storage = new Proyecto_StorageService();
+}
+
     public function index()
     {
         $proyectos = $this->obtenerProyectos();
@@ -67,7 +76,7 @@ class Proyectos_Controller extends BaseController
 
     public function obtener(int $idProyecto)
     {
-        $proyectos = $this->obtenerProyectos();
+        $proyectos = $this->storage->obtenerTodos();
 
         $proyectoEncontrado = null;
 
@@ -160,69 +169,69 @@ class Proyectos_Controller extends BaseController
 
     public function actualizar(int $id)
     {
-    $datos = $this->request->getJSON(true);
+        $datos = $this->request->getJSON(true);
 
-    if (!is_array($datos)) {
-        return $this->response
-            ->setStatusCode(400)
-            ->setJSON([
-                'ok'      => false,
-                'mensaje' => 'Los datos enviados no son válidos.',
-            ]);
-    }
-
-    $proyectoExistente = null;
-
-    $proyectos = $this->obtenerProyectos();
-    $indiceProyecto = null;
-
-    foreach ($proyectos as $indice => $proyecto) {
-        if ((int) ($proyecto['id_proyecto'] ?? 0) === $id) {
-            $proyectoExistente = $proyecto;
-            $indiceProyecto = $indice;
-            break;
+        if (!is_array($datos)) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'Los datos enviados no son válidos.',
+                ]);
         }
-    }
 
-    if ($proyectoExistente === null) {
-        return $this->response
-            ->setStatusCode(404)
-            ->setJSON([
-                'ok'      => false,
-                'mensaje' => 'El proyecto solicitado no existe.',
-            ]);
-    }
+        $proyectoExistente = null;
 
-    $estado = trim((string) ($datos['estado'] ?? ''));
+        $proyectos = $this->obtenerProyectos();
+        $indiceProyecto = null;
 
-    $proyectoActualizado = array_merge($proyectoExistente, [
-        'id_proyecto'       => $id,
-        'nombre'            => trim((string) ($datos['nombre'] ?? '')),
-        'estado'            => $estado,
-        'estado_tipo'       => $this->obtenerTipoEstado($estado),
-        'origen'            => trim((string) ($datos['origen'] ?? '')),
-        'descripcion'       => trim((string) ($datos['descripcion'] ?? '')),
-        'repositorio_url'   => trim((string) ($datos['repositorio_url'] ?? '')),
-        'ruta_local'        => trim((string) ($datos['ruta_local'] ?? '')),
-        'url_servidor'      => trim((string) ($datos['url_servidor'] ?? '')),
-        'id_especificacion' => (string) ($datos['id_especificacion'] ?? ''),
-        'responsable'       => trim((string) ($datos['responsable'] ?? '')),
-        'observaciones'     => trim((string) ($datos['observaciones'] ?? '')),
-    ]);
+        foreach ($proyectos as $indice => $proyecto) {
+            if ((int) ($proyecto['id_proyecto'] ?? 0) === $id) {
+                $proyectoExistente = $proyecto;
+                $indiceProyecto = $indice;
+                break;
+            }
+        }
 
-    $proyectos[$indiceProyecto] = $proyectoActualizado;
-    $this->guardarProyectos($proyectos);
+        if ($proyectoExistente === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'El proyecto solicitado no existe.',
+                ]);
+        }
 
-    $filaHtml = view('components/ui/fila_proyecto', [
-    'proyecto' => $proyectoActualizado,
-]);
+        $estado = trim((string) ($datos['estado'] ?? ''));
 
-    return $this->response->setJSON([
-        'ok'        => true,
-        'mensaje'   => 'Proyecto actualizado correctamente.',
-        'proyecto'  => $proyectoActualizado,
-        'fila_html' => $filaHtml,
-    ]);
+        $proyectoActualizado = array_merge($proyectoExistente, [
+            'id_proyecto'       => $id,
+            'nombre'            => trim((string) ($datos['nombre'] ?? '')),
+            'estado'            => $estado,
+            'estado_tipo'       => $this->obtenerTipoEstado($estado),
+            'origen'            => trim((string) ($datos['origen'] ?? '')),
+            'descripcion'       => trim((string) ($datos['descripcion'] ?? '')),
+            'repositorio_url'   => trim((string) ($datos['repositorio_url'] ?? '')),
+            'ruta_local'        => trim((string) ($datos['ruta_local'] ?? '')),
+            'url_servidor'      => trim((string) ($datos['url_servidor'] ?? '')),
+            'id_especificacion' => (string) ($datos['id_especificacion'] ?? ''),
+            'responsable'       => trim((string) ($datos['responsable'] ?? '')),
+            'observaciones'     => trim((string) ($datos['observaciones'] ?? '')),
+        ]);
+
+        $proyectos[$indiceProyecto] = $proyectoActualizado;
+        $this->guardarProyectos($proyectos);
+
+        $filaHtml = view('components/ui/fila_proyecto', [
+            'proyecto' => $proyectoActualizado,
+        ]);
+
+        return $this->response->setJSON([
+            'ok'        => true,
+            'mensaje'   => 'Proyecto actualizado correctamente.',
+            'proyecto'  => $proyectoActualizado,
+            'fila_html' => $filaHtml,
+        ]);
     }
 
     private function obtenerProyectos(): array
@@ -275,7 +284,7 @@ class Proyectos_Controller extends BaseController
     private function generarIdProyecto(array $proyectos): int
     {
         $ids = array_map(
-            static fn (array $proyecto): int => (int) ($proyecto['id_proyecto'] ?? 0),
+            static fn(array $proyecto): int => (int) ($proyecto['id_proyecto'] ?? 0),
             $proyectos
         );
 

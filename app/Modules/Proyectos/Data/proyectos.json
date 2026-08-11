@@ -78,5 +78,21 @@
         "observaciones": "",
         "total_sistemas": 0,
         "fecha_creacion": "27\/07\/2026"
+    },
+    {
+        "id_proyecto": 6,
+        "nombre": "prueba2",
+        "estado": "Detenido",
+        "estado_tipo": "detenido",
+        "origen": "Trabajo",
+        "descripcion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "id_especificacion": "",
+        "responsable": "joana",
+        "observaciones": "",
+        "total_sistemas": 0,
+        "fecha_creacion": "11\/08\/2026"
     }
 ]
