@@ -259,4 +259,113 @@ class Sistemas_Controller extends BaseController
             'sistema' => $sistema,
         ]);
     }
+
+    public function actualizar(int $idSistema)
+    {
+        $datos = $this->request->getJSON(true);
+
+        if (!is_array($datos)) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'Los datos enviados no son válidos.',
+                ]);
+        }
+
+        $sistemas = $this->storage->obtenerTodos();
+
+        $indiceSistema = null;
+
+        foreach ($sistemas as $indice => $sistema) {
+            if (
+                (int) ($sistema['id_sistema'] ?? 0)
+                === $idSistema
+            ) {
+                $indiceSistema = $indice;
+                break;
+            }
+        }
+
+        if ($indiceSistema === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'No se encontró el sistema solicitado.',
+                ]);
+        }
+
+        /*
+     * Conservamos datos que no deben modificarse
+     * desde el formulario de edición.
+     */
+        $sistemaActual = $sistemas[$indiceSistema];
+
+        $estado = trim(
+            (string) ($datos['estado'] ?? '')
+        );
+
+        $sistemaActualizado = [
+            ...$sistemaActual,
+
+            'nombre' => trim(
+                (string) ($datos['nombre'] ?? '')
+            ),
+
+            'estado' => $estado,
+
+            'estado_tipo' =>
+            $this->obtenerTipoEstado($estado),
+
+            'tipo' => trim(
+                (string) ($datos['tipo'] ?? 'Sistema')
+            ),
+
+            'modo_visualizacion' => trim(
+                (string) (
+                    $datos['modo_visualizacion']
+                    ?? 'registro'
+                )
+            ),
+
+            'descripcion' => trim(
+                (string) ($datos['descripcion'] ?? '')
+            ),
+
+            'url' => trim(
+                (string) ($datos['url'] ?? '')
+            ),
+
+            'repositorio_url' => trim(
+                (string) ($datos['repositorio_url'] ?? '')
+            ),
+
+            'ruta_local' => trim(
+                (string) ($datos['ruta_local'] ?? '')
+            ),
+
+            'url_servidor' => trim(
+                (string) ($datos['url_servidor'] ?? '')
+            ),
+
+            'responsable' => trim(
+                (string) ($datos['responsable'] ?? '')
+            ),
+
+            'observaciones' => trim(
+                (string) ($datos['observaciones'] ?? '')
+            ),
+        ];
+
+        $sistemas[$indiceSistema] = $sistemaActualizado;
+
+        $this->storage->guardarTodos($sistemas);
+
+        return $this->response->setJSON([
+            'ok'      => true,
+            'mensaje' => 'Sistema actualizado correctamente.',
+            'sistema' => $sistemaActualizado,
+        ]);
+    }
 }

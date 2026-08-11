@@ -13,3 +13,5 @@ $routes->get('proyectos/(:num)/sistemas', [Sistemas_Controller::class, 'obtenerP
 $routes->post('sistemas', [Sistemas_Controller::class, 'guardar']);
 
 $routes->get('sistemas/(:num)', [Sistemas_Controller::class, 'obtener']);
+
+$routes->put('sistemas/(:num)', [Sistemas_Controller::class, 'actualizar']);

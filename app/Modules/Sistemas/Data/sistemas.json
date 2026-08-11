@@ -44,7 +44,7 @@
     {
         "id_sistema": 4,
         "id_proyecto": 1,
-        "nombre": "prueba",
+        "nombre": "prueba1",
         "tipo": "Agrupador",
         "estado": "Producción",
         "estado_tipo": "produccion",
