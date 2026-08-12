@@ -80,7 +80,22 @@ document.addEventListener("input", (event) => {
   });
 });
 
+/*==================================================*
+*=              FORMULARIOS DE APIs                 =*
+*==================================================*/
 
+if (document.getElementById("form-nueva-api")) {
+  import("./apis/formulario.js")
+    .then(({ inicializarFormularioApi }) => {
+      inicializarFormularioApi();
+    })
+    .catch((error) => {
+      console.error(
+        "No fue posible inicializar los formularios de APIs:",
+        error,
+      );
+    });
+}
 
 
 

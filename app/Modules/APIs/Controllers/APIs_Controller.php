@@ -3,334 +3,123 @@
 namespace App\Modules\APIs\Controllers;
 
 use App\Controllers\BaseController;
+use App\Modules\APIs\Services\API_StorageService;
+use App\Modules\Proyectos\Services\Proyecto_StorageService;
 
 class APIs_Controller extends BaseController
 {
+    private API_StorageService $storage;
+    private Proyecto_StorageService $proyectoStorage;
+
+    public function __construct()
+    {
+        $this->storage = new API_StorageService();
+        $this->proyectoStorage = new Proyecto_StorageService();
+    }
     public function index()
     {
-        $apis = [
+        /*
+     * Obtener las APIs desde el almacenamiento provisional.
+     */
+        $apisAlmacenadas = $this->storage->obtenerTodos();
 
-            [
-                'id' => 1,
-                'nombre' => 'API de Invitaciones',
-                'proyecto' => 'Extorsión',
-                'descripcion' => 'Envía invitaciones por correo electrónico.',
-                'estado' => 'Producción',
+        /*
+     * Obtener los proyectos para resolver el nombre
+     * a partir de id_proyecto.
+     */
+        $proyectos = $this->proyectoStorage->obtenerTodos();
 
-                'metodo' => 'POST',
-                'endpoint' => '/api/correos/invitacion',
-                'url' => 'https://cepyc.seguridadneza.gob.mx/ExtorsionF/public/api/correos/invitacion',
+        /*
+     * Crear mapa:
+     *
+     * id_proyecto => nombre
+     */
+        $nombresProyectos = [];
 
-                'autenticacion' => 'API Token',
+        foreach ($proyectos as $proyecto) {
+            $idProyecto = (int) (
+                $proyecto['id_proyecto'] ?? 0
+            );
 
-                'repositorio' => 'https://github.com/JoanaHdez/Extorsi-n',
-                'ruta_local' => 'C:/LaragonNuevo/laragon/www/ExtorsionF',
-                'servidor' => 'https://cepyc.seguridadneza.gob.mx/ExtorsionF/public',
+            if ($idProyecto <= 0) {
+                continue;
+            }
 
-                'headers' => [
+            $nombresProyectos[$idProyecto] =
+                $proyecto['nombre'] ?? 'Sin proyecto';
+        }
+
+        /*
+     * Adaptar los datos del JSON a los nombres
+     * que actualmente espera la vista de APIs.
+     *
+     * Esto permite cambiar el almacenamiento
+     * sin modificar todavía la interfaz.
+     */
+        $apis = array_map(
+            static function (array $api) use ($nombresProyectos): array {
+                $idProyecto = isset($api['id_proyecto'])
+                    ? (int) $api['id_proyecto']
+                    : null;
+
+                return array_merge(
+                    $api,
                     [
-                        'nombre' => 'Content-Type',
-                        'valor' => 'application/json',
-                        'obligatorio' => true,
-                        'descripcion' => 'Indica que el cuerpo de la petición se envía en formato JSON.',
-                    ],
-                    [
-                        'nombre' => 'Authorization',
-                        'valor' => 'Bearer {api_token}',
-                        'obligatorio' => true,
-                        'descripcion' => 'Token utilizado para autenticar la petición.',
-                    ],
-                ],
+                        /*
+                     * Compatibilidad temporal:
+                     * la vista actual utiliza "id".
+                     */
+                        'id' =>
+                        $api['id_api'] ?? null,
 
-                'parametros' => [
-                    [
-                        'nombre' => 'connection',
-                        'tipo' => 'object',
-                        'obligatorio' => true,
-                        'descripcion' => 'Configuración SMTP.',
-                    ],
-                    [
-                        'nombre' => 'to',
-                        'tipo' => 'array',
-                        'obligatorio' => true,
-                        'descripcion' => 'Lista de destinatarios.',
-                    ],
-                    [
-                        'nombre' => 'subject',
-                        'tipo' => 'string',
-                        'obligatorio' => true,
-                        'descripcion' => 'Asunto del correo.',
-                    ],
-                ],
+                        /*
+                     * La vista actual utiliza el nombre
+                     * del proyecto directamente.
+                     */
+                        'proyecto' =>
+                        $idProyecto !== null
+                            ? (
+                                $nombresProyectos[$idProyecto]
+                                ?? 'Sin proyecto'
+                            )
+                            : 'Sin proyecto',
 
-                // API de Invitaciones
-                'ejemplo' => [
-                    'metodo' => 'POST',
-                    'endpoint' => '/api/correos/invitacion',
-                    'url' => 'https://cepyc.seguridadneza.gob.mx/ExtorsionF/public/api/correos/invitacion',
-                    'body' => [
-                        'to' => [
-                            'usuario@correo.com',
-                        ],
-                        'subject' => 'Invitación al evento',
-                        'body' => 'Contenido del correo de invitación.',
-                    ],
-                ],
-                'respuestas' => [
-                    [
-                        'codigo' => 200,
-                        'descripcion' => 'Correo enviado correctamente.',
-                        'body' => [
-                            'success' => true,
-                            'message' => 'Correo enviado correctamente.'
-                        ]
-                    ],
-                    [
-                        'codigo' => 401,
-                        'descripcion' => 'API Token inválido.',
-                        'body' => [
-                            'success' => false,
-                            'message' => 'API Token inválido.'
-                        ]
-                    ],
-                ],
-            ],
+                        /*
+                     * Compatibilidad con los nombres
+                     * utilizados actualmente por la vista.
+                     */
+                        'repositorio' =>
+                        $api['repositorio_url'] ?? '',
 
-            [
-                'id' => 2,
-                'nombre' => 'API Registro Exitoso',
-                'proyecto' => 'Extorsión',
-                'descripcion' => 'Envía el correo de registro exitoso.',
-                'estado' => 'Producción',
+                        'servidor' =>
+                        $api['url_servidor'] ?? '',
+                    ]
+                );
+            },
+            $apisAlmacenadas
+        );
 
-                'metodo' => 'POST',
-                'endpoint' => '/api/correos/registro',
-                'url' => 'https://cepyc.seguridadneza.gob.mx/ExtorsionF/public/api/correos/registro',
+        $proyectosDisponibles = array_map(
+    static function (array $proyecto): array {
+        return [
+            'id_proyecto' =>
+                $proyecto['id_proyecto'] ?? null,
 
-                'autenticacion' => 'API Token',
-
-                'repositorio' => 'https://github.com/JoanaHdez/Extorsi-n',
-                'ruta_local' => 'C:/LaragonNuevo/laragon/www/ExtorsionF',
-                'servidor' => 'https://cepyc.seguridadneza.gob.mx/ExtorsionF/public',
-
-                'headers' => [
-                    [
-                        'nombre' => 'Content-Type',
-                        'valor' => 'application/json',
-                        'obligatorio' => true,
-                        'descripcion' => 'Indica que el cuerpo de la petición se envía en formato JSON.',
-                    ],
-                    [
-                        'nombre' => 'Authorization',
-                        'valor' => 'Bearer {api_token}',
-                        'obligatorio' => true,
-                        'descripcion' => 'Token utilizado para autenticar la petición.',
-                    ],
-                ],
-
-                'parametros' => [
-                    [
-                        'nombre' => 'id',
-                        'tipo' => 'integer',
-                        'obligatorio' => true,
-                        'descripcion' => 'Identificador del registro.',
-                    ],
-                    [
-                        'nombre' => 'correo',
-                        'tipo' => 'string',
-                        'obligatorio' => true,
-                        'descripcion' => 'Correo electrónico del destinatario.',
-                    ],
-                ],
-
-                // API Registro Exitoso
-                'ejemplo' => [
-                    'metodo' => 'POST',
-                    'endpoint' => '/api/correos/registro',
-                    'url' => 'https://cepyc.seguridadneza.gob.mx/ExtorsionF/public/api/correos/registro',
-                    'body' => [
-                        'id' => 1,
-                        'correo' => 'usuario@correo.com',
-                    ],
-                ],
-                'respuestas' => [
-                    [
-                        'codigo' => 200,
-                        'descripcion' => 'Correo enviado correctamente.',
-                        'body' => [
-                            'success' => true,
-                            'message' => 'Correo enviado correctamente.'
-                        ]
-                    ],
-                    [
-                        'codigo' => 401,
-                        'descripcion' => 'API Token inválido.',
-                        'body' => [
-                            'success' => false,
-                            'message' => 'API Token inválido.'
-                        ]
-                    ],
-                ],
-            ],
-
-            [
-                'id' => 3,
-                'nombre' => 'API Constancias',
-                'proyecto' => 'Extorsión',
-                'descripcion' => 'Envía la constancia de acreditación.',
-                'estado' => 'Producción',
-
-                'metodo' => 'POST',
-                'endpoint' => '/api/constancia/enviar-constancia',
-                'url' => 'https://cepyc.seguridadneza.gob.mx/ExtorsionF/public/api/constancia/enviar-constancia',
-
-                'autenticacion' => 'API Token',
-
-                'repositorio' => 'https://github.com/JoanaHdez/Extorsi-n',
-                'ruta_local' => 'C:/LaragonNuevo/laragon/www/ExtorsionF',
-                'servidor' => 'https://cepyc.seguridadneza.gob.mx/ExtorsionF/public',
-
-                'headers' => [
-                    [
-                        'nombre' => 'Content-Type',
-                        'valor' => 'application/json',
-                        'obligatorio' => true,
-                        'descripcion' => 'Indica que el cuerpo de la petición se envía en formato JSON.',
-                    ],
-                    [
-                        'nombre' => 'Authorization',
-                        'valor' => 'Bearer {api_token}',
-                        'obligatorio' => true,
-                        'descripcion' => 'Token utilizado para autenticar la petición.',
-                    ],
-                ],
-
-                'parametros' => [
-                    [
-                        'nombre' => 'id',
-                        'tipo' => 'integer',
-                        'obligatorio' => true,
-                        'descripcion' => 'Identificador del registro.',
-                    ],
-                    [
-                        'nombre' => 'correo',
-                        'tipo' => 'string',
-                        'obligatorio' => true,
-                        'descripcion' => 'Correo electrónico del destinatario.',
-                    ],
-                ],
-
-                // API Constancias
-                'ejemplo' => [
-                    'metodo' => 'POST',
-                    'endpoint' => '/api/constancia/enviar-constancia',
-                    'url' => 'https://cepyc.seguridadneza.gob.mx/ExtorsionF/public/api/constancia/enviar-constancia',
-                    'body' => [
-                        'id' => 1,
-                        'correo' => 'usuario@correo.com',
-                    ],
-                ],
-                'respuestas' => [
-                    [
-                        'codigo' => 200,
-                        'descripcion' => 'Correo enviado correctamente.',
-                        'body' => [
-                            'success' => true,
-                            'message' => 'Correo enviado correctamente.'
-                        ]
-                    ],
-                    [
-                        'codigo' => 401,
-                        'descripcion' => 'API Token inválido.',
-                        'body' => [
-                            'success' => false,
-                            'message' => 'API Token inválido.'
-                        ]
-                    ],
-                ],
-            ],
-
-            [
-                'id' => 4,
-                'nombre' => 'API Cuestionario',
-                'proyecto' => 'Extorsión',
-                'descripcion' => 'Envía el acceso al cuestionario de reforzamiento.',
-                'estado' => 'Producción',
-
-                'metodo' => 'POST',
-                'endpoint' => '/api/cuestionario-reforzamiento',
-                'url' => 'https://congreso.seguridadneza.gob.mx/2026/cuestionario-reforzamiento/',
-
-                'autenticacion' => 'API Token',
-
-                'repositorio' => 'https://github.com/JoanaHdez/Extorsi-n',
-                'ruta_local' => 'C:/LaragonNuevo/laragon/www/ExtorsionF',
-                'servidor' => 'https://cepyc.seguridadneza.gob.mx/ExtorsionF/public',
-
-                'headers' => [
-                    [
-                        'nombre' => 'Content-Type',
-                        'valor' => 'application/json',
-                        'obligatorio' => true,
-                        'descripcion' => 'Indica que el cuerpo de la petición se envía en formato JSON.',
-                    ],
-                    [
-                        'nombre' => 'Authorization',
-                        'valor' => 'Bearer {api_token}',
-                        'obligatorio' => true,
-                        'descripcion' => 'Token utilizado para autenticar la petición.',
-                    ],
-                ],
-
-                'parametros' => [
-                    [
-                        'nombre' => 'id',
-                        'tipo' => 'integer',
-                        'obligatorio' => true,
-                        'descripcion' => 'Identificador del registro.',
-                    ],
-                    [
-                        'nombre' => 'correo',
-                        'tipo' => 'string',
-                        'obligatorio' => true,
-                        'descripcion' => 'Correo electrónico del destinatario.',
-                    ],
-                ],
-
-                // API Cuestionario
-                'ejemplo' => [
-                    'metodo' => 'POST',
-                    'endpoint' => '/api/cuestionario-reforzamiento',
-                    'url' => 'https://congreso.seguridadneza.gob.mx/2026/cuestionario-reforzamiento/',
-                    'body' => [
-                        'id' => 1,
-                        'correo' => 'usuario@correo.com',
-                    ],
-                ],
-                'respuestas' => [
-                    [
-                        'codigo' => 200,
-                        'descripcion' => 'Correo enviado correctamente.',
-                        'body' => [
-                            'success' => true,
-                            'message' => 'Correo enviado correctamente.'
-                        ]
-                    ],
-                    [
-                        'codigo' => 401,
-                        'descripcion' => 'API Token inválido.',
-                        'body' => [
-                            'success' => false,
-                            'message' => 'API Token inválido.'
-                        ]
-                    ],
-                ],
-            ],
-
+            'nombre' =>
+                $proyecto['nombre'] ?? 'Proyecto sin nombre',
         ];
+    },
+    $proyectos
+);
 
-        return view('App\Modules\APIs\Views\index', [
-            'apis' => $apis,
-        ]);
+        return view(
+    'App\Modules\APIs\Views\index',
+    [
+        'title'     => 'APIs | Project Hub',
+        'apis'      => $apis,
+        'proyectos' => $proyectosDisponibles,
+    ]
+);
     }
 }
+

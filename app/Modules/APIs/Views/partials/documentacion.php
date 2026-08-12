@@ -5,15 +5,24 @@
         <div class="documentacion-api__encabezado">
 
             <div>
-                <span class="documentacion-api__metodo" id="api-metodo">
+                <span
+                    class="documentacion-api__metodo"
+                    id="api-metodo"
+                >
                     —
                 </span>
 
-                <h2 class="documentacion-api__titulo" id="api-nombre">
+                <h2
+                    class="documentacion-api__titulo"
+                    id="api-nombre"
+                >
                     Selecciona una API
                 </h2>
 
-                <p class="documentacion-api__descripcion" id="api-descripcion">
+                <p
+                    class="documentacion-api__descripcion"
+                    id="api-descripcion"
+                >
                     Selecciona una API del catálogo para consultar su documentación técnica.
                 </p>
             </div>
@@ -21,13 +30,18 @@
             <button
                 type="button"
                 id="abrir-ficha-tecnica"
-                class="boton boton--secundario">
+                class="boton boton--secundario"
+            >
                 Ficha técnica
             </button>
 
         </div>
 
         <div class="documentacion-api__contenido">
+
+            <!-- =========================================
+                 INFORMACIÓN GENERAL
+            ========================================== -->
 
             <section class="documentacion-seccion">
 
@@ -39,33 +53,89 @@
 
                     <?= view('components/ui/dato', [
                         'etiqueta' => 'Proyecto',
-                        'id' => 'api-proyecto',
+                        'id'       => 'api-proyecto',
                     ]) ?>
 
                     <?= view('components/ui/dato', [
                         'etiqueta' => 'Estado',
-                        'id' => 'api-estado',
+                        'id'       => 'api-estado',
                     ]) ?>
 
                     <?= view('components/ui/dato', [
                         'etiqueta' => 'Autenticación',
-                        'id' => 'api-autenticacion',
+                        'id'       => 'api-autenticacion',
                     ]) ?>
 
                 </div>
 
             </section>
 
+            <!-- =========================================
+                 ENDPOINT
+            ========================================== -->
+
+            <section class="documentacion-seccion">
+
+                <div class="documentacion-seccion__encabezado">
+                    <h3>Endpoint</h3>
+
+                    <p>
+                        Dirección utilizada para consumir la API.
+                    </p>
+                </div>
+
+                <div class="documentacion-endpoint">
+
+                    <div class="documentacion-endpoint__ruta">
+
+                        <span
+                            id="api-endpoint-metodo"
+                            class="badge-metodo"
+                        >
+                            —
+                        </span>
+
+                        <code id="api-endpoint">
+                            —
+                        </code>
+
+                    </div>
+
+                    <div class="documentacion-endpoint__url">
+
+                        <span>
+                            URL completa
+                        </span>
+
+                        <strong id="api-url">
+                            —
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- =========================================
+                 HEADERS
+            ========================================== -->
+
             <section class="documentacion-seccion">
 
                 <div class="documentacion-seccion__encabezado">
                     <h3>Headers</h3>
+
                     <p>
                         Encabezados requeridos para consumir la API.
                     </p>
                 </div>
 
-                <div class="tabla-contenedor" id="api-headers-contenedor" hidden>
+                <div
+                    class="tabla-contenedor"
+                    id="api-headers-contenedor"
+                    hidden
+                >
                     <table class="tabla">
 
                         <thead>
@@ -82,22 +152,34 @@
                     </table>
                 </div>
 
-                <div class="estado-vacio" id="api-headers-vacio">
+                <div
+                    class="estado-vacio"
+                    id="api-headers-vacio"
+                >
                     Selecciona una API para consultar sus headers.
                 </div>
 
             </section>
 
+            <!-- =========================================
+                 PARÁMETROS
+            ========================================== -->
+
             <section class="documentacion-seccion">
 
                 <div class="documentacion-seccion__encabezado">
                     <h3>Parámetros</h3>
+
                     <p>
                         Parámetros requeridos para consumir la API.
                     </p>
                 </div>
 
-                <div class="tabla-contenedor" id="api-parametros-contenedor" hidden>
+                <div
+                    class="tabla-contenedor"
+                    id="api-parametros-contenedor"
+                    hidden
+                >
 
                     <table class="tabla">
 
@@ -116,81 +198,104 @@
 
                 </div>
 
-                <div class="estado-vacio" id="api-parametros-vacio">
+                <div
+                    class="estado-vacio"
+                    id="api-parametros-vacio"
+                >
                     Selecciona una API para consultar sus parámetros.
                 </div>
 
             </section>
 
+            <!-- =========================================
+                 EJEMPLO DE CONSUMO
+            ========================================== -->
+
             <section class="documentacion-seccion">
 
                 <div class="documentacion-seccion__encabezado">
                     <h3>Ejemplo de consumo</h3>
+
                     <p>
                         Ejemplo de petición para consumir la API.
                     </p>
                 </div>
 
-                <div id="api-ejemplo-contenedor" hidden>
+                <div
+                    id="api-ejemplo-contenedor"
+                    hidden
+                >
 
                     <div class="codigo-api__acciones">
 
-                        <button type="button" class="boton boton--secundario boton--sm" id="copiar-ejemplo">
-
+                        <button
+                            type="button"
+                            class="boton boton--secundario boton--sm"
+                            id="copiar-ejemplo"
+                        >
                             Copiar
-
                         </button>
 
                     </div>
 
                     <div class="codigo-api__encabezado">
 
-                        <span id="api-ejemplo-metodo" class="badge-metodo">
-
+                        <span
+                            id="api-ejemplo-metodo"
+                            class="badge-metodo"
+                        >
                             POST
-
                         </span>
 
                     </div>
 
-                    <pre class="codigo-api">
-                        <code id="api-ejemplo"></code>
-                    </pre>
+                    <pre class="codigo-api"><code id="api-ejemplo"></code></pre>
 
                 </div>
 
-                <div id="api-ejemplo-vacio" class="estado-vacio">
-
+                <div
+                    id="api-ejemplo-vacio"
+                    class="estado-vacio"
+                >
                     Esta API no tiene un ejemplo documentado.
-
                 </div>
 
             </section>
+
+            <!-- =========================================
+                 RESPUESTAS ESPERADAS
+            ========================================== -->
 
             <section class="documentacion-seccion">
 
                 <div class="documentacion-seccion__encabezado">
                     <h3>Respuestas esperadas</h3>
+
                     <p>
                         Posibles respuestas que devuelve la API.
                     </p>
                 </div>
 
-                <div id="api-respuestas-contenedor" hidden>
+                <div
+                    id="api-respuestas-contenedor"
+                    hidden
+                >
 
                     <div id="api-respuestas"></div>
 
                 </div>
 
-                <div id="api-respuestas-vacio" class="estado-vacio">
-
+                <div
+                    id="api-respuestas-vacio"
+                    class="estado-vacio"
+                >
                     Esta API no tiene respuestas documentadas.
-
                 </div>
 
             </section>
 
         </div>
+
     </div>
 
 </section>
