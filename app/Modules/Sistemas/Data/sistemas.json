@@ -128,5 +128,22 @@
         "responsable": "joana",
         "observaciones": "",
         "activo": true
+    },
+    {
+        "id_sistema": 10,
+        "id_proyecto": 4,
+        "nombre": "prueba de proyecto 1c",
+        "tipo": "Sistema",
+        "estado": "Desarrollo",
+        "estado_tipo": "desarrollo",
+        "modo_visualizacion": "externo",
+        "descripcion": "",
+        "url": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "responsable": "joana",
+        "observaciones": "",
+        "activo": true
     }
 ]

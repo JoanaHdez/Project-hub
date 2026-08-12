@@ -113,5 +113,37 @@
         "observaciones": "",
         "total_sistemas": 0,
         "fecha_creacion": "11\/08\/2026"
+    },
+    {
+        "id_proyecto": 8,
+        "nombre": "prueba 5",
+        "estado": "Detenido",
+        "estado_tipo": "detenido",
+        "origen": "Personal",
+        "descripcion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "id_especificacion": "",
+        "responsable": "joana",
+        "observaciones": "",
+        "total_sistemas": 0,
+        "fecha_creacion": "12\/08\/2026"
+    },
+    {
+        "id_proyecto": 9,
+        "nombre": "prueba 6",
+        "estado": "Desarrollo",
+        "estado_tipo": "desarrollo",
+        "origen": "Personal",
+        "descripcion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "id_especificacion": "",
+        "responsable": "joana",
+        "observaciones": "",
+        "total_sistemas": 0,
+        "fecha_creacion": "12\/08\/2026"
     }
 ]
