@@ -18,22 +18,10 @@ class APIs_Controller extends BaseController
     }
     public function index()
     {
-        /*
-     * Obtener las APIs desde el almacenamiento provisional.
-     */
         $apisAlmacenadas = $this->storage->obtenerTodos();
 
-        /*
-     * Obtener los proyectos para resolver el nombre
-     * a partir de id_proyecto.
-     */
         $proyectos = $this->proyectoStorage->obtenerTodos();
 
-        /*
-     * Crear mapa:
-     *
-     * id_proyecto => nombre
-     */
         $nombresProyectos = [];
 
         foreach ($proyectos as $proyecto) {
@@ -49,13 +37,6 @@ class APIs_Controller extends BaseController
                 $proyecto['nombre'] ?? 'Sin proyecto';
         }
 
-        /*
-     * Adaptar los datos del JSON a los nombres
-     * que actualmente espera la vista de APIs.
-     *
-     * Esto permite cambiar el almacenamiento
-     * sin modificar todavía la interfaz.
-     */
         $apis = array_map(
             static function (array $api) use ($nombresProyectos): array {
                 $idProyecto = isset($api['id_proyecto'])
@@ -65,17 +46,10 @@ class APIs_Controller extends BaseController
                 return array_merge(
                     $api,
                     [
-                        /*
-                     * Compatibilidad temporal:
-                     * la vista actual utiliza "id".
-                     */
+
                         'id' =>
                         $api['id_api'] ?? null,
 
-                        /*
-                     * La vista actual utiliza el nombre
-                     * del proyecto directamente.
-                     */
                         'proyecto' =>
                         $idProyecto !== null
                             ? (
@@ -84,10 +58,6 @@ class APIs_Controller extends BaseController
                             )
                             : 'Sin proyecto',
 
-                        /*
-                     * Compatibilidad con los nombres
-                     * utilizados actualmente por la vista.
-                     */
                         'repositorio' =>
                         $api['repositorio_url'] ?? '',
 
@@ -100,26 +70,204 @@ class APIs_Controller extends BaseController
         );
 
         $proyectosDisponibles = array_map(
-    static function (array $proyecto): array {
-        return [
-            'id_proyecto' =>
-                $proyecto['id_proyecto'] ?? null,
+            static function (array $proyecto): array {
+                return [
+                    'id_proyecto' =>
+                    $proyecto['id_proyecto'] ?? null,
 
-            'nombre' =>
-                $proyecto['nombre'] ?? 'Proyecto sin nombre',
-        ];
-    },
-    $proyectos
-);
+                    'nombre' =>
+                    $proyecto['nombre'] ?? 'Proyecto sin nombre',
+                ];
+            },
+            $proyectos
+        );
 
         return view(
-    'App\Modules\APIs\Views\index',
-    [
-        'title'     => 'APIs | Project Hub',
-        'apis'      => $apis,
-        'proyectos' => $proyectosDisponibles,
-    ]
-);
+            'App\Modules\APIs\Views\index',
+            [
+                'title'     => 'APIs | Project Hub',
+                'apis'      => $apis,
+                'proyectos' => $proyectosDisponibles,
+            ]
+        );
+    }
+
+    public function guardar()
+    {
+        $datos = $this->request->getJSON(true);
+
+        if (!is_array($datos)) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'Los datos enviados no son válidos.',
+                ]);
+        }
+
+        $idProyecto = (int) (
+            $datos['id_proyecto'] ?? 0
+        );
+
+        if ($idProyecto <= 0) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'Debes seleccionar un proyecto.',
+                ]);
+        }
+
+        $nombre = trim(
+            (string) ($datos['nombre'] ?? '')
+        );
+
+        if ($nombre === '') {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'El nombre de la API es obligatorio.',
+                ]);
+        }
+
+        $estado = trim(
+            (string) ($datos['estado'] ?? '')
+        );
+
+        $metodo = trim(
+            (string) ($datos['metodo'] ?? '')
+        );
+
+        $endpoint = trim(
+            (string) ($datos['endpoint'] ?? '')
+        );
+
+        if ($estado === '') {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'El estado es obligatorio.',
+                ]);
+        }
+
+        if ($metodo === '') {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'El método HTTP es obligatorio.',
+                ]);
+        }
+
+        if ($endpoint === '') {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok'      => false,
+                    'mensaje' => 'El endpoint es obligatorio.',
+                ]);
+        }
+
+        $apis = $this->storage->obtenerTodos();
+
+        $idSistema = $datos['id_sistema'] ?? null;
+
+        if (
+            $idSistema === ''
+            || $idSistema === null
+        ) {
+            $idSistema = null;
+        } else {
+            $idSistema = (int) $idSistema;
+        }
+
+        $api = [
+            'id_api' =>
+            $this->storage->generarNuevoId($apis),
+
+            'id_proyecto' =>
+            $idProyecto,
+
+            'id_sistema' =>
+            $idSistema,
+
+            'nombre' =>
+            $nombre,
+
+            'descripcion' => trim(
+                (string) ($datos['descripcion'] ?? '')
+            ),
+
+            'estado' =>
+            $estado,
+
+            'metodo' =>
+            strtoupper($metodo),
+
+            'endpoint' =>
+            $endpoint,
+
+            'url' => trim(
+                (string) ($datos['url'] ?? '')
+            ),
+
+            'autenticacion' => trim(
+                (string) ($datos['autenticacion'] ?? '')
+            ),
+
+            'repositorio_url' => trim(
+                (string) ($datos['repositorio_url'] ?? '')
+            ),
+
+            'ruta_local' => trim(
+                (string) ($datos['ruta_local'] ?? '')
+            ),
+
+            'url_servidor' => trim(
+                (string) ($datos['url_servidor'] ?? '')
+            ),
+
+            'headers' =>
+            is_array($datos['headers'] ?? null)
+                ? $datos['headers']
+                : [],
+
+            'parametros' =>
+            is_array($datos['parametros'] ?? null)
+                ? $datos['parametros']
+                : [],
+
+            'ejemplo' =>
+            is_array($datos['ejemplo'] ?? null)
+                ? $datos['ejemplo']
+                : [],
+
+            'respuestas' =>
+            is_array($datos['respuestas'] ?? null)
+                ? $datos['respuestas']
+                : [],
+
+            'responsable' => trim(
+                (string) ($datos['responsable'] ?? '')
+            ),
+
+            'observaciones' => trim(
+                (string) ($datos['observaciones'] ?? '')
+            ),
+
+            'activo' => true,
+        ];
+
+        $apis[] = $api;
+
+        $this->storage->guardarTodos($apis);
+
+        return $this->response->setJSON([
+            'ok'      => true,
+            'mensaje' => 'API registrada correctamente.',
+            'api'     => $api,
+        ]);
     }
 }
-
