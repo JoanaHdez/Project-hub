@@ -20,6 +20,33 @@
     background-color: #f8fafc;
 }
 
+.sistemas-catalogo__encabezado select {
+    width: 100%;
+    padding: 10px 12px;
+
+    border: 1px solid #d9dee5;
+    border-radius: 8px;
+
+    background-color: #ffffff;
+    color: #344054;
+
+    font-size: 0.95rem;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.sistemas-catalogo__encabezado select:focus {
+    outline: none;
+    border-color: #98a2b3;
+
+    box-shadow:
+        0 0 0 3px rgba(152, 162, 179, 0.15);
+}
+
 .sistemas-catalogo__encabezado {
     margin-bottom: 18px;
 }
@@ -40,6 +67,28 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+
+    max-height: 510px;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+.sistemas-catalogo__lista {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.sistemas-catalogo__lista::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sistemas-catalogo__lista::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sistemas-catalogo__lista::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 999px;
 }
 
 .sistema-selector {

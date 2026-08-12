@@ -19,72 +19,70 @@
         <aside class="sistemas-catalogo">
 
             <div class="sistemas-catalogo__encabezado">
-    <h3>Catálogo</h3>
+                <h3>Catálogo</h3>
 
-    <input
-        type="search"
-        id="buscar-sistema"
-        placeholder="Buscar sistema..."
-    >
+                <input type="search" id="buscar-sistema" placeholder="Buscar sistema...">
 
-    <select id="filtrar-proyecto">
-        <option value="">
-            Todos los proyectos
-        </option>
+                <select id="filtrar-proyecto">
+                    <option value="">
+                        Todos los proyectos
+                    </option>
 
-        <?php
-        $proyectosFiltro = [];
+                    <?php
+                    $proyectosFiltro = [];
 
-        foreach ($sistemas as $sistema) {
-            $proyecto = trim(
-                (string) ($sistema['proyecto'] ?? '')
-            );
+                    foreach ($sistemas as $sistema) {
+                        $proyecto = trim(
+                            (string) ($sistema['proyecto'] ?? '')
+                        );
 
-            if (
-                $proyecto === '' ||
-                $proyecto === 'Sin proyecto'
-            ) {
-                continue;
-            }
+                        if (
+                            $proyecto === '' ||
+                            $proyecto === 'Sin proyecto'
+                        ) {
+                            continue;
+                        }
 
-            $proyectosFiltro[$proyecto] = $proyecto;
-        }
+                        $proyectosFiltro[$proyecto] = $proyecto;
+                    }
 
-        natcasesort($proyectosFiltro);
-        ?>
+                    natcasesort($proyectosFiltro);
+                    ?>
 
-        <?php foreach ($proyectosFiltro as $proyecto): ?>
-            <option
-                value="<?= esc($proyecto, 'attr') ?>"
-            >
-                <?= esc($proyecto) ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-</div>
+                    <?php foreach ($proyectosFiltro as $proyecto): ?>
+                        <option value="<?= esc($proyecto, 'attr') ?>">
+                            <?= esc($proyecto) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+
+                <button type="button" id="limpiar-filtros-sistemas" class="boton boton--secundario">
+                    Limpiar filtros
+                </button>
+            </div>
 
             <div class="sistemas-catalogo__lista">
 
                 <?php foreach ($sistemas as $sistema): ?>
 
-                <button type="button" class="sistema-selector"
-                    data-sistema-nombre="<?= esc($sistema['nombre'], 'attr') ?>"
-                    data-sistema-url="<?= esc($sistema['url'] ?? '', 'attr') ?>"
-                    data-modo-visualizacion="<?= esc($sistema['modo_visualizacion'] ?? 'registro', 'attr') ?>"
-                    data-proyecto="<?= esc($sistema['proyecto'] ?? '', 'attr') ?>"
-                    data-estado="<?= esc($sistema['estado'] ?? '', 'attr') ?>"
-                    data-repositorio="<?= esc($sistema['repositorio'] ?? '', 'attr') ?>"
-                    data-ruta="<?= esc($sistema['ruta_local'] ?? '', 'attr') ?>"
-                    data-servidor="<?= esc($sistema['servidor'] ?? '', 'attr') ?>">
-                    <span class="sistema-selector__nombre">
-                        <?= esc($sistema['nombre']) ?>
-                    </span>
+                    <button type="button" class="sistema-selector"
+                        data-sistema-nombre="<?= esc($sistema['nombre'], 'attr') ?>"
+                        data-sistema-url="<?= esc($sistema['url'] ?? '', 'attr') ?>"
+                        data-modo-visualizacion="<?= esc($sistema['modo_visualizacion'] ?? 'registro', 'attr') ?>"
+                        data-proyecto="<?= esc($sistema['proyecto'] ?? '', 'attr') ?>"
+                        data-estado="<?= esc($sistema['estado'] ?? '', 'attr') ?>"
+                        data-repositorio="<?= esc($sistema['repositorio'] ?? '', 'attr') ?>"
+                        data-ruta="<?= esc($sistema['ruta_local'] ?? '', 'attr') ?>"
+                        data-servidor="<?= esc($sistema['servidor'] ?? '', 'attr') ?>">
+                        <span class="sistema-selector__nombre">
+                            <?= esc($sistema['nombre']) ?>
+                        </span>
 
-                    <span class="sistema-selector__proyecto">
-                        <?= esc($sistema['proyecto']) ?>
-                    </span>
+                        <span class="sistema-selector__proyecto">
+                            <?= esc($sistema['proyecto']) ?>
+                        </span>
 
-                    <?= view('components/ui/estado', [
+                        <?= view('components/ui/estado', [
                             'texto' => $sistema['estado'],
                             'tipo'  => strtolower($sistema['estado']) === 'producción'
                                 ? 'produccion'
@@ -92,7 +90,7 @@
                         ], [
                             'saveData' => false,
                         ]) ?>
-                </button>
+                    </button>
 
                 <?php endforeach; ?>
 

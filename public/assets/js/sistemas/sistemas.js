@@ -25,6 +25,8 @@ const buscadorSistema = document.getElementById("buscar-sistema");
 
 const filtroProyecto = document.getElementById("filtrar-proyecto");
 
+const botonLimpiarFiltros = document.getElementById("limpiar-filtros-sistemas",);
+
 let sistemaUrlActual = "";
 
 selectoresSistema.forEach((selector) => {
@@ -253,6 +255,23 @@ if (filtroProyecto) {
     filtrarSistemas,
   );
 }
+
+botonLimpiarFiltros?.addEventListener(
+  "click",
+  () => {
+    if (buscadorSistema) {
+      buscadorSistema.value = "";
+    }
+
+    if (filtroProyecto) {
+      filtroProyecto.value = "";
+    }
+
+    filtrarSistemas();
+
+    buscadorSistema?.focus();
+  },
+);
 
 /*==================================================
 =          ABRIR SISTEMA EN OTRA PESTAÑA           =
