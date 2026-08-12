@@ -1,31 +1,63 @@
 export function inicializarFormularioNuevaApi() {
-  const formulario = document.getElementById("form-nueva-api",);
+  const formulario = document.getElementById(
+    "form-nueva-api",
+  );
 
   if (!formulario) {
     return;
   }
 
-  const selectProyecto = document.getElementById("nueva-api-proyecto",);
+  /*==================================================*
+  *=                    ELEMENTOS                     =*
+  *==================================================*/
 
-  const selectSistema = document.getElementById("nueva-api-sistema",);
+  const selectProyecto = document.getElementById(
+    "nueva-api-proyecto",
+  );
 
-  const botonAgregarHeader = document.getElementById("btn-agregar-header",);
+  const selectSistema = document.getElementById(
+    "nueva-api-sistema",
+  );
 
-  const contenedorHeaders = document.getElementById("nueva-api-headers",);
+  const botonAgregarHeader = document.getElementById(
+    "btn-agregar-header",
+  );
 
-  const estadoHeadersVacio = document.getElementById("nueva-api-headers-vacio",);
+  const contenedorHeaders = document.getElementById(
+    "nueva-api-headers",
+  );
 
-  const botonAgregarParametro = document.getElementById("btn-agregar-parametro",);
+  const estadoHeadersVacio = document.getElementById(
+    "nueva-api-headers-vacio",
+  );
 
-  const contenedorParametros = document.getElementById("nueva-api-parametros",);
+  const botonAgregarParametro = document.getElementById(
+    "btn-agregar-parametro",
+  );
 
-  const estadoParametrosVacio = document.getElementById("nueva-api-parametros-vacio",);
+  const contenedorParametros = document.getElementById(
+    "nueva-api-parametros",
+  );
 
-  const botonAgregarRespuesta = document.getElementById("btn-agregar-respuesta",);
+  const estadoParametrosVacio = document.getElementById(
+    "nueva-api-parametros-vacio",
+  );
 
-  const contenedorRespuestas = document.getElementById("nueva-api-respuestas",);
+  const botonAgregarRespuesta = document.getElementById(
+    "btn-agregar-respuesta",
+  );
 
-  const estadoRespuestasVacio = document.getElementById("nueva-api-respuestas-vacio",);
+  const contenedorRespuestas = document.getElementById(
+    "nueva-api-respuestas",
+  );
+
+  const estadoRespuestasVacio = document.getElementById(
+    "nueva-api-respuestas-vacio",
+  );
+
+  const campoEjemploBody = document.getElementById(
+    "nueva-api-ejemplo-body",
+  );
 
   if (!selectProyecto || !selectSistema) {
     return;
@@ -103,7 +135,7 @@ export function inicializarFormularioNuevaApi() {
   );
 
   /*==================================================*
-  *=                    HEADERS                      =*
+  *=                    HEADERS                       =*
   *==================================================*/
 
   if (
@@ -149,7 +181,7 @@ export function inicializarFormularioNuevaApi() {
   }
 
   /*==================================================*
-  *=                  PARÁMETROS                     =*
+  *=                  PARÁMETROS                      =*
   *==================================================*/
 
   if (
@@ -195,14 +227,17 @@ export function inicializarFormularioNuevaApi() {
   }
 
   /*==================================================*
-*=               RESPUESTAS ESPERADAS               =*
-*==================================================*/
+  *=               RESPUESTAS ESPERADAS              =*
+  *==================================================*/
 
   if (
     botonAgregarRespuesta &&
     contenedorRespuestas &&
     estadoRespuestasVacio
   ) {
+    /*
+     * Agregar respuesta.
+     */
     botonAgregarRespuesta.addEventListener(
       "click",
       () => {
@@ -213,6 +248,9 @@ export function inicializarFormularioNuevaApi() {
       },
     );
 
+    /*
+     * Eliminar respuesta.
+     */
     contenedorRespuestas.addEventListener(
       "click",
       (event) => {
@@ -238,8 +276,43 @@ export function inicializarFormularioNuevaApi() {
         );
       },
     );
+
+    /*
+     * Validar el JSON de los bodies
+     * automáticamente mientras se escribe.
+     */
+    contenedorRespuestas.addEventListener(
+      "input",
+      (event) => {
+        const campoBody = event.target.closest(
+          "[data-respuesta-body]",
+        );
+
+        if (!campoBody) {
+          return;
+        }
+
+        validarCampoJson(campoBody);
+      },
+    );
+  }
+
+  /*==================================================*
+  *=           EJEMPLO DE CONSUMO                    =*
+  *==================================================*/
+
+  if (campoEjemploBody) {
+    campoEjemploBody.addEventListener(
+      "input",
+      () => {
+        validarCampoJson(
+          campoEjemploBody,
+        );
+      },
+    );
   }
 }
+
 
 /*==================================================*
 *=                AGREGAR HEADER                    =*
@@ -334,6 +407,7 @@ function agregarHeader(
   );
 }
 
+
 /*==================================================*
 *=         ACTUALIZAR ESTADO DE HEADERS             =*
 *==================================================*/
@@ -347,8 +421,10 @@ function actualizarEstadoHeaders(
       "[data-api-header]",
     ) !== null;
 
-  estadoVacio.hidden = existenHeaders;
+  estadoVacio.hidden =
+    existenHeaders;
 }
+
 
 /*==================================================*
 *=              AGREGAR PARÁMETRO                   =*
@@ -467,6 +543,7 @@ function agregarParametro(
   );
 }
 
+
 /*==================================================*
 *=       ACTUALIZAR ESTADO DE PARÁMETROS            =*
 *==================================================*/
@@ -480,8 +557,10 @@ function actualizarEstadoParametros(
       "[data-api-parametro]",
     ) !== null;
 
-  estadoVacio.hidden = existenParametros;
+  estadoVacio.hidden =
+    existenParametros;
 }
+
 
 /*==================================================*
 *=              AGREGAR RESPUESTA                   =*
@@ -528,6 +607,7 @@ function agregarRespuesta(
       </div>
 
       <div class="form-grupo form-grupo--completo">
+
         <label>
           Body de respuesta
         </label>
@@ -536,14 +616,15 @@ function agregarRespuesta(
           rows="6"
           data-respuesta-body
           placeholder='{
-            "success": true,
-            "message": "Operación realizada correctamente"
-          }'
+  "success": true,
+  "message": "Operación realizada correctamente"
+}'
         ></textarea>
 
         <small>
           Ingresa un objeto JSON válido.
         </small>
+
       </div>
 
     </div>
@@ -569,6 +650,7 @@ function agregarRespuesta(
   );
 }
 
+
 /*==================================================*
 *=       ACTUALIZAR ESTADO DE RESPUESTAS            =*
 *==================================================*/
@@ -582,5 +664,74 @@ function actualizarEstadoRespuestas(
       "[data-api-respuesta]",
     ) !== null;
 
-  estadoVacio.hidden = existenRespuestas;
+  estadoVacio.hidden =
+    existenRespuestas;
+}
+
+
+/*==================================================*
+*=               VALIDAR JSON                       =*
+*==================================================*/
+
+function validarCampoJson(campo) {
+  const valor =
+    campo.value.trim();
+
+  let mensajeError = campo
+    .closest(".form-grupo")
+    ?.querySelector(
+      "[data-error-json]",
+    );
+
+  /*
+   * Campo vacío:
+   * no lo consideramos error.
+   */
+  if (!valor) {
+    campo.dataset.jsonValido =
+      "true";
+
+    if (mensajeError) {
+      mensajeError.remove();
+    }
+
+    return true;
+  }
+
+  try {
+    JSON.parse(valor);
+
+    campo.dataset.jsonValido =
+      "true";
+
+    if (mensajeError) {
+      mensajeError.remove();
+    }
+
+    return true;
+  } catch (error) {
+    campo.dataset.jsonValido =
+      "false";
+
+    if (!mensajeError) {
+      mensajeError =
+        document.createElement("small");
+
+      mensajeError.dataset.errorJson =
+        "";
+
+      mensajeError.className =
+        "campo-error";
+
+      campo.insertAdjacentElement(
+        "afterend",
+        mensajeError,
+      );
+    }
+
+    mensajeError.textContent =
+      "El contenido debe ser un JSON válido.";
+
+    return false;
+  }
 }
