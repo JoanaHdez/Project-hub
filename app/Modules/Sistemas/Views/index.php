@@ -19,10 +19,49 @@
         <aside class="sistemas-catalogo">
 
             <div class="sistemas-catalogo__encabezado">
-                <h3>Catálogo</h3>
+    <h3>Catálogo</h3>
 
-                <input type="search" id="buscar-sistema" placeholder="Buscar sistema...">
-            </div>
+    <input
+        type="search"
+        id="buscar-sistema"
+        placeholder="Buscar sistema..."
+    >
+
+    <select id="filtrar-proyecto">
+        <option value="">
+            Todos los proyectos
+        </option>
+
+        <?php
+        $proyectosFiltro = [];
+
+        foreach ($sistemas as $sistema) {
+            $proyecto = trim(
+                (string) ($sistema['proyecto'] ?? '')
+            );
+
+            if (
+                $proyecto === '' ||
+                $proyecto === 'Sin proyecto'
+            ) {
+                continue;
+            }
+
+            $proyectosFiltro[$proyecto] = $proyecto;
+        }
+
+        natcasesort($proyectosFiltro);
+        ?>
+
+        <?php foreach ($proyectosFiltro as $proyecto): ?>
+            <option
+                value="<?= esc($proyecto, 'attr') ?>"
+            >
+                <?= esc($proyecto) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</div>
 
             <div class="sistemas-catalogo__lista">
 

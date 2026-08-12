@@ -23,6 +23,8 @@ const fichaServidor = document.getElementById("ficha-servidor");
 
 const buscadorSistema = document.getElementById("buscar-sistema");
 
+const filtroProyecto = document.getElementById("filtrar-proyecto");
+
 let sistemaUrlActual = "";
 
 selectoresSistema.forEach((selector) => {
@@ -187,19 +189,70 @@ visorFrame?.addEventListener("load", () => {
   visorFrame.hidden = false;
 });
 
-/*==================================================
-=             BÚSQUEDA DE SISTEMAS                 =
-==================================================*/
+/*==================================================*
+*=          FILTRO Y BÚSQUEDA DE SISTEMAS          =*
+*==================================================*/
 
-buscadorSistema?.addEventListener("input", () => {
-  const termino = normalizarTexto(buscadorSistema.value);
+function filtrarSistemas() {
+  const termino = normalizarTexto(
+    buscadorSistema ? buscadorSistema.value : "",
+  );
+
+  const proyectoSeleccionado = normalizarTexto(
+    filtroProyecto ? filtroProyecto.value : "",
+  );
 
   selectoresSistema.forEach((selector) => {
-    const contenido = normalizarTexto(selector.textContent);
+    const nombreSistema = normalizarTexto(
+      selector.dataset.sistemaNombre ?? "",
+    );
 
-    selector.hidden = !contenido.includes(termino);
+    const proyectoSistema = normalizarTexto(
+      selector.dataset.proyecto ?? "",
+    );
+
+    /*
+     * Buscar tanto por nombre del sistema
+     * como por nombre del proyecto.
+     */
+    const coincideBusqueda =
+      termino === "" ||
+      nombreSistema.includes(termino) ||
+      proyectoSistema.includes(termino);
+
+    /*
+     * Si no hay proyecto seleccionado,
+     * se aceptan todos.
+     */
+    const coincideProyecto =
+      proyectoSeleccionado === "" ||
+      proyectoSistema === proyectoSeleccionado;
+
+    const mostrar =
+      coincideBusqueda && coincideProyecto;
+
+    /*
+     * Usamos display directamente para evitar
+     * conflictos con los estilos de .sistema-selector.
+     */
+    selector.style.display =
+      mostrar ? "" : "none";
   });
-});
+}
+
+if (buscadorSistema) {
+  buscadorSistema.addEventListener(
+    "input",
+    filtrarSistemas,
+  );
+}
+
+if (filtroProyecto) {
+  filtroProyecto.addEventListener(
+    "change",
+    filtrarSistemas,
+  );
+}
 
 /*==================================================
 =          ABRIR SISTEMA EN OTRA PESTAÑA           =
