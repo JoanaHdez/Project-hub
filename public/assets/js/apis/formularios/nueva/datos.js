@@ -15,10 +15,15 @@ import {
 *=              OBTENER EJEMPLO                     =*
 *==================================================*/
 
-function obtenerEjemplo(
-  campoBody,
+function obtenerEjemplo({
   formulario,
-) {
+  campoEjemploId,
+}) {
+  const campoBody =
+    document.getElementById(
+      campoEjemploId,
+    );
+
   const valor =
     campoBody?.value.trim() ?? "";
 
@@ -49,21 +54,19 @@ function obtenerEjemplo(
 
 
 /*==================================================*
-*=            OBTENER DATOS NUEVA API               =*
+*=             OBTENER DATOS DE API                 =*
 *==================================================*/
 
-export function obtenerDatosNuevaApi(
+export function obtenerDatosApi({
   formulario,
-) {
+  prefijo = "nueva-api",
+}) {
   const datosFormulario =
     new FormData(formulario);
 
   const idSistema =
-    datosFormulario.get("id_sistema");
-
-  const campoEjemploBody =
-    document.getElementById(
-      "nueva-api-ejemplo-body",
+    datosFormulario.get(
+      "id_sistema",
     );
 
   return {
@@ -80,7 +83,9 @@ export function obtenerDatosNuevaApi(
         : Number(idSistema),
 
     nombre: String(
-      datosFormulario.get("nombre") ?? "",
+      datosFormulario.get(
+        "nombre",
+      ) ?? "",
     ).trim(),
 
     descripcion: String(
@@ -90,19 +95,27 @@ export function obtenerDatosNuevaApi(
     ).trim(),
 
     estado: String(
-      datosFormulario.get("estado") ?? "",
+      datosFormulario.get(
+        "estado",
+      ) ?? "",
     ),
 
     metodo: String(
-      datosFormulario.get("metodo") ?? "",
+      datosFormulario.get(
+        "metodo",
+      ) ?? "",
     ),
 
     endpoint: String(
-      datosFormulario.get("endpoint") ?? "",
+      datosFormulario.get(
+        "endpoint",
+      ) ?? "",
     ).trim(),
 
     url: String(
-      datosFormulario.get("url") ?? "",
+      datosFormulario.get(
+        "url",
+      ) ?? "",
     ).trim(),
 
     autenticacion: String(
@@ -142,18 +155,56 @@ export function obtenerDatosNuevaApi(
     ).trim(),
 
     headers:
-      obtenerHeaders(),
+      obtenerHeaders({
+        contenedorId:
+          `${prefijo}-headers`,
+      }),
 
     parametros:
-      obtenerParametros(),
+      obtenerParametros({
+        contenedorId:
+          `${prefijo}-parametros`,
+      }),
 
     ejemplo:
-      obtenerEjemplo(
-        campoEjemploBody,
+      obtenerEjemplo({
         formulario,
-      ),
+        campoEjemploId:
+          `${prefijo}-ejemplo-body`,
+      }),
 
     respuestas:
-      obtenerRespuestas(),
+      obtenerRespuestas({
+        contenedorId:
+          `${prefijo}-respuestas`,
+      }),
   };
+}
+
+
+/*==================================================*
+*=         COMPATIBILIDAD NUEVA API                 =*
+*==================================================*/
+
+export function obtenerDatosNuevaApi(
+  formulario,
+) {
+  return obtenerDatosApi({
+    formulario,
+    prefijo: "nueva-api",
+  });
+}
+
+
+/*==================================================*
+*=         COMPATIBILIDAD EDITAR API                =*
+*==================================================*/
+
+export function obtenerDatosEditarApi(
+  formulario,
+) {
+  return obtenerDatosApi({
+    formulario,
+    prefijo: "editar-api",
+  });
 }

@@ -13,20 +13,47 @@ class APIs_Controller extends BaseController
 
     public function __construct()
     {
-        $this->storage = new API_StorageService();
-        $this->proyectoStorage = new Proyecto_StorageService();
+        $this->storage =
+            new API_StorageService();
+
+        $this->proyectoStorage =
+            new Proyecto_StorageService();
     }
+
+
+    /*==================================================
+    =                     INDEX                        =
+    ==================================================*/
+
     public function index()
     {
-        $apisAlmacenadas = $this->storage->obtenerTodos();
+        $apisAlmacenadas =
+            $this->storage->obtenerTodos();
 
-        $proyectos = $this->proyectoStorage->obtenerTodos();
+        usort(
+            $apisAlmacenadas,
+            static function (
+                array $a,
+                array $b
+            ): int {
+                return (int) (
+                    $b['id_api'] ?? 0
+                ) <=> (int) (
+                    $a['id_api'] ?? 0
+                );
+            }
+        );
+
+        $proyectos =
+            $this->proyectoStorage
+            ->obtenerTodos();
 
         $nombresProyectos = [];
 
         foreach ($proyectos as $proyecto) {
             $idProyecto = (int) (
-                $proyecto['id_proyecto'] ?? 0
+                $proyecto['id_proyecto']
+                ?? 0
             );
 
             if ($idProyecto <= 0) {
@@ -34,21 +61,29 @@ class APIs_Controller extends BaseController
             }
 
             $nombresProyectos[$idProyecto] =
-                $proyecto['nombre'] ?? 'Sin proyecto';
+                $proyecto['nombre']
+                ?? 'Sin proyecto';
         }
 
         $apis = array_map(
-            static function (array $api) use ($nombresProyectos): array {
-                $idProyecto = isset($api['id_proyecto'])
+            static function (
+                array $api
+            ) use (
+                $nombresProyectos
+            ): array {
+                $idProyecto =
+                    isset(
+                        $api['id_proyecto']
+                    )
                     ? (int) $api['id_proyecto']
                     : null;
 
                 return array_merge(
                     $api,
                     [
-
                         'id' =>
-                        $api['id_api'] ?? null,
+                        $api['id_api']
+                            ?? null,
 
                         'proyecto' =>
                         $idProyecto !== null
@@ -69,110 +104,343 @@ class APIs_Controller extends BaseController
             $apisAlmacenadas
         );
 
-        $proyectosDisponibles = array_map(
-            static function (array $proyecto): array {
-                return [
-                    'id_proyecto' =>
-                    $proyecto['id_proyecto'] ?? null,
+        $proyectosDisponibles =
+            array_map(
+                static function (
+                    array $proyecto
+                ): array {
+                    return [
+                        'id_proyecto' =>
+                        $proyecto['id_proyecto'] ?? null,
 
-                    'nombre' =>
-                    $proyecto['nombre'] ?? 'Proyecto sin nombre',
-                ];
-            },
-            $proyectos
-        );
+                        'nombre' =>
+                        $proyecto['nombre']
+                            ?? 'Proyecto sin nombre',
+                    ];
+                },
+                $proyectos
+            );
 
         return view(
             'App\Modules\APIs\Views\index',
             [
-                'title'     => 'APIs | Project Hub',
-                'apis'      => $apis,
-                'proyectos' => $proyectosDisponibles,
+                'title' =>
+                'APIs | Project Hub',
+
+                'apis' =>
+                $apis,
+
+                'proyectos' =>
+                $proyectosDisponibles,
             ]
         );
     }
 
+
+    /*==================================================
+    =                    GUARDAR                       =
+    ==================================================*/
+
     public function guardar()
     {
-        $datos = $this->request->getJSON(true);
+        $datos =
+            $this->request
+            ->getJSON(true);
 
+        $error =
+            $this->validarDatosApi(
+                $datos
+            );
+
+        if ($error !== null) {
+            return $error;
+        }
+
+        $apis =
+            $this->storage
+            ->obtenerTodos();
+
+        $api =
+            $this->construirDatosApi(
+                $datos,
+                [
+                    'id_api' =>
+                    $this->storage
+                        ->generarNuevoId(
+                            $apis
+                        ),
+
+                    'activo' => true,
+                ]
+            );
+
+        $apis[] = $api;
+
+        $this->storage
+            ->guardarTodos(
+                $apis
+            );
+
+        $apiVista =
+            $this->construirApiVista(
+                $api
+            );
+
+        $selectorHtml =
+            $this->construirSelectorHtml(
+                $apiVista
+            );
+
+        return $this->response
+            ->setJSON([
+                'ok' => true,
+
+                'mensaje' =>
+                'API registrada correctamente.',
+
+                'api' =>
+                $apiVista,
+
+                'selector_html' =>
+                $selectorHtml,
+            ]);
+    }
+
+
+    /*==================================================
+    =                   ACTUALIZAR                     =
+    ==================================================*/
+
+    public function actualizar(
+        int $idApi
+    ) {
+        $datos =
+            $this->request
+            ->getJSON(true);
+
+        $error =
+            $this->validarDatosApi(
+                $datos
+            );
+
+        if ($error !== null) {
+            return $error;
+        }
+
+        $apis =
+            $this->storage
+            ->obtenerTodos();
+
+        $indiceApi = null;
+        $apiExistente = null;
+
+        foreach (
+            $apis as
+            $indice => $api
+        ) {
+            if (
+                (int) (
+                    $api['id_api']
+                    ?? 0
+                ) === $idApi
+            ) {
+                $indiceApi =
+                    $indice;
+
+                $apiExistente =
+                    $api;
+
+                break;
+            }
+        }
+
+        if (
+            $indiceApi === null ||
+            $apiExistente === null
+        ) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'No se encontró la API solicitada.',
+                ]);
+        }
+
+        /*
+         * Conservamos campos que no deben
+         * perderse durante una edición.
+         */
+        $apiActualizada =
+            $this->construirDatosApi(
+                $datos,
+                [
+                    'id_api' =>
+                    $idApi,
+
+                    'activo' =>
+                    (bool) (
+                        $apiExistente['activo'] ?? true
+                    ),
+                ]
+            );
+
+        $apis[$indiceApi] =
+            $apiActualizada;
+
+        $this->storage
+            ->guardarTodos(
+                $apis
+            );
+
+        $apiVista =
+            $this->construirApiVista(
+                $apiActualizada
+            );
+
+        $selectorHtml =
+            $this->construirSelectorHtml(
+                $apiVista
+            );
+
+        return $this->response
+            ->setJSON([
+                'ok' => true,
+
+                'mensaje' =>
+                'API actualizada correctamente.',
+
+                'api' =>
+                $apiVista,
+
+                'selector_html' =>
+                $selectorHtml,
+            ]);
+    }
+
+
+    /*==================================================
+    =                VALIDAR DATOS                    =
+    ==================================================*/
+
+    private function validarDatosApi(
+        mixed $datos
+    ) {
         if (!is_array($datos)) {
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok'      => false,
-                    'mensaje' => 'Los datos enviados no son válidos.',
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'Los datos enviados no son válidos.',
                 ]);
         }
 
         $idProyecto = (int) (
-            $datos['id_proyecto'] ?? 0
+            $datos['id_proyecto']
+            ?? 0
         );
 
         if ($idProyecto <= 0) {
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok'      => false,
-                    'mensaje' => 'Debes seleccionar un proyecto.',
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'Debes seleccionar un proyecto.',
                 ]);
         }
 
         $nombre = trim(
-            (string) ($datos['nombre'] ?? '')
+            (string) (
+                $datos['nombre']
+                ?? ''
+            )
         );
 
         if ($nombre === '') {
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok'      => false,
-                    'mensaje' => 'El nombre de la API es obligatorio.',
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'El nombre de la API es obligatorio.',
                 ]);
         }
 
         $estado = trim(
-            (string) ($datos['estado'] ?? '')
-        );
-
-        $metodo = trim(
-            (string) ($datos['metodo'] ?? '')
-        );
-
-        $endpoint = trim(
-            (string) ($datos['endpoint'] ?? '')
+            (string) (
+                $datos['estado']
+                ?? ''
+            )
         );
 
         if ($estado === '') {
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok'      => false,
-                    'mensaje' => 'El estado es obligatorio.',
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'El estado es obligatorio.',
                 ]);
         }
+
+        $metodo = trim(
+            (string) (
+                $datos['metodo']
+                ?? ''
+            )
+        );
 
         if ($metodo === '') {
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok'      => false,
-                    'mensaje' => 'El método HTTP es obligatorio.',
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'El método HTTP es obligatorio.',
                 ]);
         }
+
+        $endpoint = trim(
+            (string) (
+                $datos['endpoint']
+                ?? ''
+            )
+        );
 
         if ($endpoint === '') {
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok'      => false,
-                    'mensaje' => 'El endpoint es obligatorio.',
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'El endpoint es obligatorio.',
                 ]);
         }
 
-        $apis = $this->storage->obtenerTodos();
+        return null;
+    }
 
-        $idSistema = $datos['id_sistema'] ?? null;
+
+    /*==================================================
+    =             CONSTRUIR DATOS API                =
+    ==================================================*/
+
+    private function construirDatosApi(
+        array $datos,
+        array $datosBase = []
+    ): array {
+        $idSistema =
+            $datos['id_sistema']
+            ?? null;
 
         if (
             $idSistema === ''
@@ -180,111 +448,189 @@ class APIs_Controller extends BaseController
         ) {
             $idSistema = null;
         } else {
-            $idSistema = (int) $idSistema;
+            $idSistema =
+                (int) $idSistema;
         }
 
-        $api = [
-            'id_api' =>
-            $this->storage->generarNuevoId($apis),
+        return array_merge(
+            $datosBase,
+            [
+                'id_proyecto' =>
+                (int) (
+                    $datos['id_proyecto'] ?? 0
+                ),
 
-            'id_proyecto' =>
-            $idProyecto,
+                'id_sistema' =>
+                $idSistema,
 
-            'id_sistema' =>
-            $idSistema,
+                'nombre' =>
+                trim(
+                    (string) (
+                        $datos['nombre']
+                        ?? ''
+                    )
+                ),
 
-            'nombre' =>
-            $nombre,
+                'descripcion' =>
+                trim(
+                    (string) (
+                        $datos['descripcion'] ?? ''
+                    )
+                ),
 
-            'descripcion' => trim(
-                (string) ($datos['descripcion'] ?? '')
-            ),
+                'estado' =>
+                trim(
+                    (string) (
+                        $datos['estado']
+                        ?? ''
+                    )
+                ),
 
-            'estado' =>
-            $estado,
+                'metodo' =>
+                strtoupper(
+                    trim(
+                        (string) (
+                            $datos['metodo']
+                            ?? ''
+                        )
+                    )
+                ),
 
-            'metodo' =>
-            strtoupper($metodo),
+                'endpoint' =>
+                trim(
+                    (string) (
+                        $datos['endpoint']
+                        ?? ''
+                    )
+                ),
 
-            'endpoint' =>
-            $endpoint,
+                'url' =>
+                trim(
+                    (string) (
+                        $datos['url']
+                        ?? ''
+                    )
+                ),
 
-            'url' => trim(
-                (string) ($datos['url'] ?? '')
-            ),
+                'autenticacion' =>
+                trim(
+                    (string) (
+                        $datos['autenticacion'] ?? ''
+                    )
+                ),
 
-            'autenticacion' => trim(
-                (string) ($datos['autenticacion'] ?? '')
-            ),
+                'repositorio_url' =>
+                trim(
+                    (string) (
+                        $datos['repositorio_url'] ?? ''
+                    )
+                ),
 
-            'repositorio_url' => trim(
-                (string) ($datos['repositorio_url'] ?? '')
-            ),
+                'ruta_local' =>
+                trim(
+                    (string) (
+                        $datos['ruta_local'] ?? ''
+                    )
+                ),
 
-            'ruta_local' => trim(
-                (string) ($datos['ruta_local'] ?? '')
-            ),
+                'url_servidor' =>
+                trim(
+                    (string) (
+                        $datos['url_servidor'] ?? ''
+                    )
+                ),
 
-            'url_servidor' => trim(
-                (string) ($datos['url_servidor'] ?? '')
-            ),
+                'headers' =>
+                is_array(
+                    $datos['headers']
+                        ?? null
+                )
+                    ? $datos['headers']
+                    : [],
 
-            'headers' =>
-            is_array($datos['headers'] ?? null)
-                ? $datos['headers']
-                : [],
+                'parametros' =>
+                is_array(
+                    $datos['parametros'] ?? null
+                )
+                    ? $datos['parametros']
+                    : [],
 
-            'parametros' =>
-            is_array($datos['parametros'] ?? null)
-                ? $datos['parametros']
-                : [],
+                'ejemplo' =>
+                is_array(
+                    $datos['ejemplo']
+                        ?? null
+                )
+                    ? $datos['ejemplo']
+                    : [],
 
-            'ejemplo' =>
-            is_array($datos['ejemplo'] ?? null)
-                ? $datos['ejemplo']
-                : [],
+                'respuestas' =>
+                is_array(
+                    $datos['respuestas'] ?? null
+                )
+                    ? $datos['respuestas']
+                    : [],
 
-            'respuestas' =>
-            is_array($datos['respuestas'] ?? null)
-                ? $datos['respuestas']
-                : [],
+                'responsable' =>
+                trim(
+                    (string) (
+                        $datos['responsable'] ?? ''
+                    )
+                ),
 
-            'responsable' => trim(
-                (string) ($datos['responsable'] ?? '')
-            ),
+                'observaciones' =>
+                trim(
+                    (string) (
+                        $datos['observaciones'] ?? ''
+                    )
+                ),
+            ]
+        );
+    }
 
-            'observaciones' => trim(
-                (string) ($datos['observaciones'] ?? '')
-            ),
 
-            'activo' => true,
-        ];
+    /*==================================================
+    =               CONSTRUIR API VISTA              =
+    ==================================================*/
 
-        $apis[] = $api;
+    private function construirApiVista(
+        array $api
+    ): array {
+        $nombreProyecto =
+            'Sin proyecto';
 
-        $this->storage->guardarTodos($apis);
+        $idProyecto =
+            (int) (
+                $api['id_proyecto']
+                ?? 0
+            );
 
-        $nombreProyecto = 'Sin proyecto';
+        $proyectos =
+            $this->proyectoStorage
+            ->obtenerTodos();
 
-        $proyectos = $this->proyectoStorage->obtenerTodos();
-
-        foreach ($proyectos as $proyecto) {
+        foreach (
+            $proyectos as
+            $proyecto
+        ) {
             if (
-                (int) ($proyecto['id_proyecto'] ?? 0)
-                === $idProyecto
+                (int) (
+                    $proyecto['id_proyecto'] ?? 0
+                ) === $idProyecto
             ) {
                 $nombreProyecto =
-                    $proyecto['nombre'] ?? 'Sin proyecto';
+                    $proyecto['nombre']
+                    ?? 'Sin proyecto';
 
                 break;
             }
         }
 
-        $apiVista = array_merge(
+        return array_merge(
             $api,
             [
                 'id' =>
-                $api['id_api'],
+                $api['id_api']
+                    ?? null,
 
                 'proyecto' =>
                 $nombreProyecto,
@@ -296,95 +642,107 @@ class APIs_Controller extends BaseController
                 $api['url_servidor'] ?? '',
             ]
         );
+    }
 
-        $selectorHtml = view(
+
+    /*==================================================
+    =             CONSTRUIR SELECTOR HTML            =
+    ==================================================*/
+
+    private function construirSelectorHtml(
+        array $api
+    ): string {
+        return view(
             'App\Modules\APIs\Views\components\api_selector',
             [
                 'titulo' =>
-                $apiVista['nombre'],
+                $api['nombre'],
 
                 'proyecto' =>
-                $apiVista['proyecto'],
+                $api['proyecto'],
 
                 'estado' =>
-                $apiVista['estado'],
+                $api['estado'],
 
                 'metodo' =>
-                $apiVista['metodo'],
+                $api['metodo'],
 
                 'atributos' => [
                     'data-api-id' =>
-                    $apiVista['id'],
+                    $api['id'],
+
+                    'data-api-id-proyecto' =>
+                    $api['id_proyecto'] ?? '',
+
+                    'data-api-id-sistema' =>
+                    $api['id_sistema'] ?? '',
 
                     'data-api-nombre' =>
-                    $apiVista['nombre'],
+                    $api['nombre'],
 
                     'data-api-proyecto' =>
-                    $apiVista['proyecto'],
+                    $api['proyecto'],
 
                     'data-api-descripcion' =>
-                    $apiVista['descripcion'],
+                    $api['descripcion'],
 
                     'data-api-estado' =>
-                    $apiVista['estado'],
+                    $api['estado'],
 
                     'data-api-metodo' =>
-                    $apiVista['metodo'],
+                    $api['metodo'],
 
                     'data-api-endpoint' =>
-                    $apiVista['endpoint'],
+                    $api['endpoint'],
 
                     'data-api-url' =>
-                    $apiVista['url'],
+                    $api['url'],
 
                     'data-api-autenticacion' =>
-                    $apiVista['autenticacion'],
+                    $api['autenticacion'],
 
                     'data-api-repositorio' =>
-                    $apiVista['repositorio'],
+                    $api['repositorio'],
 
                     'data-api-ruta' =>
-                    $apiVista['ruta_local'],
+                    $api['ruta_local'],
 
                     'data-api-servidor' =>
-                    $apiVista['servidor'],
+                    $api['servidor'],
 
-                    'data-api-headers' => json_encode(
-                        $apiVista['headers'] ?? [],
+                    'data-api-headers' =>
+                    json_encode(
+                        $api['headers'] ?? [],
                         JSON_UNESCAPED_UNICODE
                             | JSON_UNESCAPED_SLASHES
                     ),
 
-                    'data-api-parametros' => json_encode(
-                        $apiVista['parametros'] ?? [],
+                    'data-api-parametros' =>
+                    json_encode(
+                        $api['parametros'] ?? [],
                         JSON_UNESCAPED_UNICODE
                             | JSON_UNESCAPED_SLASHES
                     ),
 
-                    'data-api-ejemplo' => json_encode(
-                        $apiVista['ejemplo'] ?? [],
+                    'data-api-ejemplo' =>
+                    json_encode(
+                        $api['ejemplo'] ?? [],
                         JSON_UNESCAPED_UNICODE
                             | JSON_UNESCAPED_SLASHES
                     ),
 
-                    'data-api-respuestas' => json_encode(
-                        $apiVista['respuestas'] ?? [],
+                    'data-api-respuestas' =>
+                    json_encode(
+                        $api['respuestas'] ?? [],
                         JSON_UNESCAPED_UNICODE
                             | JSON_UNESCAPED_SLASHES
                     ),
                 ],
             ],
             [
-                'saveData' => false,
+                'saveData' =>
+                false,
             ]
         );
-
-
-        return $this->response->setJSON([
-            'ok'            => true,
-            'mensaje'       => 'API registrada correctamente.',
-            'api'           => $apiVista,
-            'selector_html' => $selectorHtml,
-        ]);
     }
 }

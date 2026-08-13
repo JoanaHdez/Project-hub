@@ -602,6 +602,7 @@
     },
     {
         "id_api": 19,
+        "activo": true,
         "id_proyecto": 7,
         "id_sistema": null,
         "nombre": "api prueba 13",
@@ -631,15 +632,8 @@
             }
         ],
         "ejemplo": [],
-        "respuestas": [
-            {
-                "codigo": 0,
-                "descripcion": "",
-                "body": []
-            }
-        ],
+        "respuestas": [],
         "responsable": "",
-        "observaciones": "",
-        "activo": true
+        "observaciones": ""
     }
 ]

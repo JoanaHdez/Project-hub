@@ -11,4 +11,6 @@ $routes->group('apis', ['namespace' => 'App\Modules\APIs\Controllers'], static f
 $routes->get('/', 'APIs_Controller::index');
 
 $routes->post('/', 'APIs_Controller::guardar');
+
+$routes->put('(:num)', 'APIs_Controller::actualizar/$1');
 });
