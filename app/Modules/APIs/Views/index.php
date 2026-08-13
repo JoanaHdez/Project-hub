@@ -23,4 +23,11 @@
     ]
 ) ?>
 
+<?= view(
+    'App\Modules\APIs\Views\modals\editar_api',
+    [
+        'proyectos' => $proyectos ?? [],
+    ]
+) ?>
+
 <?= $this->endSection() ?>

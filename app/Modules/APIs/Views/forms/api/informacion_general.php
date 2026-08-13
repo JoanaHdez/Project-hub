@@ -1,6 +1,21 @@
 <?php
 
-$esDetalle = ($modo ?? 'crear') === 'detalle';
+$modo = $modo ?? 'crear';
+
+$esDetalle = $modo === 'detalle';
+
+$prefijoId = match ($modo) {
+    'editar'  => 'editar-api',
+    'detalle' => 'detalle-api',
+    default   => 'nueva-api',
+};
+
+$idProyecto = $prefijoId . '-proyecto';
+$idSistema = $prefijoId . '-sistema';
+$idNombre = $prefijoId . '-nombre';
+$idEstado = $prefijoId . '-estado';
+$idMetodo = $prefijoId . '-metodo';
+$idDescripcion = $prefijoId . '-descripcion';
 
 ?>
 
@@ -18,48 +33,57 @@ $esDetalle = ($modo ?? 'crear') === 'detalle';
 
         <div class="form-grupo">
 
-            <label for="nueva-api-proyecto">
+            <label for="<?= esc($idProyecto, 'attr') ?>">
                 Proyecto
                 <span class="campo-obligatorio">*</span>
             </label>
 
             <select
-    id="nueva-api-proyecto"
-    name="id_proyecto"
-    <?= $esDetalle ? 'disabled' : '' ?>
-    required
->
-    <option value="">
-        Selecciona un proyecto
-    </option>
+                id="<?= esc($idProyecto, 'attr') ?>"
+                name="id_proyecto"
+                <?= $esDetalle ? 'disabled' : '' ?>
+                required
+            >
+                <option value="">
+                    Selecciona un proyecto
+                </option>
 
-    <?php foreach (($proyectos ?? []) as $proyecto): ?>
+                <?php foreach (($proyectos ?? []) as $proyecto): ?>
 
-        <option
-            value="<?= esc(
-                $proyecto['id_proyecto'] ?? '',
-                'attr'
-            ) ?>"
-        >
-            <?= esc(
-                $proyecto['nombre']
-                ?? 'Proyecto sin nombre'
-            ) ?>
-        </option>
+                    <?php
+                    $proyectoId = (string) (
+                        $proyecto['id_proyecto'] ?? ''
+                    );
 
-    <?php endforeach; ?>
-</select>
+                    $seleccionado =
+                        (string) ($api['id_proyecto'] ?? '')
+                        === $proyectoId;
+                    ?>
+
+                    <option
+                        value="<?= esc($proyectoId, 'attr') ?>"
+                        <?= $seleccionado ? 'selected' : '' ?>
+                    >
+                        <?= esc(
+                            $proyecto['nombre']
+                            ?? 'Proyecto sin nombre'
+                        ) ?>
+                    </option>
+
+                <?php endforeach; ?>
+
+            </select>
 
         </div>
 
         <div class="form-grupo">
 
-            <label for="nueva-api-sistema">
+            <label for="<?= esc($idSistema, 'attr') ?>">
                 Sistema asociado
             </label>
 
             <select
-                id="nueva-api-sistema"
+                id="<?= esc($idSistema, 'attr') ?>"
                 name="id_sistema"
                 <?= $esDetalle ? 'disabled' : '' ?>
             >
@@ -72,16 +96,19 @@ $esDetalle = ($modo ?? 'crear') === 'detalle';
 
         <div class="form-grupo form-grupo--completo">
 
-            <label for="nueva-api-nombre">
+            <label for="<?= esc($idNombre, 'attr') ?>">
                 Nombre de la API
                 <span class="campo-obligatorio">*</span>
             </label>
 
             <input
                 type="text"
-                id="nueva-api-nombre"
+                id="<?= esc($idNombre, 'attr') ?>"
                 name="nombre"
-                value="<?= esc($api['nombre'] ?? '', 'attr') ?>"
+                value="<?= esc(
+                    $api['nombre'] ?? '',
+                    'attr'
+                ) ?>"
                 placeholder="Ej. API de Invitaciones"
                 <?= $esDetalle ? 'readonly' : '' ?>
                 required
@@ -91,13 +118,13 @@ $esDetalle = ($modo ?? 'crear') === 'detalle';
 
         <div class="form-grupo">
 
-            <label for="nueva-api-estado">
+            <label for="<?= esc($idEstado, 'attr') ?>">
                 Estado
                 <span class="campo-obligatorio">*</span>
             </label>
 
             <select
-                id="nueva-api-estado"
+                id="<?= esc($idEstado, 'attr') ?>"
                 name="estado"
                 <?= $esDetalle ? 'disabled' : '' ?>
                 required
@@ -106,34 +133,41 @@ $esDetalle = ($modo ?? 'crear') === 'detalle';
                     Selecciona una opción
                 </option>
 
-                <option value="Producción">
-                    Producción
-                </option>
+                <?php
+                $estados = [
+                    'Producción',
+                    'Desarrollo',
+                    'Detenido',
+                    'Mantenimiento',
+                ];
+                ?>
 
-                <option value="Desarrollo">
-                    Desarrollo
-                </option>
+                <?php foreach ($estados as $estado): ?>
 
-                <option value="Detenido">
-                    Detenido
-                </option>
+                    <option
+                        value="<?= esc($estado, 'attr') ?>"
+                        <?= (
+                            ($api['estado'] ?? '') === $estado
+                        ) ? 'selected' : '' ?>
+                    >
+                        <?= esc($estado) ?>
+                    </option>
 
-                <option value="Mantenimiento">
-                    Mantenimiento
-                </option>
+                <?php endforeach; ?>
+
             </select>
 
         </div>
 
         <div class="form-grupo">
 
-            <label for="nueva-api-metodo">
+            <label for="<?= esc($idMetodo, 'attr') ?>">
                 Método
                 <span class="campo-obligatorio">*</span>
             </label>
 
             <select
-                id="nueva-api-metodo"
+                id="<?= esc($idMetodo, 'attr') ?>"
                 name="metodo"
                 <?= $esDetalle ? 'disabled' : '' ?>
                 required
@@ -142,27 +176,49 @@ $esDetalle = ($modo ?? 'crear') === 'detalle';
                     Selecciona una opción
                 </option>
 
-                <option value="GET">GET</option>
-                <option value="POST">POST</option>
-                <option value="PUT">PUT</option>
-                <option value="PATCH">PATCH</option>
-                <option value="DELETE">DELETE</option>
+                <?php
+                $metodos = [
+                    'GET',
+                    'POST',
+                    'PUT',
+                    'PATCH',
+                    'DELETE',
+                ];
+                ?>
+
+                <?php foreach ($metodos as $metodo): ?>
+
+                    <option
+                        value="<?= esc($metodo, 'attr') ?>"
+                        <?= (
+                            strtoupper(
+                                (string) ($api['metodo'] ?? '')
+                            ) === $metodo
+                        ) ? 'selected' : '' ?>
+                    >
+                        <?= esc($metodo) ?>
+                    </option>
+
+                <?php endforeach; ?>
+
             </select>
 
         </div>
 
         <div class="form-grupo form-grupo--completo">
 
-            <label for="nueva-api-descripcion">
+            <label for="<?= esc($idDescripcion, 'attr') ?>">
                 Descripción
             </label>
 
             <textarea
-                id="nueva-api-descripcion"
+                id="<?= esc($idDescripcion, 'attr') ?>"
                 name="descripcion"
                 rows="4"
                 <?= $esDetalle ? 'readonly' : '' ?>
-            ><?= esc($api['descripcion'] ?? '') ?></textarea>
+            ><?= esc(
+                $api['descripcion'] ?? ''
+            ) ?></textarea>
 
         </div>
 

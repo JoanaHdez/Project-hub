@@ -6,6 +6,9 @@ import {
   inicializarCopiarEjemplo,
 } from "./documentacion/ejemplo.js";
 
+import {
+  inicializarEditarApi,
+} from "./acciones/editar.js";
 
 /*==================================================
 =              DOCUMENTACIÓN DE APIs                =
@@ -14,3 +17,5 @@ import {
 inicializarSeleccionApi();
 
 inicializarCopiarEjemplo();
+
+inicializarEditarApi();
