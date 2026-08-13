@@ -180,6 +180,13 @@ export function inicializarFormularioNuevaApi() {
           formulario.closest(".modal");
 
         if (modal) {
+ 
+          if (
+            document.activeElement instanceof HTMLElement
+          ) {
+            document.activeElement.blur();
+          }
+
           modal.classList.remove(
             "modal--visible",
           );
@@ -191,6 +198,7 @@ export function inicializarFormularioNuevaApi() {
 
           document.body.style.overflow = "";
         }
+
       } catch (error) {
         console.error(
           "Error al registrar la API:",
