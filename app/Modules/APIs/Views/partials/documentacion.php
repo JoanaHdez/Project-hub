@@ -2,7 +2,7 @@
 
     <div class="documentacion-api__panel">
 
-        <div class="documentacion-api__encabezado">
+        <!-- <div class="documentacion-api__encabezado">
 
             <div>
                 <span
@@ -35,7 +35,74 @@
                 Ficha técnica
             </button>
 
-        </div>
+        </div> -->
+
+        <div class="documentacion-api__encabezado">
+
+    <div>
+        <span
+            class="documentacion-api__metodo"
+            id="api-metodo"
+        >
+            —
+        </span>
+
+        <h2
+            class="documentacion-api__titulo"
+            id="api-nombre"
+        >
+            Selecciona una API
+        </h2>
+
+        <p
+            class="documentacion-api__descripcion"
+            id="api-descripcion"
+        >
+            Selecciona una API del catálogo para consultar su documentación técnica.
+        </p>
+    </div>
+
+    <div class="documentacion-api__acciones">
+
+        <button
+            type="button"
+            id="btn-editar-api"
+            class="boton boton--secundario"
+            disabled
+        >
+            Editar
+        </button>
+
+        <button
+            type="button"
+            id="btn-estado-api"
+            class="boton boton--secundario"
+            disabled
+        >
+            Desactivar
+        </button>
+
+        <button
+            type="button"
+            id="btn-eliminar-api"
+            class="boton boton--peligro"
+            disabled
+        >
+            Eliminar
+        </button>
+
+        <button
+            type="button"
+            id="abrir-ficha-tecnica"
+            class="boton boton--secundario"
+            disabled
+        >
+            Ficha técnica
+        </button>
+
+    </div>
+
+</div>
 
         <div class="documentacion-api__contenido">
 

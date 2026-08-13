@@ -55,6 +55,12 @@ export function inicializarSeleccionApi() {
         "selector--activo",
       );
 
+      const idApi =
+        selector.dataset.apiId ?? "";
+
+      document.body.dataset.apiSeleccionadaId =
+        idApi;
+
       const nombre =
         selector.dataset.apiNombre ?? "";
 
@@ -183,10 +189,37 @@ export function inicializarSeleccionApi() {
         servidor || "—",
       );
 
+      const botonEditarApi =
+        document.getElementById(
+          "btn-editar-api",
+        );
+
+      const botonEstadoApi =
+        document.getElementById(
+          "btn-estado-api",
+        );
+
+      const botonEliminarApi =
+        document.getElementById(
+          "btn-eliminar-api",
+        );
+
       const botonFichaApi =
         document.getElementById(
-          "btn-ficha-api",
+          "abrir-ficha-tecnica",
         );
+
+      if (botonEditarApi) {
+        botonEditarApi.disabled = false;
+      }
+
+      if (botonEstadoApi) {
+        botonEstadoApi.disabled = false;
+      }
+
+      if (botonEliminarApi) {
+        botonEliminarApi.disabled = false;
+      }
 
       if (botonFichaApi) {
         botonFichaApi.disabled = false;
