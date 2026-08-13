@@ -14,6 +14,12 @@ if (!empty($atributos['class'])) {
     unset($atributos['class']);
 }
 
+$activo = $atributos['data-api-activo'] ?? '1';
+
+if ($activo === '0') {
+    $clases .= ' api-selector--inactiva';
+}
+
 $metodoClase = match (strtoupper($metodo)) {
     'GET'    => 'api-selector__metodo--get',
     'POST'   => 'api-selector__metodo--post',

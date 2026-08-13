@@ -16,6 +16,11 @@
 </div>
 
 <?= view('App\Modules\APIs\Views\modals\ficha_tecnica') ?>
+
+<?= view('App\Modules\APIs\Views\modals\estado_api') ?>
+
+<?= view('App\Modules\APIs\Views\modals\administrar_api') ?>
+
 <?= view(
     'App\Modules\APIs\Views\modals\nueva_api',
     [
@@ -29,5 +34,6 @@
         'proyectos' => $proyectos ?? [],
     ]
 ) ?>
+
 
 <?= $this->endSection() ?>

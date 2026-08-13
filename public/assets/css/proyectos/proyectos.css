@@ -79,32 +79,32 @@
 }
 
 /* =========================
-   Mensaje
+   Elementos inactivos
 ========================= */
 
-.toast__mensaje {
-    font-size: .92rem;
-    line-height: 1.45;
-}
-
-.campo-obligatorio {
-    color: #c62828;
-}
-
 .proyecto-fila--inactiva,
-.sistema-fila--inactiva {
+.sistema-fila--inactiva,
+.api-selector--inactiva {
     background-color: #f2f4f7;
     color: #858366;
 }
+
+
+/* Filas de tablas */
 
 .proyecto-fila--inactiva td,
 .sistema-fila--inactiva td {
     background-color: #f2f4f7;
 }
 
+
+/* Controles secundarios */
+
 .proyecto-fila--inactiva .estado,
 .proyecto-fila--inactiva .boton-accion,
 .sistema-fila--inactiva .estado,
-.sistema-fila--inactiva .boton-accion {
+.sistema-fila--inactiva .boton-accion,
+.api-selector--inactiva .badge,
+.api-selector--inactiva .api-selector__metodo {
     opacity: 0.65;
 }

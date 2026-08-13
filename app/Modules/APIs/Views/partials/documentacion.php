@@ -2,107 +2,39 @@
 
     <div class="documentacion-api__panel">
 
-        <!-- <div class="documentacion-api__encabezado">
+        <div class="documentacion-api__encabezado">
 
             <div>
-                <span
-                    class="documentacion-api__metodo"
-                    id="api-metodo"
-                >
+                <span class="documentacion-api__metodo" id="api-metodo">
                     —
                 </span>
 
-                <h2
-                    class="documentacion-api__titulo"
-                    id="api-nombre"
-                >
+                <h2 class="documentacion-api__titulo" id="api-nombre">
                     Selecciona una API
                 </h2>
 
-                <p
-                    class="documentacion-api__descripcion"
-                    id="api-descripcion"
-                >
+                <p class="documentacion-api__descripcion" id="api-descripcion">
                     Selecciona una API del catálogo para consultar su documentación técnica.
                 </p>
             </div>
 
-            <button
-                type="button"
-                id="abrir-ficha-tecnica"
-                class="boton boton--secundario"
-            >
-                Ficha técnica
-            </button>
+            <div class="documentacion-api__acciones">
 
-        </div> -->
+                <button type="button" id="btn-editar-api" class="boton boton--secundario" disabled>
+                    Editar
+                </button>
 
-        <div class="documentacion-api__encabezado">
+                <button type="button" id="btn-administrar-api" class="boton boton--secundario" disabled>
+                    Administrar
+                </button>
 
-    <div>
-        <span
-            class="documentacion-api__metodo"
-            id="api-metodo"
-        >
-            —
-        </span>
+                <button type="button" id="abrir-ficha-tecnica" class="boton boton--secundario" disabled>
+                    Ficha técnica
+                </button>
 
-        <h2
-            class="documentacion-api__titulo"
-            id="api-nombre"
-        >
-            Selecciona una API
-        </h2>
+            </div>
 
-        <p
-            class="documentacion-api__descripcion"
-            id="api-descripcion"
-        >
-            Selecciona una API del catálogo para consultar su documentación técnica.
-        </p>
-    </div>
-
-    <div class="documentacion-api__acciones">
-
-        <button
-            type="button"
-            id="btn-editar-api"
-            class="boton boton--secundario"
-            disabled
-        >
-            Editar
-        </button>
-
-        <button
-            type="button"
-            id="btn-estado-api"
-            class="boton boton--secundario"
-            disabled
-        >
-            Desactivar
-        </button>
-
-        <button
-            type="button"
-            id="btn-eliminar-api"
-            class="boton boton--peligro"
-            disabled
-        >
-            Eliminar
-        </button>
-
-        <button
-            type="button"
-            id="abrir-ficha-tecnica"
-            class="boton boton--secundario"
-            disabled
-        >
-            Ficha técnica
-        </button>
-
-    </div>
-
-</div>
+        </div>
 
         <div class="documentacion-api__contenido">
 
@@ -155,10 +87,7 @@
 
                     <div class="documentacion-endpoint__ruta">
 
-                        <span
-                            id="api-endpoint-metodo"
-                            class="badge-metodo"
-                        >
+                        <span id="api-endpoint-metodo" class="badge-metodo">
                             —
                         </span>
 
@@ -198,11 +127,7 @@
                     </p>
                 </div>
 
-                <div
-                    class="tabla-contenedor"
-                    id="api-headers-contenedor"
-                    hidden
-                >
+                <div class="tabla-contenedor" id="api-headers-contenedor" hidden>
                     <table class="tabla">
 
                         <thead>
@@ -219,10 +144,7 @@
                     </table>
                 </div>
 
-                <div
-                    class="estado-vacio"
-                    id="api-headers-vacio"
-                >
+                <div class="estado-vacio" id="api-headers-vacio">
                     Selecciona una API para consultar sus headers.
                 </div>
 
@@ -242,11 +164,7 @@
                     </p>
                 </div>
 
-                <div
-                    class="tabla-contenedor"
-                    id="api-parametros-contenedor"
-                    hidden
-                >
+                <div class="tabla-contenedor" id="api-parametros-contenedor" hidden>
 
                     <table class="tabla">
 
@@ -265,10 +183,7 @@
 
                 </div>
 
-                <div
-                    class="estado-vacio"
-                    id="api-parametros-vacio"
-                >
+                <div class="estado-vacio" id="api-parametros-vacio">
                     Selecciona una API para consultar sus parámetros.
                 </div>
 
@@ -288,18 +203,11 @@
                     </p>
                 </div>
 
-                <div
-                    id="api-ejemplo-contenedor"
-                    hidden
-                >
+                <div id="api-ejemplo-contenedor" hidden>
 
                     <div class="codigo-api__acciones">
 
-                        <button
-                            type="button"
-                            class="boton boton--secundario boton--sm"
-                            id="copiar-ejemplo"
-                        >
+                        <button type="button" class="boton boton--secundario boton--sm" id="copiar-ejemplo">
                             Copiar
                         </button>
 
@@ -307,10 +215,7 @@
 
                     <div class="codigo-api__encabezado">
 
-                        <span
-                            id="api-ejemplo-metodo"
-                            class="badge-metodo"
-                        >
+                        <span id="api-ejemplo-metodo" class="badge-metodo">
                             POST
                         </span>
 
@@ -320,10 +225,7 @@
 
                 </div>
 
-                <div
-                    id="api-ejemplo-vacio"
-                    class="estado-vacio"
-                >
+                <div id="api-ejemplo-vacio" class="estado-vacio">
                     Esta API no tiene un ejemplo documentado.
                 </div>
 
@@ -343,19 +245,13 @@
                     </p>
                 </div>
 
-                <div
-                    id="api-respuestas-contenedor"
-                    hidden
-                >
+                <div id="api-respuestas-contenedor" hidden>
 
                     <div id="api-respuestas"></div>
 
                 </div>
 
-                <div
-                    id="api-respuestas-vacio"
-                    class="estado-vacio"
-                >
+                <div id="api-respuestas-vacio" class="estado-vacio">
                     Esta API no tiene respuestas documentadas.
                 </div>
 

@@ -19,6 +19,10 @@ import {
 } from "./respuestas.js";
 
 
+/*==================================================
+=              SELECCIÓN DE API                     =
+==================================================*/
+
 export function inicializarSeleccionApi() {
   const catalogoApis =
     document.querySelector(
@@ -41,6 +45,11 @@ export function inicializarSeleccionApi() {
         return;
       }
 
+
+      /*==================================================
+      =              MARCAR SELECCIÓN                    =
+      ==================================================*/
+
       document
         .querySelectorAll(
           ".api-selector",
@@ -55,11 +64,21 @@ export function inicializarSeleccionApi() {
         "selector--activo",
       );
 
+
+      /*==================================================
+      =               IDENTIFICADOR                     =
+      ==================================================*/
+
       const idApi =
         selector.dataset.apiId ?? "";
 
       document.body.dataset.apiSeleccionadaId =
         idApi;
+
+
+      /*==================================================
+      =               DATOS DE LA API                   =
+      ==================================================*/
 
       const nombre =
         selector.dataset.apiNombre ?? "";
@@ -94,6 +113,11 @@ export function inicializarSeleccionApi() {
       const servidor =
         selector.dataset.apiServidor ?? "";
 
+
+      /*==================================================
+      =              DOCUMENTACIÓN                       =
+      ==================================================*/
+
       const headers =
         obtenerJson(
           selector.dataset.apiHeaders,
@@ -114,10 +138,26 @@ export function inicializarSeleccionApi() {
           selector.dataset.apiRespuestas,
         );
 
-      renderHeaders(headers);
-      renderParametros(parametros);
-      renderEjemplo(ejemplo);
-      renderRespuestas(respuestas);
+      renderHeaders(
+        headers,
+      );
+
+      renderParametros(
+        parametros,
+      );
+
+      renderEjemplo(
+        ejemplo,
+      );
+
+      renderRespuestas(
+        respuestas,
+      );
+
+
+      /*==================================================
+      =            INFORMACIÓN GENERAL                  =
+      ==================================================*/
 
       actualizarTexto(
         "api-nombre",
@@ -164,6 +204,11 @@ export function inicializarSeleccionApi() {
         url,
       );
 
+
+      /*==================================================
+      =               FICHA TÉCNICA                     =
+      ==================================================*/
+
       actualizarTexto(
         "ficha-api-proyecto",
         proyecto || "—",
@@ -189,19 +234,19 @@ export function inicializarSeleccionApi() {
         servidor || "—",
       );
 
+
+      /*==================================================
+      =                    BOTONES                       =
+      ==================================================*/
+
       const botonEditarApi =
         document.getElementById(
           "btn-editar-api",
         );
 
-      const botonEstadoApi =
+      const botonAdministrarApi =
         document.getElementById(
-          "btn-estado-api",
-        );
-
-      const botonEliminarApi =
-        document.getElementById(
-          "btn-eliminar-api",
+          "btn-administrar-api",
         );
 
       const botonFichaApi =
@@ -210,31 +255,36 @@ export function inicializarSeleccionApi() {
         );
 
       if (botonEditarApi) {
-        botonEditarApi.disabled = false;
+        botonEditarApi.disabled =
+          false;
       }
 
-      if (botonEstadoApi) {
-        botonEstadoApi.disabled = false;
-      }
-
-      if (botonEliminarApi) {
-        botonEliminarApi.disabled = false;
+      if (botonAdministrarApi) {
+        botonAdministrarApi.disabled =
+          false;
       }
 
       if (botonFichaApi) {
-        botonFichaApi.disabled = false;
+        botonFichaApi.disabled =
+          false;
       }
     },
   );
 }
 
 
+/*==================================================
+=                ACTUALIZAR TEXTO                   =
+==================================================*/
+
 function actualizarTexto(
   id,
   valor,
 ) {
   const elemento =
-    document.getElementById(id);
+    document.getElementById(
+      id,
+    );
 
   if (!elemento) {
     return;

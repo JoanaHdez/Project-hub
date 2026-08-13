@@ -321,6 +321,175 @@ class APIs_Controller extends BaseController
 
 
     /*==================================================
+    =                  DESACTIVAR API                   =
+    ==================================================*/
+
+    public function desactivar(
+        int $idApi
+    ) {
+        $apis =
+            $this->storage
+            ->obtenerTodos();
+
+        $indiceApi = null;
+        $apiEncontrada = null;
+
+        foreach (
+            $apis as
+            $indice => $api
+        ) {
+            if (
+                (int) (
+                    $api['id_api']
+                    ?? 0
+                ) === $idApi
+            ) {
+                $indiceApi =
+                    $indice;
+
+                $apiEncontrada =
+                    $api;
+
+                break;
+            }
+        }
+
+        if (
+            $indiceApi === null ||
+            $apiEncontrada === null
+        ) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'No se encontró la API solicitada.',
+                ]);
+        }
+
+        $apiEncontrada['activo'] =
+            false;
+
+        $apis[$indiceApi] =
+            $apiEncontrada;
+
+        $this->storage
+            ->guardarTodos(
+                $apis
+            );
+
+        $apiVista =
+            $this->construirApiVista(
+                $apiEncontrada
+            );
+
+        $selectorHtml =
+            $this->construirSelectorHtml(
+                $apiVista
+            );
+
+        return $this->response
+            ->setJSON([
+                'ok' => true,
+
+                'mensaje' =>
+                'API desactivada correctamente.',
+
+                'api' =>
+                $apiVista,
+
+                'selector_html' =>
+                $selectorHtml,
+            ]);
+    }
+
+
+    /*==================================================
+    =                    ACTIVAR API                    =
+    ==================================================*/
+
+    public function activar(
+        int $idApi
+    ) {
+        $apis =
+            $this->storage
+            ->obtenerTodos();
+
+        $indiceApi = null;
+        $apiEncontrada = null;
+
+        foreach (
+            $apis as
+            $indice => $api
+        ) {
+            if (
+                (int) (
+                    $api['id_api']
+                    ?? 0
+                ) === $idApi
+            ) {
+                $indiceApi =
+                    $indice;
+
+                $apiEncontrada =
+                    $api;
+
+                break;
+            }
+        }
+
+        if (
+            $indiceApi === null ||
+            $apiEncontrada === null
+        ) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'No se encontró la API solicitada.',
+                ]);
+        }
+
+        $apiEncontrada['activo'] =
+            true;
+
+        $apis[$indiceApi] =
+            $apiEncontrada;
+
+        $this->storage
+            ->guardarTodos(
+                $apis
+            );
+
+        $apiVista =
+            $this->construirApiVista(
+                $apiEncontrada
+            );
+
+        $selectorHtml =
+            $this->construirSelectorHtml(
+                $apiVista
+            );
+
+        return $this->response
+            ->setJSON([
+                'ok' => true,
+
+                'mensaje' =>
+                'API activada correctamente.',
+
+                'api' =>
+                $apiVista,
+
+                'selector_html' =>
+                $selectorHtml,
+            ]);
+    }
+
+    /*==================================================
     =                VALIDAR DATOS                    =
     ==================================================*/
 
@@ -670,6 +839,11 @@ class APIs_Controller extends BaseController
                 'atributos' => [
                     'data-api-id' =>
                     $api['id'],
+
+                    'data-api-activo' =>
+                    !empty($api['activo'])
+                        ? '1'
+                        : '0',
 
                     'data-api-id-proyecto' =>
                     $api['id_proyecto'] ?? '',
