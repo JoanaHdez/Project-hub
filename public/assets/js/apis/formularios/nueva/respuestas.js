@@ -7,18 +7,25 @@ import {
 *=               RESPUESTAS ESPERADAS               =*
 *==================================================*/
 
-export function inicializarRespuestas() {
-  const botonAgregar = document.getElementById(
-    "btn-agregar-respuesta",
-  );
+export function inicializarRespuestas({
+  botonId = "nueva-api-btn-agregar-respuesta",
+  contenedorId = "nueva-api-respuestas",
+  estadoVacioId = "nueva-api-respuestas-vacio",
+} = {}) {
+  const botonAgregar =
+    document.getElementById(
+      botonId,
+    );
 
-  const contenedor = document.getElementById(
-    "nueva-api-respuestas",
-  );
+  const contenedor =
+    document.getElementById(
+      contenedorId,
+    );
 
-  const estadoVacio = document.getElementById(
-    "nueva-api-respuestas-vacio",
-  );
+  const estadoVacio =
+    document.getElementById(
+      estadoVacioId,
+    );
 
   if (
     !botonAgregar ||
@@ -27,6 +34,15 @@ export function inicializarRespuestas() {
   ) {
     return;
   }
+
+  if (
+    contenedor.dataset.inicializadoRespuestas === "true"
+  ) {
+    return;
+  }
+
+  contenedor.dataset.inicializadoRespuestas =
+    "true";
 
   botonAgregar.addEventListener(
     "click",
@@ -41,17 +57,19 @@ export function inicializarRespuestas() {
   contenedor.addEventListener(
     "click",
     (event) => {
-      const botonEliminar = event.target.closest(
-        "[data-eliminar-respuesta]",
-      );
+      const botonEliminar =
+        event.target.closest(
+          "[data-eliminar-respuesta]",
+        );
 
       if (!botonEliminar) {
         return;
       }
 
-      const fila = botonEliminar.closest(
-        "[data-api-respuesta]",
-      );
+      const fila =
+        botonEliminar.closest(
+          "[data-api-respuesta]",
+        );
 
       if (fila) {
         fila.remove();
@@ -67,15 +85,18 @@ export function inicializarRespuestas() {
   contenedor.addEventListener(
     "input",
     (event) => {
-      const campoBody = event.target.closest(
-        "[data-respuesta-body]",
-      );
+      const campoBody =
+        event.target.closest(
+          "[data-respuesta-body]",
+        );
 
       if (!campoBody) {
         return;
       }
 
-      validarCampoJson(campoBody);
+      validarCampoJson(
+        campoBody,
+      );
     },
   );
 }
@@ -85,11 +106,13 @@ export function inicializarRespuestas() {
 *=              AGREGAR RESPUESTA                   =*
 *==================================================*/
 
-function agregarRespuesta(
+export function agregarRespuesta(
   contenedor,
   estadoVacio,
+  datos = {},
 ) {
-  const fila = document.createElement("div");
+  const fila =
+    document.createElement("div");
 
   fila.className =
     "form-api-documentacion__item";
@@ -161,7 +184,46 @@ function agregarRespuesta(
     </div>
   `;
 
-  contenedor.appendChild(fila);
+  const campoCodigo =
+    fila.querySelector(
+      "[data-respuesta-codigo]",
+    );
+
+  const campoDescripcion =
+    fila.querySelector(
+      "[data-respuesta-descripcion]",
+    );
+
+  const campoBody =
+    fila.querySelector(
+      "[data-respuesta-body]",
+    );
+
+  if (campoCodigo) {
+    campoCodigo.value =
+      datos.codigo ?? "";
+  }
+
+  if (campoDescripcion) {
+    campoDescripcion.value =
+      datos.descripcion ?? "";
+  }
+
+  if (campoBody) {
+    campoBody.value =
+      datos.body &&
+      typeof datos.body === "object"
+        ? JSON.stringify(
+            datos.body,
+            null,
+            2,
+          )
+        : "";
+  }
+
+  contenedor.appendChild(
+    fila,
+  );
 
   actualizarEstadoRespuestas(
     contenedor,
@@ -189,13 +251,66 @@ function actualizarEstadoRespuestas(
 
 
 /*==================================================*
+*=              CARGAR RESPUESTAS                   =*
+*==================================================*/
+
+export function cargarRespuestas({
+  contenedorId = "nueva-api-respuestas",
+  estadoVacioId = "nueva-api-respuestas-vacio",
+  respuestas = [],
+} = {}) {
+  const contenedor =
+    document.getElementById(
+      contenedorId,
+    );
+
+  const estadoVacio =
+    document.getElementById(
+      estadoVacioId,
+    );
+
+  if (
+    !contenedor ||
+    !estadoVacio
+  ) {
+    return;
+  }
+
+  contenedor.innerHTML = "";
+
+  const listaRespuestas =
+    Array.isArray(respuestas)
+      ? respuestas
+      : [];
+
+  listaRespuestas.forEach(
+    (respuesta) => {
+      agregarRespuesta(
+        contenedor,
+        estadoVacio,
+        respuesta,
+      );
+    },
+  );
+
+  actualizarEstadoRespuestas(
+    contenedor,
+    estadoVacio,
+  );
+}
+
+
+/*==================================================*
 *=              OBTENER RESPUESTAS                  =*
 *==================================================*/
 
-export function obtenerRespuestas() {
-  const contenedor = document.getElementById(
-    "nueva-api-respuestas",
-  );
+export function obtenerRespuestas({
+  contenedorId = "nueva-api-respuestas",
+} = {}) {
+  const contenedor =
+    document.getElementById(
+      contenedorId,
+    );
 
   if (!contenedor) {
     return [];
@@ -223,9 +338,10 @@ export function obtenerRespuestas() {
           "[data-respuesta-descripcion]",
         )?.value.trim() ?? "",
 
-      body: bodyTexto
-        ? JSON.parse(bodyTexto)
-        : {},
+      body:
+        bodyTexto
+          ? JSON.parse(bodyTexto)
+          : {},
     };
   });
 }

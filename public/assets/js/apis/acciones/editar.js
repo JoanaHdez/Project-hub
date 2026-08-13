@@ -3,6 +3,17 @@ import {
   cargarSistemasPorProyecto,
 } from "../formularios/nueva/relaciones.js";
 
+import {
+  inicializarHeaders,
+} from "../formularios/nueva/headers.js";
+
+import {
+  inicializarParametros,
+} from "../formularios/nueva/parametros.js";
+
+import {
+  inicializarRespuestas,
+} from "../formularios/nueva/respuestas.js";
 
 /*==================================================
 =                    EDITAR API                     =
@@ -32,19 +43,28 @@ export function inicializarEditarApi() {
     return;
   }
 
-  /*
-   * Activar la relación Proyecto → Sistema
-   * también para el formulario de edición.
-   *
-   * Esto permite que si el usuario cambia
-   * el proyecto, el select de sistemas
-   * se actualice automáticamente.
-   */
   inicializarRelacionProyectoSistema({
     proyectoId: "editar-api-proyecto",
     sistemaId: "editar-api-sistema",
   });
 
+  inicializarHeaders({
+  botonId: "editar-api-btn-agregar-header",
+  contenedorId: "editar-api-headers",
+  estadoVacioId: "editar-api-headers-vacio",
+});
+
+inicializarParametros({
+  botonId: "editar-api-btn-agregar-parametro",
+  contenedorId: "editar-api-parametros",
+  estadoVacioId: "editar-api-parametros-vacio",
+});
+
+inicializarRespuestas({
+  botonId: "editar-api-btn-agregar-respuesta",
+  contenedorId: "editar-api-respuestas",
+  estadoVacioId: "editar-api-respuestas-vacio",
+});
 
   botonEditar.addEventListener(
     "click",

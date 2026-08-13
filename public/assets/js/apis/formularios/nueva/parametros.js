@@ -2,18 +2,25 @@
 *=                  PARÁMETROS                      =*
 *==================================================*/
 
-export function inicializarParametros() {
-  const botonAgregar = document.getElementById(
-    "btn-agregar-parametro",
-  );
+export function inicializarParametros({
+  botonId = "nueva-api-btn-agregar-parametro",
+  contenedorId = "nueva-api-parametros",
+  estadoVacioId = "nueva-api-parametros-vacio",
+} = {}) {
+  const botonAgregar =
+    document.getElementById(
+      botonId,
+    );
 
-  const contenedor = document.getElementById(
-    "nueva-api-parametros",
-  );
+  const contenedor =
+    document.getElementById(
+      contenedorId,
+    );
 
-  const estadoVacio = document.getElementById(
-    "nueva-api-parametros-vacio",
-  );
+  const estadoVacio =
+    document.getElementById(
+      estadoVacioId,
+    );
 
   if (
     !botonAgregar ||
@@ -22,6 +29,15 @@ export function inicializarParametros() {
   ) {
     return;
   }
+
+  if (
+    contenedor.dataset.inicializadoParametros === "true"
+  ) {
+    return;
+  }
+
+  contenedor.dataset.inicializadoParametros =
+    "true";
 
   botonAgregar.addEventListener(
     "click",
@@ -36,17 +52,19 @@ export function inicializarParametros() {
   contenedor.addEventListener(
     "click",
     (event) => {
-      const botonEliminar = event.target.closest(
-        "[data-eliminar-parametro]",
-      );
+      const botonEliminar =
+        event.target.closest(
+          "[data-eliminar-parametro]",
+        );
 
       if (!botonEliminar) {
         return;
       }
 
-      const fila = botonEliminar.closest(
-        "[data-api-parametro]",
-      );
+      const fila =
+        botonEliminar.closest(
+          "[data-api-parametro]",
+        );
 
       if (fila) {
         fila.remove();
@@ -65,11 +83,13 @@ export function inicializarParametros() {
 *=              AGREGAR PARÁMETRO                   =*
 *==================================================*/
 
-function agregarParametro(
+export function agregarParametro(
   contenedor,
   estadoVacio,
+  datos = {},
 ) {
-  const fila = document.createElement("div");
+  const fila =
+    document.createElement("div");
 
   fila.className =
     "form-api-documentacion__item";
@@ -170,7 +190,51 @@ function agregarParametro(
     </div>
   `;
 
-  contenedor.appendChild(fila);
+  const campoNombre =
+    fila.querySelector(
+      "[data-parametro-nombre]",
+    );
+
+  const campoTipo =
+    fila.querySelector(
+      "[data-parametro-tipo]",
+    );
+
+  const campoObligatorio =
+    fila.querySelector(
+      "[data-parametro-obligatorio]",
+    );
+
+  const campoDescripcion =
+    fila.querySelector(
+      "[data-parametro-descripcion]",
+    );
+
+  if (campoNombre) {
+    campoNombre.value =
+      datos.nombre ?? "";
+  }
+
+  if (campoTipo) {
+    campoTipo.value =
+      datos.tipo ?? "";
+  }
+
+  if (campoObligatorio) {
+    campoObligatorio.value =
+      datos.obligatorio
+        ? "1"
+        : "0";
+  }
+
+  if (campoDescripcion) {
+    campoDescripcion.value =
+      datos.descripcion ?? "";
+  }
+
+  contenedor.appendChild(
+    fila,
+  );
 
   actualizarEstadoParametros(
     contenedor,
@@ -198,13 +262,66 @@ function actualizarEstadoParametros(
 
 
 /*==================================================*
+*=              CARGAR PARÁMETROS                   =*
+*==================================================*/
+
+export function cargarParametros({
+  contenedorId = "nueva-api-parametros",
+  estadoVacioId = "nueva-api-parametros-vacio",
+  parametros = [],
+} = {}) {
+  const contenedor =
+    document.getElementById(
+      contenedorId,
+    );
+
+  const estadoVacio =
+    document.getElementById(
+      estadoVacioId,
+    );
+
+  if (
+    !contenedor ||
+    !estadoVacio
+  ) {
+    return;
+  }
+
+  contenedor.innerHTML = "";
+
+  const listaParametros =
+    Array.isArray(parametros)
+      ? parametros
+      : [];
+
+  listaParametros.forEach(
+    (parametro) => {
+      agregarParametro(
+        contenedor,
+        estadoVacio,
+        parametro,
+      );
+    },
+  );
+
+  actualizarEstadoParametros(
+    contenedor,
+    estadoVacio,
+  );
+}
+
+
+/*==================================================*
 *=              OBTENER PARÁMETROS                  =*
 *==================================================*/
 
-export function obtenerParametros() {
-  const contenedor = document.getElementById(
-    "nueva-api-parametros",
-  );
+export function obtenerParametros({
+  contenedorId = "nueva-api-parametros",
+} = {}) {
+  const contenedor =
+    document.getElementById(
+      contenedorId,
+    );
 
   if (!contenedor) {
     return [];

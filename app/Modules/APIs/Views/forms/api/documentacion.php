@@ -1,3 +1,47 @@
+<?php
+
+$modo = $modo ?? 'crear';
+
+$esDetalle = $modo === 'detalle';
+
+$prefijoId = match ($modo) {
+    'editar'  => 'editar-api',
+    'detalle' => 'detalle-api',
+    default   => 'nueva-api',
+};
+
+$idBtnHeader =
+    $prefijoId . '-btn-agregar-header';
+
+$idHeaders =
+    $prefijoId . '-headers';
+
+$idHeadersVacio =
+    $prefijoId . '-headers-vacio';
+
+$idBtnParametro =
+    $prefijoId . '-btn-agregar-parametro';
+
+$idParametros =
+    $prefijoId . '-parametros';
+
+$idParametrosVacio =
+    $prefijoId . '-parametros-vacio';
+
+$idEjemploBody =
+    $prefijoId . '-ejemplo-body';
+
+$idBtnRespuesta =
+    $prefijoId . '-btn-agregar-respuesta';
+
+$idRespuestas =
+    $prefijoId . '-respuestas';
+
+$idRespuestasVacio =
+    $prefijoId . '-respuestas-vacio';
+
+?>
+
 <fieldset class="form-bloque">
 
     <legend class="form-bloque__titulo">
@@ -8,6 +52,7 @@
         Registra la información necesaria para documentar
         y consumir la API.
     </p>
+
 
     <!-- =========================================
          HEADERS
@@ -25,16 +70,30 @@
                 </p>
             </div>
 
-            <button type="button" class="boton boton--secundario boton--sm" id="btn-agregar-header">
-                + Agregar header
-            </button>
+            <?php if (!$esDetalle): ?>
+
+                <button
+                    type="button"
+                    class="boton boton--secundario boton--sm"
+                    id="<?= esc($idBtnHeader, 'attr') ?>"
+                >
+                    + Agregar header
+                </button>
+
+            <?php endif; ?>
 
         </div>
 
-        <div id="nueva-api-headers" class="form-api-documentacion__lista">
+        <div
+            id="<?= esc($idHeaders, 'attr') ?>"
+            class="form-api-documentacion__lista"
+        >
         </div>
 
-        <div id="nueva-api-headers-vacio" class="estado-vacio">
+        <div
+            id="<?= esc($idHeadersVacio, 'attr') ?>"
+            class="estado-vacio"
+        >
             No se han agregado headers.
         </div>
 
@@ -57,16 +116,30 @@
                 </p>
             </div>
 
-            <button type="button" class="boton boton--secundario boton--sm" id="btn-agregar-parametro">
-                + Agregar parámetro
-            </button>
+            <?php if (!$esDetalle): ?>
+
+                <button
+                    type="button"
+                    class="boton boton--secundario boton--sm"
+                    id="<?= esc($idBtnParametro, 'attr') ?>"
+                >
+                    + Agregar parámetro
+                </button>
+
+            <?php endif; ?>
 
         </div>
 
-        <div id="nueva-api-parametros" class="form-api-documentacion__lista">
+        <div
+            id="<?= esc($idParametros, 'attr') ?>"
+            class="form-api-documentacion__lista"
+        >
         </div>
 
-        <div id="nueva-api-parametros-vacio" class="estado-vacio">
+        <div
+            id="<?= esc($idParametrosVacio, 'attr') ?>"
+            class="estado-vacio"
+        >
             No se han agregado parámetros.
         </div>
 
@@ -74,7 +147,7 @@
 
 
     <!-- =========================================
-     EJEMPLO DE CONSUMO
+         EJEMPLO DE CONSUMO
     ========================================== -->
 
     <section class="form-api-documentacion">
@@ -96,14 +169,21 @@
 
             <div class="form-grupo form-grupo--completo">
 
-                <label for="nueva-api-ejemplo-body">
+                <label
+                    for="<?= esc($idEjemploBody, 'attr') ?>"
+                >
                     Body de ejemplo
                 </label>
 
-                <textarea id="nueva-api-ejemplo-body" rows="8" placeholder='{
-                    "correo": "usuario@ejemplo.com",
-                    "nombre": "Usuario"
-                    }'></textarea>
+                <textarea
+                    id="<?= esc($idEjemploBody, 'attr') ?>"
+                    rows="8"
+                    <?= $esDetalle ? 'readonly' : '' ?>
+                    placeholder='{
+  "correo": "usuario@ejemplo.com",
+  "nombre": "Usuario"
+}'
+                ></textarea>
 
                 <small>
                     Ingresa un objeto JSON válido.
@@ -117,7 +197,7 @@
 
 
     <!-- =========================================
-     RESPUESTAS ESPERADAS
+         RESPUESTAS ESPERADAS
     ========================================== -->
 
     <section class="form-api-documentacion">
@@ -133,16 +213,30 @@
                 </p>
             </div>
 
-            <button type="button" class="boton boton--secundario boton--sm" id="btn-agregar-respuesta">
-                + Agregar respuesta
-            </button>
+            <?php if (!$esDetalle): ?>
+
+                <button
+                    type="button"
+                    class="boton boton--secundario boton--sm"
+                    id="<?= esc($idBtnRespuesta, 'attr') ?>"
+                >
+                    + Agregar respuesta
+                </button>
+
+            <?php endif; ?>
 
         </div>
 
-        <div id="nueva-api-respuestas" class="form-api-documentacion__lista">
+        <div
+            id="<?= esc($idRespuestas, 'attr') ?>"
+            class="form-api-documentacion__lista"
+        >
         </div>
 
-        <div id="nueva-api-respuestas-vacio" class="estado-vacio">
+        <div
+            id="<?= esc($idRespuestasVacio, 'attr') ?>"
+            class="estado-vacio"
+        >
             No se han agregado respuestas.
         </div>
 

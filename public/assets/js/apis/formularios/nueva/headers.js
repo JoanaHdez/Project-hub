@@ -2,18 +2,25 @@
 *=                    HEADERS                       =*
 *==================================================*/
 
-export function inicializarHeaders() {
-  const botonAgregar = document.getElementById(
-    "btn-agregar-header",
-  );
+export function inicializarHeaders({
+  botonId = "nueva-api-btn-agregar-header",
+  contenedorId = "nueva-api-headers",
+  estadoVacioId = "nueva-api-headers-vacio",
+} = {}) {
+  const botonAgregar =
+    document.getElementById(
+      botonId,
+    );
 
-  const contenedor = document.getElementById(
-    "nueva-api-headers",
-  );
+  const contenedor =
+    document.getElementById(
+      contenedorId,
+    );
 
-  const estadoVacio = document.getElementById(
-    "nueva-api-headers-vacio",
-  );
+  const estadoVacio =
+    document.getElementById(
+      estadoVacioId,
+    );
 
   if (
     !botonAgregar ||
@@ -22,6 +29,15 @@ export function inicializarHeaders() {
   ) {
     return;
   }
+
+  if (
+    contenedor.dataset.inicializadoHeaders === "true"
+  ) {
+    return;
+  }
+
+  contenedor.dataset.inicializadoHeaders =
+    "true";
 
   botonAgregar.addEventListener(
     "click",
@@ -36,17 +52,19 @@ export function inicializarHeaders() {
   contenedor.addEventListener(
     "click",
     (event) => {
-      const botonEliminar = event.target.closest(
-        "[data-eliminar-header]",
-      );
+      const botonEliminar =
+        event.target.closest(
+          "[data-eliminar-header]",
+        );
 
       if (!botonEliminar) {
         return;
       }
 
-      const fila = botonEliminar.closest(
-        "[data-api-header]",
-      );
+      const fila =
+        botonEliminar.closest(
+          "[data-api-header]",
+        );
 
       if (fila) {
         fila.remove();
@@ -65,11 +83,13 @@ export function inicializarHeaders() {
 *=                AGREGAR HEADER                    =*
 *==================================================*/
 
-function agregarHeader(
+export function agregarHeader(
   contenedor,
   estadoVacio,
+  datos = {},
 ) {
-  const fila = document.createElement("div");
+  const fila =
+    document.createElement("div");
 
   fila.className =
     "form-api-documentacion__item";
@@ -146,7 +166,51 @@ function agregarHeader(
     </div>
   `;
 
-  contenedor.appendChild(fila);
+  const campoNombre =
+    fila.querySelector(
+      "[data-header-nombre]",
+    );
+
+  const campoValor =
+    fila.querySelector(
+      "[data-header-valor]",
+    );
+
+  const campoObligatorio =
+    fila.querySelector(
+      "[data-header-obligatorio]",
+    );
+
+  const campoDescripcion =
+    fila.querySelector(
+      "[data-header-descripcion]",
+    );
+
+  if (campoNombre) {
+    campoNombre.value =
+      datos.nombre ?? "";
+  }
+
+  if (campoValor) {
+    campoValor.value =
+      datos.valor ?? "";
+  }
+
+  if (campoObligatorio) {
+    campoObligatorio.value =
+      datos.obligatorio
+        ? "1"
+        : "0";
+  }
+
+  if (campoDescripcion) {
+    campoDescripcion.value =
+      datos.descripcion ?? "";
+  }
+
+  contenedor.appendChild(
+    fila,
+  );
 
   actualizarEstadoHeaders(
     contenedor,
@@ -174,13 +238,66 @@ function actualizarEstadoHeaders(
 
 
 /*==================================================*
+*=               CARGAR HEADERS                     =*
+*==================================================*/
+
+export function cargarHeaders({
+  contenedorId = "nueva-api-headers",
+  estadoVacioId = "nueva-api-headers-vacio",
+  headers = [],
+} = {}) {
+  const contenedor =
+    document.getElementById(
+      contenedorId,
+    );
+
+  const estadoVacio =
+    document.getElementById(
+      estadoVacioId,
+    );
+
+  if (
+    !contenedor ||
+    !estadoVacio
+  ) {
+    return;
+  }
+
+  contenedor.innerHTML = "";
+
+  const listaHeaders =
+    Array.isArray(headers)
+      ? headers
+      : [];
+
+  listaHeaders.forEach(
+    (header) => {
+      agregarHeader(
+        contenedor,
+        estadoVacio,
+        header,
+      );
+    },
+  );
+
+  actualizarEstadoHeaders(
+    contenedor,
+    estadoVacio,
+  );
+}
+
+
+/*==================================================*
 *=                OBTENER HEADERS                   =*
 *==================================================*/
 
-export function obtenerHeaders() {
-  const contenedor = document.getElementById(
-    "nueva-api-headers",
-  );
+export function obtenerHeaders({
+  contenedorId = "nueva-api-headers",
+} = {}) {
+  const contenedor =
+    document.getElementById(
+      contenedorId,
+    );
 
   if (!contenedor) {
     return [];

@@ -599,5 +599,47 @@
         "responsable": "",
         "observaciones": "",
         "activo": true
+    },
+    {
+        "id_api": 19,
+        "id_proyecto": 7,
+        "id_sistema": null,
+        "nombre": "api prueba 13",
+        "descripcion": "",
+        "estado": "Detenido",
+        "metodo": "GET",
+        "endpoint": "http://localhost:8080/index.php/apis",
+        "url": "",
+        "autenticacion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "headers": [
+            {
+                "nombre": "",
+                "valor": "",
+                "obligatorio": false,
+                "descripcion": ""
+            }
+        ],
+        "parametros": [
+            {
+                "nombre": "",
+                "tipo": "",
+                "obligatorio": false,
+                "descripcion": ""
+            }
+        ],
+        "ejemplo": [],
+        "respuestas": [
+            {
+                "codigo": 0,
+                "descripcion": "",
+                "body": []
+            }
+        ],
+        "responsable": "",
+        "observaciones": "",
+        "activo": true
     }
 ]
