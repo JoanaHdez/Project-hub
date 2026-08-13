@@ -44,10 +44,6 @@ export function inicializarFormularioNuevaApi() {
     return;
   }
 
-  /*
-   * Evita inicializar dos veces el mismo
-   * formulario accidentalmente.
-   */
   if (
     formulario.dataset.inicializado === "true"
   ) {
@@ -106,17 +102,11 @@ export function inicializarFormularioNuevaApi() {
     async (event) => {
       event.preventDefault();
 
-      /*
-       * Validaciones HTML.
-       */
       if (!formulario.checkValidity()) {
         formulario.reportValidity();
         return;
       }
 
-      /*
-       * Validar JSON del ejemplo.
-       */
       if (
         campoEjemploBody &&
         !validarCampoJson(
@@ -126,15 +116,11 @@ export function inicializarFormularioNuevaApi() {
         return;
       }
 
-      /*
-       * Validar JSON de todas
-       * las respuestas registradas.
-       */
       const camposRespuesta =
         contenedorRespuestas
           ? contenedorRespuestas.querySelectorAll(
-              "[data-respuesta-body]",
-            )
+            "[data-respuesta-body]",
+          )
           : [];
 
       for (const campo of camposRespuesta) {
@@ -143,28 +129,28 @@ export function inicializarFormularioNuevaApi() {
         }
       }
 
-      /*
-       * Construir todos los datos
-       * de la nueva API.
-       */
       const datosApi =
         obtenerDatosNuevaApi(
           formulario,
         );
 
       try {
-        /*
-         * Guardar en el backend.
-         */
+
         const resultado =
           await guardarNuevaApi(
             datosApi,
           );
 
-        /*
-         * Agregar inmediatamente la API
-         * al catálogo sin recargar.
-         */
+        console.log(
+          "Resultado completo del guardado:",
+          resultado,
+        );
+
+        console.log(
+          "selector_html:",
+          resultado.selector_html,
+        );
+
         const catalogo =
           document.querySelector(
             ".catalogo__lista",
@@ -180,9 +166,6 @@ export function inicializarFormularioNuevaApi() {
           );
         }
 
-        /*
-         * Notificación de éxito.
-         */
         mostrarNotificacion({
           tipo: "success",
           titulo: "API registrada",
@@ -191,14 +174,8 @@ export function inicializarFormularioNuevaApi() {
             "API registrada correctamente.",
         });
 
-        /*
-         * Limpiar campos normales.
-         */
         formulario.reset();
 
-        /*
-         * Cerrar modal.
-         */
         const modal =
           formulario.closest(".modal");
 
