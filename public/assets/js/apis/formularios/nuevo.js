@@ -22,6 +22,14 @@ import {
   obtenerDatosNuevaApi,
 } from "./nueva/datos.js";
 
+import {
+  guardarNuevaApi,
+} from "./nueva/guardar.js";
+
+import {
+  mostrarNotificacion,
+} from "../../proyectos/notificaciones.js";
+
 
 /*==================================================*
 *=                NUEVA API                         =*
@@ -59,6 +67,7 @@ export function inicializarFormularioNuevaApi() {
       "nueva-api-respuestas",
     );
 
+
   /*================================================*
   *=               INICIALIZADORES                 =*
   *================================================*/
@@ -70,6 +79,7 @@ export function inicializarFormularioNuevaApi() {
   inicializarParametros();
 
   inicializarRespuestas();
+
 
   /*================================================*
   *=         VALIDAR EJEMPLO DE CONSUMO            =*
@@ -86,17 +96,18 @@ export function inicializarFormularioNuevaApi() {
     );
   }
 
+
   /*================================================*
-  *=                SUBMIT TEMPORAL                 =*
+  *=                  GUARDAR API                   =*
   *================================================*/
 
   formulario.addEventListener(
     "submit",
-    (event) => {
+    async (event) => {
       event.preventDefault();
 
       /*
-       * Validaciones HTML normales.
+       * Validaciones HTML.
        */
       if (!formulario.checkValidity()) {
         formulario.reportValidity();
@@ -116,7 +127,8 @@ export function inicializarFormularioNuevaApi() {
       }
 
       /*
-       * Validar todos los JSON de respuestas.
+       * Validar JSON de todas
+       * las respuestas registradas.
        */
       const camposRespuesta =
         contenedorRespuestas
@@ -125,32 +137,98 @@ export function inicializarFormularioNuevaApi() {
             )
           : [];
 
-      for (
-        const campo
-        of camposRespuesta
-      ) {
+      for (const campo of camposRespuesta) {
         if (!validarCampoJson(campo)) {
           return;
         }
       }
 
       /*
-       * Construir objeto completo.
+       * Construir todos los datos
+       * de la nueva API.
        */
       const datosApi =
         obtenerDatosNuevaApi(
           formulario,
         );
 
-      /*
-       * Temporal.
-       * En el siguiente paso esto se convertirá
-       * en POST /apis.
-       */
-      console.log(
-        "Datos de Nueva API:",
-        datosApi,
-      );
+      try {
+        /*
+         * Guardar en el backend.
+         */
+        const resultado =
+          await guardarNuevaApi(
+            datosApi,
+          );
+
+        /*
+         * Agregar inmediatamente la API
+         * al catálogo sin recargar.
+         */
+        const catalogo =
+          document.querySelector(
+            ".catalogo__lista",
+          );
+
+        if (
+          catalogo &&
+          resultado.selector_html
+        ) {
+          catalogo.insertAdjacentHTML(
+            "afterbegin",
+            resultado.selector_html,
+          );
+        }
+
+        /*
+         * Notificación de éxito.
+         */
+        mostrarNotificacion({
+          tipo: "success",
+          titulo: "API registrada",
+          mensaje:
+            resultado.mensaje ||
+            "API registrada correctamente.",
+        });
+
+        /*
+         * Limpiar campos normales.
+         */
+        formulario.reset();
+
+        /*
+         * Cerrar modal.
+         */
+        const modal =
+          formulario.closest(".modal");
+
+        if (modal) {
+          modal.classList.remove(
+            "modal--visible",
+          );
+
+          modal.setAttribute(
+            "aria-hidden",
+            "true",
+          );
+
+          document.body.style.overflow = "";
+        }
+      } catch (error) {
+        console.error(
+          "Error al registrar la API:",
+          error,
+        );
+
+        mostrarNotificacion({
+          tipo: "error",
+          titulo:
+            "No se pudo registrar la API",
+          mensaje:
+            error.message ||
+            "Ocurrió un error al registrar la API.",
+        });
+      }
     },
   );
 }

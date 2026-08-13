@@ -145,5 +145,21 @@
         "observaciones": "",
         "total_sistemas": 0,
         "fecha_creacion": "12\/08\/2026"
+    },
+    {
+        "id_proyecto": 11,
+        "nombre": "prueba 7",
+        "estado": "Desarrollo",
+        "estado_tipo": "desarrollo",
+        "origen": "Práctica",
+        "descripcion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "id_especificacion": "",
+        "responsable": "joana",
+        "observaciones": "",
+        "total_sistemas": 0,
+        "fecha_creacion": "13\/08\/2026"
     }
 ]

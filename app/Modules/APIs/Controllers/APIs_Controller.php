@@ -262,12 +262,144 @@ class APIs_Controller extends BaseController
 
         $apis[] = $api;
 
-        $this->storage->guardarTodos($apis);
+$this->storage->guardarTodos($apis);
 
-        return $this->response->setJSON([
-            'ok'      => true,
-            'mensaje' => 'API registrada correctamente.',
-            'api'     => $api,
-        ]);
+
+/*
+ * Resolver el nombre del proyecto para mostrarlo
+ * inmediatamente en el catálogo.
+ */
+$nombreProyecto = 'Sin proyecto';
+
+$proyectos = $this->proyectoStorage->obtenerTodos();
+
+foreach ($proyectos as $proyecto) {
+    if (
+        (int) ($proyecto['id_proyecto'] ?? 0)
+        === $idProyecto
+    ) {
+        $nombreProyecto =
+            $proyecto['nombre'] ?? 'Sin proyecto';
+
+        break;
+    }
+}
+
+
+/*
+ * Adaptar la API a los nombres utilizados
+ * actualmente por la vista.
+ */
+$apiVista = array_merge(
+    $api,
+    [
+        'id' =>
+            $api['id_api'],
+
+        'proyecto' =>
+            $nombreProyecto,
+
+        'repositorio' =>
+            $api['repositorio_url'] ?? '',
+
+        'servidor' =>
+            $api['url_servidor'] ?? '',
+    ]
+);
+
+
+/*
+ * Generar el mismo componente que utiliza
+ * el catálogo al cargar la página.
+ */
+$selectorHtml = view(
+    'App\Modules\APIs\Views\components\api_selector',
+    [
+        'titulo' =>
+            $apiVista['nombre'],
+
+        'proyecto' =>
+            $apiVista['proyecto'],
+
+        'estado' =>
+            $apiVista['estado'],
+
+        'metodo' =>
+            $apiVista['metodo'],
+
+        'atributos' => [
+            'data-api-id' =>
+                $apiVista['id'],
+
+            'data-api-nombre' =>
+                $apiVista['nombre'],
+
+            'data-api-proyecto' =>
+                $apiVista['proyecto'],
+
+            'data-api-descripcion' =>
+                $apiVista['descripcion'],
+
+            'data-api-estado' =>
+                $apiVista['estado'],
+
+            'data-api-metodo' =>
+                $apiVista['metodo'],
+
+            'data-api-endpoint' =>
+                $apiVista['endpoint'],
+
+            'data-api-url' =>
+                $apiVista['url'],
+
+            'data-api-autenticacion' =>
+                $apiVista['autenticacion'],
+
+            'data-api-repositorio' =>
+                $apiVista['repositorio'],
+
+            'data-api-ruta' =>
+                $apiVista['ruta_local'],
+
+            'data-api-servidor' =>
+                $apiVista['servidor'],
+
+            'data-api-headers' => json_encode(
+                $apiVista['headers'] ?? [],
+                JSON_UNESCAPED_UNICODE
+                | JSON_UNESCAPED_SLASHES
+            ),
+
+            'data-api-parametros' => json_encode(
+                $apiVista['parametros'] ?? [],
+                JSON_UNESCAPED_UNICODE
+                | JSON_UNESCAPED_SLASHES
+            ),
+
+            'data-api-ejemplo' => json_encode(
+                $apiVista['ejemplo'] ?? [],
+                JSON_UNESCAPED_UNICODE
+                | JSON_UNESCAPED_SLASHES
+            ),
+
+            'data-api-respuestas' => json_encode(
+                $apiVista['respuestas'] ?? [],
+                JSON_UNESCAPED_UNICODE
+                | JSON_UNESCAPED_SLASHES
+            ),
+        ],
+    ],
+    [
+        'saveData' => false,
+    ]
+);
+
+
+return $this->response->setJSON([
+    'ok'            => true,
+    'mensaje'       => 'API registrada correctamente.',
+    'api'           => $apiVista,
+    'selector_html' => $selectorHtml,
+]);
     }
 }
