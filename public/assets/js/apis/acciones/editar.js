@@ -5,15 +5,27 @@ import {
 
 import {
   inicializarHeaders,
+  cargarHeaders,
 } from "../formularios/nueva/headers.js";
 
 import {
   inicializarParametros,
+  cargarParametros,
 } from "../formularios/nueva/parametros.js";
 
 import {
   inicializarRespuestas,
+  cargarRespuestas,
 } from "../formularios/nueva/respuestas.js";
+
+import {
+  validarCampoJson,
+} from "../formularios/nueva/json.js";
+
+import {
+  obtenerJson,
+} from "../documentacion/json.js";
+
 
 /*==================================================
 =                    EDITAR API                     =
@@ -35,6 +47,11 @@ export function inicializarEditarApi() {
       "form-editar-api",
     );
 
+  const campoEjemploBody =
+    document.getElementById(
+      "editar-api-ejemplo-body",
+    );
+
   if (
     !botonEditar ||
     !modal ||
@@ -43,28 +60,84 @@ export function inicializarEditarApi() {
     return;
   }
 
+
+  /*==================================================
+  =           PROYECTO → SISTEMA                    =
+  ==================================================*/
+
   inicializarRelacionProyectoSistema({
     proyectoId: "editar-api-proyecto",
     sistemaId: "editar-api-sistema",
   });
 
+
+  /*==================================================
+  =                    HEADERS                       =
+  ==================================================*/
+
   inicializarHeaders({
-  botonId: "editar-api-btn-agregar-header",
-  contenedorId: "editar-api-headers",
-  estadoVacioId: "editar-api-headers-vacio",
-});
+    botonId:
+      "editar-api-btn-agregar-header",
 
-inicializarParametros({
-  botonId: "editar-api-btn-agregar-parametro",
-  contenedorId: "editar-api-parametros",
-  estadoVacioId: "editar-api-parametros-vacio",
-});
+    contenedorId:
+      "editar-api-headers",
 
-inicializarRespuestas({
-  botonId: "editar-api-btn-agregar-respuesta",
-  contenedorId: "editar-api-respuestas",
-  estadoVacioId: "editar-api-respuestas-vacio",
-});
+    estadoVacioId:
+      "editar-api-headers-vacio",
+  });
+
+
+  /*==================================================
+  =                  PARÁMETROS                      =
+  ==================================================*/
+
+  inicializarParametros({
+    botonId:
+      "editar-api-btn-agregar-parametro",
+
+    contenedorId:
+      "editar-api-parametros",
+
+    estadoVacioId:
+      "editar-api-parametros-vacio",
+  });
+
+
+  /*==================================================
+  =               RESPUESTAS                        =
+  ==================================================*/
+
+  inicializarRespuestas({
+    botonId:
+      "editar-api-btn-agregar-respuesta",
+
+    contenedorId:
+      "editar-api-respuestas",
+
+    estadoVacioId:
+      "editar-api-respuestas-vacio",
+  });
+
+
+  /*==================================================
+  =          VALIDACIÓN EJEMPLO JSON                =
+  ==================================================*/
+
+  if (campoEjemploBody) {
+    campoEjemploBody.addEventListener(
+      "input",
+      () => {
+        validarCampoJson(
+          campoEjemploBody,
+        );
+      },
+    );
+  }
+
+
+  /*==================================================
+  =                BOTÓN EDITAR                     =
+  ==================================================*/
 
   botonEditar.addEventListener(
     "click",
@@ -199,10 +272,117 @@ inicializarRespuestas({
         await cargarSistemasPorProyecto({
           selectProyecto,
           selectSistema,
+
           idSistemaSeleccionado:
             idSistema || null,
         });
       }
+
+
+      /*==================================================
+      =                   HEADERS                        =
+      ==================================================*/
+
+      const headers =
+        obtenerJson(
+          selector.dataset.apiHeaders,
+        );
+
+      cargarHeaders({
+        contenedorId:
+          "editar-api-headers",
+
+        estadoVacioId:
+          "editar-api-headers-vacio",
+
+        headers:
+          Array.isArray(headers)
+            ? headers
+            : [],
+      });
+
+
+      /*==================================================
+      =                 PARÁMETROS                       =
+      ==================================================*/
+
+      const parametros =
+        obtenerJson(
+          selector.dataset.apiParametros,
+        );
+
+      cargarParametros({
+        contenedorId:
+          "editar-api-parametros",
+
+        estadoVacioId:
+          "editar-api-parametros-vacio",
+
+        parametros:
+          Array.isArray(parametros)
+            ? parametros
+            : [],
+      });
+
+
+      /*==================================================
+      =              EJEMPLO DE CONSUMO                  =
+      ==================================================*/
+
+      const ejemplo =
+        obtenerJson(
+          selector.dataset.apiEjemplo,
+        );
+
+      if (campoEjemploBody) {
+        if (
+          ejemplo &&
+          !Array.isArray(ejemplo) &&
+          ejemplo.body &&
+          typeof ejemplo.body === "object"
+        ) {
+          campoEjemploBody.value =
+            JSON.stringify(
+              ejemplo.body,
+              null,
+              2,
+            );
+        } else {
+          campoEjemploBody.value =
+            "";
+        }
+
+        /*
+         * Eliminar cualquier mensaje de
+         * validación anterior.
+         */
+        validarCampoJson(
+          campoEjemploBody,
+        );
+      }
+
+
+      /*==================================================
+      =                  RESPUESTAS                      =
+      ==================================================*/
+
+      const respuestas =
+        obtenerJson(
+          selector.dataset.apiRespuestas,
+        );
+
+      cargarRespuestas({
+        contenedorId:
+          "editar-api-respuestas",
+
+        estadoVacioId:
+          "editar-api-respuestas-vacio",
+
+        respuestas:
+          Array.isArray(respuestas)
+            ? respuestas
+            : [],
+      });
 
 
       /*==================================================
@@ -226,7 +406,7 @@ inicializarRespuestas({
 
 
 /*==================================================
-=                  AUXILIAR                        =
+=                  AUXILIAR                         =
 ==================================================*/
 
 function asignarValor(
