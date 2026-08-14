@@ -226,6 +226,34 @@ export function inicializarSeleccionApi() {
         servidor,
       });
 
+      /*==================================================*
+*=             INFORMACIÓN GENERAL                 =*
+*==================================================*/
+
+actualizarTexto(
+  "ficha-general-nombre",
+  nombre || "—",
+);
+
+actualizarTexto(
+  "ficha-general-proyecto",
+  proyecto || "—",
+);
+
+actualizarTexto(
+  "ficha-general-metodo",
+  metodo || "—",
+);
+
+actualizarTexto(
+  "ficha-general-estado",
+  estado || "—",
+);
+
+actualizarTexto(
+  "ficha-general-descripcion",
+  descripcion || "Sin descripción.",
+);
 
       /*==================================================
       =                    BOTONES                       =

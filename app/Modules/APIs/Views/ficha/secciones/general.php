@@ -1,54 +1,110 @@
 <section class="ficha-seccion ficha-seccion--activa" data-ficha-contenido="general">
 
-                    <div class="ficha-seccion__encabezado">
+    <div class="ficha-seccion__encabezado">
 
-                        <span class="ficha-seccion__numero">
-                            01
-                        </span>
+        <span class="ficha-seccion__numero">
+            01
+        </span>
 
-                        <div>
-                            <h3>Información general</h3>
+        <div>
+            <h3>
+                Información general
+            </h3>
 
-                            <p>
-                                Datos principales de identificación de la API.
-                            </p>
-                        </div>
+            <p>
+                Datos principales de identificación de la API.
+            </p>
+        </div>
 
-                    </div>
+    </div>
 
-                    <div class="ficha-datos">
 
-                        <article class="ficha-dato">
-                            <small>Nombre</small>
-                            <strong>API de Constancias</strong>
-                        </article>
+    <div class="ficha-datos">
 
-                        <article class="ficha-dato">
-                            <small>Proyecto</small>
-                            <strong>Extorsión</strong>
-                        </article>
+        <!-- =========================================
+             NOMBRE
+        ========================================== -->
 
-                        <article class="ficha-dato">
-                            <small>Método HTTP</small>
-                            <strong>POST</strong>
-                        </article>
+        <article class="ficha-dato">
 
-                        <article class="ficha-dato">
-                            <small>Estado</small>
-                            <strong>Producción</strong>
-                        </article>
+            <small>
+                Nombre
+            </small>
 
-                        <article class="ficha-dato ficha-dato--completo">
+            <strong id="ficha-general-nombre">
+                —
+            </strong>
 
-                            <small>Descripción</small>
+        </article>
 
-                            <p>
-                                Envía al usuario el enlace para consultar y
-                                descargar su constancia de acreditación.
-                            </p>
 
-                        </article>
+        <!-- =========================================
+             PROYECTO
+        ========================================== -->
 
-                    </div>
+        <article class="ficha-dato">
 
-                </section>
+            <small>
+                Proyecto
+            </small>
+
+            <strong id="ficha-general-proyecto">
+                —
+            </strong>
+
+        </article>
+
+
+        <!-- =========================================
+             MÉTODO HTTP
+        ========================================== -->
+
+        <article class="ficha-dato">
+
+            <small>
+                Método HTTP
+            </small>
+
+            <strong id="ficha-general-metodo">
+                —
+            </strong>
+
+        </article>
+
+
+        <!-- =========================================
+             ESTADO
+        ========================================== -->
+
+        <article class="ficha-dato">
+
+            <small>
+                Estado
+            </small>
+
+            <strong id="ficha-general-estado">
+                —
+            </strong>
+
+        </article>
+
+
+        <!-- =========================================
+             DESCRIPCIÓN
+        ========================================== -->
+
+        <article class="ficha-dato ficha-dato--completo">
+
+            <small>
+                Descripción
+            </small>
+
+            <p id="ficha-general-descripcion">
+                —
+            </p>
+
+        </article>
+
+    </div>
+
+</section>
