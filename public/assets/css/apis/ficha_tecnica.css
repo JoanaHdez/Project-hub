@@ -1036,3 +1036,51 @@
     margin-top: 2px;
   }
 }
+
+/* =========================
+   Información pendiente
+========================= */
+
+.ficha-pendiente {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+
+    padding: 1.25rem;
+
+    background-color: #fffafa;
+    border: 1px solid #f1c7c7;
+    border-radius: 10px;
+}
+
+
+.ficha-pendiente__estado {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 0.25rem 0.6rem;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+
+    color: #b42318;
+    background-color: #fee4e2;
+
+    border-radius: 999px;
+}
+
+
+.ficha-pendiente strong {
+    font-size: 0.95rem;
+}
+
+
+.ficha-pendiente p {
+    margin: 0;
+
+    font-size: 0.88rem;
+    line-height: 1.5;
+
+    color: #667085;
+}

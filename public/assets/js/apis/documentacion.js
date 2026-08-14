@@ -22,6 +22,10 @@ import {
   inicializarConfirmacionAccionApi,
 } from "./acciones/administrar/ejecutar.js";
 
+import {
+  inicializarArquitecturaFicha,
+} from "./ficha/arquitectura.js";
+
 /*==================================================
 =              DOCUMENTACIÓN DE APIs                =
 ==================================================*/
@@ -37,3 +41,5 @@ inicializarEstadoApi();
 inicializarAdministrarApi();
 
 inicializarConfirmacionAccionApi();
+
+inicializarArquitecturaFicha();

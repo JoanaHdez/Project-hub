@@ -23,6 +23,8 @@
 
 <?= view('App\Modules\APIs\Views\modals\confirmar_accion_api') ?>
 
+<?= view('App\Modules\APIs\Views\modals\completar_arquitectura') ?>
+
 <?= view(
     'App\Modules\APIs\Views\modals\nueva_api',
     [
