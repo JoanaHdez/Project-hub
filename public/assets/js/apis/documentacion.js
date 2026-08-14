@@ -18,6 +18,10 @@ import {
   inicializarAdministrarApi,
 } from "./acciones/administrar.js";
 
+import {
+  inicializarConfirmacionAccionApi,
+} from "./acciones/administrar/ejecutar.js";
+
 /*==================================================
 =              DOCUMENTACIÓN DE APIs                =
 ==================================================*/
@@ -31,3 +35,5 @@ inicializarEditarApi();
 inicializarEstadoApi();
 
 inicializarAdministrarApi();
+
+inicializarConfirmacionAccionApi();
