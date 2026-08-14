@@ -12,11 +12,14 @@
                 id="titulo-ficha-tecnica"
                 class="modal-ficha__titulo"
             >
-                API de Constancias
+                —
             </h2>
 
-            <p class="modal-ficha__subtitulo">
-                Proyecto Extorsión
+            <p
+                class="modal-ficha__subtitulo"
+                id="ficha-encabezado-proyecto"
+            >
+                —
             </p>
 
         </div>
@@ -26,38 +29,39 @@
             aria-label="Resumen técnico de la API"
         >
 
-            <span class="ficha-badge ficha-badge--metodo">
-                POST
+            <span
+                class="ficha-badge ficha-badge--metodo"
+                id="ficha-encabezado-metodo"
+            >
+                —
             </span>
 
-            <span class="ficha-badge">
-                v1.2
+            <span
+                class="ficha-badge"
+                id="ficha-encabezado-version"
+            >
+                Pendiente
             </span>
 
-            <span class="ficha-badge ficha-badge--produccion">
+            <span
+                class="ficha-badge ficha-badge--produccion"
+                id="ficha-encabezado-estado"
+            >
                 <span
                     class="ficha-badge__indicador"
                     aria-hidden="true"
                 ></span>
 
-                Producción
+                <span id="ficha-encabezado-estado-texto">
+                    —
+                </span>
             </span>
 
-            <span class="ficha-badge ficha-badge--tecnologia">
-                SMTP
-            </span>
-
-            <span class="ficha-badge ficha-badge--tecnologia">
-                Token
-            </span>
-
-            <span class="ficha-badge ficha-badge--tecnologia">
-                CI4
-            </span>
-
-            <span class="ficha-badge ficha-badge--tecnologia">
-                MySQL
-            </span>
+            <!--
+                Más adelante estos badges se
+                generarán desde Dependencias.
+            -->
+            <div id="ficha-encabezado-tecnologias"></div>
 
         </div>
 

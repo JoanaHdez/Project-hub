@@ -18,6 +18,9 @@ import {
   renderRespuestas,
 } from "./respuestas.js";
 
+import {
+  actualizarFichaTecnica,
+} from "../ficha/actualizar.js";
 
 /*==================================================
 =              SELECCIÓN DE API                     =
@@ -206,33 +209,22 @@ export function inicializarSeleccionApi() {
 
 
       /*==================================================
-      =               FICHA TÉCNICA                     =
+      =               FICHA TÉCNICA                      =
       ==================================================*/
 
-      actualizarTexto(
-        "ficha-api-proyecto",
-        proyecto || "—",
-      );
-
-      actualizarTexto(
-        "ficha-api-estado",
-        estado || "—",
-      );
-
-      actualizarTexto(
-        "ficha-api-repositorio",
-        repositorio || "—",
-      );
-
-      actualizarTexto(
-        "ficha-api-ruta",
-        ruta || "—",
-      );
-
-      actualizarTexto(
-        "ficha-api-servidor",
-        servidor || "—",
-      );
+      actualizarFichaTecnica({
+        nombre,
+        proyecto,
+        metodo,
+        estado,
+        descripcion,
+        autenticacion,
+        endpoint,
+        url,
+        repositorio,
+        ruta,
+        servidor,
+      });
 
 
       /*==================================================
