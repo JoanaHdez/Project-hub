@@ -321,6 +321,110 @@ class APIs_Controller extends BaseController
 
 
     /*==================================================
+    =             ACTUALIZAR ARQUITECTURA              =
+    ==================================================*/
+
+    public function actualizarArquitectura(
+        int $idApi
+    ) {
+        $datos =
+            $this->request
+            ->getJSON(true);
+
+        if (!is_array($datos)) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                    'Los datos enviados no son válidos.',
+                ]);
+        }
+
+        $arquitectura =
+            $datos['arquitectura']
+            ?? null;
+
+        if (!is_array($arquitectura)) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                    'La arquitectura enviada no es válida.',
+                ]);
+        }
+
+        $apis =
+            $this->storage
+            ->obtenerTodos();
+
+        $indiceApi = null;
+
+        foreach (
+            $apis as
+            $indice => $api
+        ) {
+            if (
+                (int) (
+                    $api['id_api']
+                    ?? 0
+                ) === $idApi
+            ) {
+                $indiceApi =
+                    $indice;
+
+                break;
+            }
+        }
+
+        if ($indiceApi === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                    'No se encontró la API solicitada.',
+                ]);
+        }
+
+        $apis[$indiceApi]['arquitectura'] = [
+            'modulo' =>
+            trim(
+                (string) (
+                    $arquitectura['modulo']
+                    ?? ''
+                )
+            ),
+
+            'componentes' =>
+            is_array(
+                $arquitectura['componentes']
+                    ?? null
+            )
+                ? $arquitectura['componentes']
+                : [],
+        ];
+
+        $this->storage
+            ->guardarTodos(
+                $apis
+            );
+
+        return $this->response
+            ->setJSON([
+                'ok' => true,
+
+                'mensaje' =>
+                'Arquitectura guardada correctamente.',
+
+                'arquitectura' =>
+                $apis[$indiceApi]['arquitectura'],
+            ]);
+    }
+
+    
+    /*==================================================
     =                  DESACTIVAR API                   =
     ==================================================*/
 
