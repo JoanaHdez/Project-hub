@@ -17,4 +17,6 @@ $routes->put('(:num)', 'APIs_Controller::actualizar/$1');
 $routes->patch('(:num)/desactivar', 'APIs_Controller::desactivar/$1');
 
 $routes->patch('(:num)/activar', 'APIs_Controller::activar/$1');
+
+$routes->delete('(:num)', 'APIs_Controller::eliminar/$1');
 });

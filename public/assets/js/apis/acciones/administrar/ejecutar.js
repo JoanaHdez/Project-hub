@@ -46,17 +46,51 @@ export function inicializarConfirmacionAccionApi() {
         return;
       }
 
-      /*
-       * Por ahora solo implementamos
-       * activar y desactivar.
-       */
-      if (accion === "eliminar") {
-        return;
-      }
-
-      botonConfirmar.disabled = true;
+      botonConfirmar.disabled =
+        true;
 
       try {
+        /*==================================================
+        =                   ELIMINAR                        =
+        ==================================================*/
+
+        if (accion === "eliminar") {
+          const resultado =
+            await eliminarApi(
+              idApi,
+            );
+
+          eliminarSelectorApi(
+            idApi,
+          );
+
+          mostrarNotificacion({
+            tipo: "success",
+
+            titulo:
+              "API eliminada",
+
+            mensaje:
+              resultado.mensaje ||
+              "API eliminada correctamente.",
+          });
+
+          cerrarModalConfirmacion(
+            modalConfirmacion,
+          );
+
+          limpiarDatosTemporales(
+            modalConfirmacion,
+          );
+
+          return;
+        }
+
+
+        /*==================================================
+        =             ACTIVAR / DESACTIVAR                 =
+        ==================================================*/
+
         const resultado =
           await cambiarEstadoApi(
             idApi,
@@ -94,7 +128,7 @@ export function inicializarConfirmacionAccionApi() {
         );
       } catch (error) {
         console.error(
-          "Error al cambiar el estado de la API:",
+          "Error al ejecutar la acción de la API:",
           error,
         );
 
@@ -106,7 +140,7 @@ export function inicializarConfirmacionAccionApi() {
 
           mensaje:
             error.message ||
-            "Ocurrió un error al cambiar el estado de la API.",
+            "Ocurrió un error al realizar la acción sobre la API.",
         });
       } finally {
         botonConfirmar.disabled =
@@ -147,6 +181,42 @@ async function cambiarEstadoApi(
     throw new Error(
       resultado.mensaje ||
         "No fue posible cambiar el estado de la API.",
+    );
+  }
+
+  return resultado;
+}
+
+
+/*==================================================
+=              PETICIÓN DELETE                      =
+==================================================*/
+
+async function eliminarApi(
+  idApi,
+) {
+  const respuesta = await fetch(
+    `/apis/${idApi}`,
+    {
+      method: "DELETE",
+
+      headers: {
+        "X-Requested-With":
+          "XMLHttpRequest",
+      },
+    },
+  );
+
+  const resultado =
+    await respuesta.json();
+
+  if (
+    !respuesta.ok ||
+    !resultado.ok
+  ) {
+    throw new Error(
+      resultado.mensaje ||
+        "No fue posible eliminar la API.",
     );
   }
 
@@ -201,6 +271,26 @@ function actualizarSelectorApi(
    * información/botones.
    */
   nuevoSelector.click();
+}
+
+
+/*==================================================
+=              ELIMINAR SELECTOR                    =
+==================================================*/
+
+function eliminarSelectorApi(
+  idApi,
+) {
+  const selector =
+    document.querySelector(
+      `.api-selector[data-api-id="${idApi}"]`,
+    );
+
+  if (!selector) {
+    return;
+  }
+
+  selector.remove();
 }
 
 

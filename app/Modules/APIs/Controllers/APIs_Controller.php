@@ -490,6 +490,83 @@ class APIs_Controller extends BaseController
     }
 
     /*==================================================
+    =                    ELIMINAR API                    =
+    ==================================================*/
+
+    public function eliminar(
+        int $idApi
+    ) {
+        $apis =
+            $this->storage
+            ->obtenerTodos();
+
+        $indiceApi = null;
+        $apiEncontrada = null;
+
+        foreach (
+            $apis as
+            $indice => $api
+        ) {
+            if (
+                (int) (
+                    $api['id_api']
+                    ?? 0
+                ) === $idApi
+            ) {
+                $indiceApi =
+                    $indice;
+
+                $apiEncontrada =
+                    $api;
+
+                break;
+            }
+        }
+
+        if (
+            $indiceApi === null ||
+            $apiEncontrada === null
+        ) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'No se encontró la API solicitada.',
+                ]);
+        }
+
+        /*
+     * Eliminar la API del arreglo.
+     */
+        array_splice(
+            $apis,
+            $indiceApi,
+            1
+        );
+
+        $this->storage
+            ->guardarTodos(
+                $apis
+            );
+
+        return $this->response
+            ->setJSON([
+                'ok' => true,
+
+                'mensaje' =>
+                'API eliminada correctamente.',
+
+                'id_api' =>
+                $idApi,
+
+                'total_apis' =>
+                count($apis),
+            ]);
+    }
+
+    /*==================================================
     =                VALIDAR DATOS                    =
     ==================================================*/
 
