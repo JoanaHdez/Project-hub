@@ -2,6 +2,10 @@ import {
     mostrarNotificacion,
 } from "../../proyectos/notificaciones.js";
 
+import {
+    inicializarComponentesArquitectura,
+} from "./arquitectura/componentes.js";
+
 /*==================================================*
 *=              ARQUITECTURA DE API                 =*
 *==================================================*/
@@ -70,52 +74,11 @@ export function inicializarArquitecturaFicha() {
     );
 
 
-    /*==================================================*
-    *=            AGREGAR COMPONENTE                   =*
-    *==================================================*/
-
-    botonAgregar.addEventListener(
-        "click",
-        () => {
-            agregarComponente(
-                contenedor,
-                estadoVacio,
-            );
-        },
-    );
-
-
-    /*==================================================*
-    *=            ELIMINAR COMPONENTE                  =*
-    *==================================================*/
-
-    contenedor.addEventListener(
-        "click",
-        (event) => {
-            const botonEliminar =
-                event.target.closest(
-                    "[data-eliminar-componente-arquitectura]",
-                );
-
-            if (!botonEliminar) {
-                return;
-            }
-
-            const item =
-                botonEliminar.closest(
-                    "[data-componente-arquitectura]",
-                );
-
-            if (item) {
-                item.remove();
-            }
-
-            actualizarEstadoVacio(
-                contenedor,
-                estadoVacio,
-            );
-        },
-    );
+    inicializarComponentesArquitectura({
+    botonAgregar,
+    contenedor,
+    estadoVacio,
+});
 
     /*==================================================*
 *=              GUARDAR ARQUITECTURA                =*
@@ -210,140 +173,6 @@ export function inicializarArquitecturaFicha() {
             }
         },
     );
-}
-
-
-/*==================================================*
-*=            CREAR COMPONENTE                      =*
-*==================================================*/
-
-function agregarComponente(
-    contenedor,
-    estadoVacio,
-) {
-    const item =
-        document.createElement(
-            "div",
-        );
-
-    item.className =
-        "form-api-documentacion__item";
-
-    item.dataset.componenteArquitectura =
-        "";
-
-    item.innerHTML = `
-    <div class="form-grid">
-
-      <div class="form-grupo">
-
-        <label>
-          Tipo
-        </label>
-
-        <select
-          data-arquitectura-tipo
-        >
-          <option value="">
-            Selecciona un tipo
-          </option>
-
-          <option value="Controllers">
-            Controllers
-          </option>
-
-          <option value="Services">
-            Services
-          </option>
-
-          <option value="Models">
-            Models
-          </option>
-
-          <option value="Views">
-            Views
-          </option>
-
-          <option value="Libraries">
-            Libraries
-          </option>
-
-          <option value="Helpers">
-            Helpers
-          </option>
-
-          <option value="Config">
-            Config
-          </option>
-
-          <option value="Routes">
-            Routes
-          </option>
-
-          <option value="Otros">
-            Otros
-          </option>
-        </select>
-
-      </div>
-
-
-      <div class="form-grupo">
-
-        <label>
-          Archivo / componente
-        </label>
-
-        <input
-          type="text"
-          data-arquitectura-archivo
-          placeholder="Ej. ConstanciaAPI_Controller.php"
-        >
-
-      </div>
-
-    </div>
-
-
-    <div class="form-api-documentacion__acciones">
-
-      <button
-        type="button"
-        class="boton boton--peligro boton--sm"
-        data-eliminar-componente-arquitectura
-      >
-        Eliminar
-      </button>
-
-    </div>
-  `;
-
-    contenedor.appendChild(
-        item,
-    );
-
-    actualizarEstadoVacio(
-        contenedor,
-        estadoVacio,
-    );
-}
-
-
-/*==================================================*
-*=              ESTADO VACÍO                        =*
-*==================================================*/
-
-function actualizarEstadoVacio(
-    contenedor,
-    estadoVacio,
-) {
-    const existenComponentes =
-        contenedor.querySelector(
-            "[data-componente-arquitectura]",
-        ) !== null;
-
-    estadoVacio.hidden =
-        existenComponentes;
 }
 
 
