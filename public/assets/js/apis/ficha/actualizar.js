@@ -16,43 +16,65 @@ export function actualizarFichaTecnica({
   servidor = "",
 } = {}) {
 
-    /*==================================================*
-*=                 ENCABEZADO                      =*
-*==================================================*/
-
-actualizarTexto(
-  "titulo-ficha-tecnica",
-  nombre || "—",
-);
-
-actualizarTexto(
-  "ficha-encabezado-proyecto",
-  proyecto || "Sin proyecto",
-);
-
-actualizarTexto(
-  "ficha-encabezado-metodo",
-  metodo || "—",
-);
-
-actualizarTexto(
-  "ficha-encabezado-estado-texto",
-  estado || "—",
-);
 
   /*==================================================*
-  *=                 DATOS ACTUALES                  =*
+  *=                 ENCABEZADO                      =*
   *==================================================*/
 
   actualizarTexto(
-    "ficha-api-proyecto",
+    "titulo-ficha-tecnica",
+    nombre || "—",
+  );
+
+  actualizarTexto(
+    "ficha-encabezado-proyecto",
+    proyecto || "Sin proyecto",
+  );
+
+  actualizarTexto(
+    "ficha-encabezado-metodo",
+    metodo || "—",
+  );
+
+  actualizarTexto(
+    "ficha-encabezado-estado-texto",
+    estado || "—",
+  );
+
+
+  /*==================================================*
+  *=             INFORMACIÓN GENERAL                 =*
+  *==================================================*/
+
+  actualizarTexto(
+    "ficha-general-nombre",
+    nombre || "—",
+  );
+
+  actualizarTexto(
+    "ficha-general-proyecto",
     proyecto || "—",
   );
 
   actualizarTexto(
-    "ficha-api-estado",
+    "ficha-general-metodo",
+    metodo || "—",
+  );
+
+  actualizarTexto(
+    "ficha-general-estado",
     estado || "—",
   );
+
+  actualizarTexto(
+    "ficha-general-descripcion",
+    descripcion || "Sin descripción.",
+  );
+
+
+  /*==================================================*
+  *=                    UBICACIÓN                     =*
+  *==================================================*/
 
   actualizarTexto(
     "ficha-api-repositorio",
@@ -67,6 +89,11 @@ actualizarTexto(
   actualizarTexto(
     "ficha-api-servidor",
     servidor || "—",
+  );
+
+  actualizarTexto(
+    "ficha-api-endpoint",
+    endpoint || "—",
   );
 }
 

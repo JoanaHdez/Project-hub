@@ -227,33 +227,33 @@ export function inicializarSeleccionApi() {
       });
 
       /*==================================================*
-*=             INFORMACIÓN GENERAL                 =*
-*==================================================*/
+      *=             INFORMACIÓN GENERAL                 =*
+      *==================================================*/
 
-actualizarTexto(
-  "ficha-general-nombre",
-  nombre || "—",
-);
+      actualizarTexto(
+        "ficha-general-nombre",
+        nombre || "—",
+      );
 
-actualizarTexto(
-  "ficha-general-proyecto",
-  proyecto || "—",
-);
+      actualizarTexto(
+        "ficha-general-proyecto",
+        proyecto || "—",
+      );
 
-actualizarTexto(
-  "ficha-general-metodo",
-  metodo || "—",
-);
+      actualizarTexto(
+        "ficha-general-metodo",
+        metodo || "—",
+      );
 
-actualizarTexto(
-  "ficha-general-estado",
-  estado || "—",
-);
+      actualizarTexto(
+        "ficha-general-estado",
+        estado || "—",
+      );
 
-actualizarTexto(
-  "ficha-general-descripcion",
-  descripcion || "Sin descripción.",
-);
+      actualizarTexto(
+        "ficha-general-descripcion",
+        descripcion || "Sin descripción.",
+      );
 
       /*==================================================
       =                    BOTONES                       =
