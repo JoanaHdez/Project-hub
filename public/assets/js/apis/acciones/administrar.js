@@ -1,3 +1,8 @@
+import {
+  abrirConfirmacionApi,
+} from "./administrar/confirmacion.js";
+
+
 /*==================================================
 =                 ADMINISTRAR API                   =
 ==================================================*/
@@ -8,17 +13,22 @@ export function inicializarAdministrarApi() {
       "btn-administrar-api",
     );
 
-  const modal =
+  const modalAdministrar =
     document.getElementById(
       "modal-administrar-api",
     );
 
   if (
     !botonAdministrar ||
-    !modal
+    !modalAdministrar
   ) {
     return;
   }
+
+
+  /*==================================================
+  =          ABRIR MODAL ADMINISTRAR                 =
+  ==================================================*/
 
   botonAdministrar.addEventListener(
     "click",
@@ -46,24 +56,17 @@ export function inicializarAdministrarApi() {
         return;
       }
 
-      /*
-       * Guardar datos temporales
-       * en el modal.
-       */
-      modal.dataset.apiId =
+      modalAdministrar.dataset.apiId =
         idApi;
 
-      modal.dataset.apiNombre =
+      modalAdministrar.dataset.apiNombre =
         nombreApi;
 
-      modal.dataset.apiActivo =
+      modalAdministrar.dataset.apiActivo =
         String(estaActiva);
 
-      /*
-       * Mostrar nombre.
-       */
       const nombreElemento =
-        modal.querySelector(
+        modalAdministrar.querySelector(
           "[data-administrar-api-nombre]",
         );
 
@@ -72,12 +75,8 @@ export function inicializarAdministrarApi() {
           `"${nombreApi}"`;
       }
 
-      /*
-       * Cambiar Activar / Desactivar
-       * según estado actual.
-       */
       const botonEstado =
-        modal.querySelector(
+        modalAdministrar.querySelector(
           "[data-boton-estado-api]",
         );
 
@@ -97,20 +96,117 @@ export function inicializarAdministrarApi() {
         }
       }
 
-      /*
-       * Abrir modal.
-       */
-      modal.classList.add(
+      modalAdministrar.classList.add(
         "modal--visible",
       );
 
-      modal.setAttribute(
+      modalAdministrar.setAttribute(
         "aria-hidden",
         "false",
       );
 
       document.body.style.overflow =
         "hidden";
+    },
+  );
+
+
+  /*==================================================
+  =             SELECCIONAR ACCIÓN                  =
+  ==================================================*/
+
+  modalAdministrar.addEventListener(
+    "click",
+    async (event) => {
+      const botonAccion =
+        event.target.closest(
+          "[data-api-accion]",
+        );
+
+      if (!botonAccion) {
+        return;
+      }
+
+      const accion =
+        botonAccion.dataset.apiAccion ?? "";
+
+      const idApi =
+        modalAdministrar.dataset.apiId ?? "";
+
+      const nombreApi =
+        modalAdministrar.dataset.apiNombre ??
+        "API";
+
+      if (
+        !idApi ||
+        ![
+          "activar",
+          "desactivar",
+          "eliminar",
+        ].includes(accion)
+      ) {
+        return;
+      }
+
+      /*
+       * Quitar foco antes de ocultar
+       * el primer modal.
+       */
+      if (
+        document.activeElement
+        instanceof HTMLElement
+      ) {
+        document.activeElement.blur();
+      }
+
+      /*
+       * Cerrar modal Administrar.
+       */
+      modalAdministrar.classList.remove(
+        "modal--visible",
+      );
+
+      modalAdministrar.setAttribute(
+        "aria-hidden",
+        "true",
+      );
+
+      document.body.style.overflow =
+        "";
+
+      /*
+       * Esperar a que el navegador
+       * termine el cambio visual.
+       */
+      await esperarActualizacionInterfaz();
+
+      /*
+       * Abrir segundo modal.
+       */
+      abrirConfirmacionApi({
+        accion,
+        idApi,
+        nombreApi,
+      });
+    },
+  );
+}
+
+
+/*==================================================
+=             ESPERAR INTERFAZ                     =
+==================================================*/
+
+function esperarActualizacionInterfaz() {
+  return new Promise(
+    (resolve) => {
+      requestAnimationFrame(
+        () => {
+          requestAnimationFrame(
+            resolve,
+          );
+        },
+      );
     },
   );
 }
