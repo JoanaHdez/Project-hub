@@ -510,7 +510,16 @@
         "respuestas": [],
         "responsable": "",
         "observaciones": "",
-        "activo": true
+        "activo": true,
+        "arquitectura": {
+            "modulo": "pruebaArquitectura",
+            "componentes": [
+                {
+                    "tipo": "Controllers",
+                    "archivo": "pruebaArquitecturaAPI"
+                }
+            ]
+        }
     },
     {
         "id_api": 15,

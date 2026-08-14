@@ -97,6 +97,11 @@
                             JSON_UNESCAPED_UNICODE
                                 | JSON_UNESCAPED_SLASHES
                         ),
+
+                        'data-api-arquitectura' => json_encode(
+                            $api['arquitectura'] ?? [],
+                            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                        ),
                     ],
                 ]
             ) ?>

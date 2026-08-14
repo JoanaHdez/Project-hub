@@ -141,6 +141,11 @@ export function inicializarSeleccionApi() {
           selector.dataset.apiRespuestas,
         );
 
+      const arquitectura =
+        obtenerJson(
+          selector.dataset.apiArquitectura,
+        );
+
       renderHeaders(
         headers,
       );
@@ -224,6 +229,7 @@ export function inicializarSeleccionApi() {
         repositorio,
         ruta,
         servidor,
+        arquitectura,
       });
 
       /*==================================================*

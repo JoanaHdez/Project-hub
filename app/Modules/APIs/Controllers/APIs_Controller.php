@@ -423,7 +423,7 @@ class APIs_Controller extends BaseController
             ]);
     }
 
-    
+
     /*==================================================
     =                  DESACTIVAR API                   =
     ==================================================*/
@@ -1089,6 +1089,13 @@ class APIs_Controller extends BaseController
                     'data-api-respuestas' =>
                     json_encode(
                         $api['respuestas'] ?? [],
+                        JSON_UNESCAPED_UNICODE
+                            | JSON_UNESCAPED_SLASHES
+                    ),
+
+                    'data-api-arquitectura' =>
+                    json_encode(
+                        $api['arquitectura'] ?? [],
                         JSON_UNESCAPED_UNICODE
                             | JSON_UNESCAPED_SLASHES
                     ),

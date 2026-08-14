@@ -407,8 +407,8 @@ export function obtenerArquitectura() {
 *=             RENDER ARQUITECTURA                  =*
 *==================================================*/
 
-function renderArquitectura(
-    arquitectura,
+export function renderArquitectura(
+  arquitectura,
 ) {
     const pendiente =
         document.getElementById(

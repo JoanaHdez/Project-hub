@@ -1,3 +1,7 @@
+import {
+  renderArquitectura,
+} from "./arquitectura.js";
+
 /*==================================================*
 *=            ACTUALIZAR FICHA TÉCNICA             =*
 *==================================================*/
@@ -14,6 +18,7 @@ export function actualizarFichaTecnica({
   repositorio = "",
   ruta = "",
   servidor = "",
+  arquitectura = {},
 } = {}) {
 
 
@@ -94,6 +99,14 @@ export function actualizarFichaTecnica({
   actualizarTexto(
     "ficha-api-endpoint",
     endpoint || "—",
+  );
+
+  /*==================================================*
+  *=                  ARQUITECTURA                    =*
+  *==================================================*/
+
+  renderArquitectura(
+    arquitectura,
   );
 }
 
