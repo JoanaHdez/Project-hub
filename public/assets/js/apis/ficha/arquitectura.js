@@ -10,6 +10,11 @@ import {
     renderArquitectura,
 } from "./arquitectura/render.js";
 
+import {
+    abrirModalArquitectura,
+    cerrarModalArquitectura,
+} from "./arquitectura/modal.js";
+
 /*==================================================*
 *=              ARQUITECTURA DE API                 =*
 *==================================================*/
@@ -63,17 +68,12 @@ export function inicializarArquitecturaFicha() {
     botonCompletar.addEventListener(
         "click",
         () => {
-            modal.classList.add(
-                "modal--visible",
+            abrirModalArquitectura(
+                modal,
+                {
+                    limpiar: true,
+                },
             );
-
-            modal.setAttribute(
-                "aria-hidden",
-                "false",
-            );
-
-            document.body.style.overflow =
-                "hidden";
         },
     );
 
@@ -85,56 +85,29 @@ export function inicializarArquitecturaFicha() {
     });
 
     inicializarFormularioArquitectura({
-    formulario,
+        formulario,
 
-    alGuardar: (arquitectura) => {
-        const apiSeleccionada =
-            document.querySelector(
-                ".selector--activo",
+        alGuardar: (arquitectura) => {
+            const apiSeleccionada =
+                document.querySelector(
+                    ".selector--activo",
+                );
+
+            if (apiSeleccionada) {
+                apiSeleccionada.dataset.apiArquitectura =
+                    JSON.stringify(
+                        arquitectura,
+                    );
+            }
+
+            renderArquitectura(
+                arquitectura,
             );
 
-        if (apiSeleccionada) {
-            apiSeleccionada.dataset.apiArquitectura =
-                JSON.stringify(
-                    arquitectura,
-                );
-        }
+            cerrarModalArquitectura(
+                modal,
+            );
+        },
+    });
 
-        renderArquitectura(
-            arquitectura,
-        );
-
-        cerrarModalArquitectura(
-            modal,
-        );
-    },
-});
-
-
-    /*==================================================*
-    *=              CERRAR MODAL                        =*
-    *==================================================*/
-
-    function cerrarModalArquitectura(
-        modal,
-    ) {
-        if (
-            document.activeElement
-            instanceof HTMLElement
-        ) {
-            document.activeElement.blur();
-        }
-
-        modal.classList.remove(
-            "modal--visible",
-        );
-
-        modal.setAttribute(
-            "aria-hidden",
-            "true",
-        );
-
-        document.body.style.overflow =
-            "";
-    }
 }

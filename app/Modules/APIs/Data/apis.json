@@ -707,5 +707,224 @@
                 }
             ]
         }
+    },
+    {
+        "id_api": 18,
+        "activo": true,
+        "id_proyecto": 11,
+        "id_sistema": null,
+        "nombre": "Api prueba 7",
+        "descripcion": "",
+        "estado": "Detenido",
+        "metodo": "PUT",
+        "endpoint": "http://localhost:8080/index.php/apis?modulo=ConstanciaAPI",
+        "url": "",
+        "autenticacion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "headers": [],
+        "parametros": [],
+        "ejemplo": [],
+        "respuestas": [],
+        "responsable": "",
+        "observaciones": "",
+        "arquitectura": {
+            "modulo": "Api prueba 7",
+            "componentes": [
+                {
+                    "tipo": "Controllers",
+                    "archivo": "Api prueba 7"
+                },
+                {
+                    "tipo": "Models",
+                    "archivo": "Api prueba 7"
+                },
+                {
+                    "tipo": "Views",
+                    "archivo": "Api prueba 7"
+                },
+                {
+                    "tipo": "Views",
+                    "archivo": "Api prueba 7"
+                }
+            ]
+        }
+    },
+    {
+        "id_api": 19,
+        "activo": true,
+        "id_proyecto": 8,
+        "id_sistema": null,
+        "nombre": "Api prueba 8",
+        "descripcion": "",
+        "estado": "Desarrollo",
+        "metodo": "POST",
+        "endpoint": "http://localhost:8080/index.php/apis?modulo=ConstanciaAPI",
+        "url": "",
+        "autenticacion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "headers": [],
+        "parametros": [],
+        "ejemplo": [],
+        "respuestas": [],
+        "responsable": "",
+        "observaciones": "",
+        "arquitectura": {
+            "modulo": "Api prueba 8",
+            "componentes": [
+                {
+                    "tipo": "Controllers",
+                    "archivo": "Api prueba 8"
+                }
+            ]
+        }
+    },
+    {
+        "id_api": 20,
+        "activo": true,
+        "id_proyecto": 3,
+        "id_sistema": 7,
+        "nombre": "API prueba 11",
+        "descripcion": "",
+        "estado": "Detenido",
+        "metodo": "GET",
+        "endpoint": "http://localhost:8080/index.php/apis?modulo=ConstanciaAPI",
+        "url": "",
+        "autenticacion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "headers": [],
+        "parametros": [],
+        "ejemplo": [],
+        "respuestas": [],
+        "responsable": "",
+        "observaciones": "",
+        "arquitectura": {
+            "modulo": "API prueba 12",
+            "componentes": [
+                {
+                    "tipo": "Services",
+                    "archivo": "API prueba 12"
+                },
+                {
+                    "tipo": "Config",
+                    "archivo": "API prueba 12"
+                }
+            ]
+        }
+    },
+    {
+        "id_api": 21,
+        "activo": true,
+        "id_proyecto": 4,
+        "id_sistema": 10,
+        "nombre": "API prueba 13",
+        "descripcion": "",
+        "estado": "Desarrollo",
+        "metodo": "PATCH",
+        "endpoint": "http://localhost:8080/index.php/apis?modulo=ConstanciaAPI",
+        "url": "",
+        "autenticacion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "headers": [],
+        "parametros": [],
+        "ejemplo": [],
+        "respuestas": [],
+        "responsable": "",
+        "observaciones": "",
+        "arquitectura": {
+            "modulo": "API prueba 13",
+            "componentes": [
+                {
+                    "tipo": "Libraries",
+                    "archivo": "API prueba 13"
+                },
+                {
+                    "tipo": "Config",
+                    "archivo": "API prueba 13"
+                }
+            ]
+        }
+    },
+    {
+        "id_api": 22,
+        "activo": true,
+        "id_proyecto": 11,
+        "id_sistema": null,
+        "nombre": "API prueba 14",
+        "descripcion": "",
+        "estado": "Detenido",
+        "metodo": "PATCH",
+        "endpoint": "http://localhost:8080/index.php/apis?modulo=ConstanciaAPI",
+        "url": "",
+        "autenticacion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "headers": [],
+        "parametros": [],
+        "ejemplo": [],
+        "respuestas": [],
+        "responsable": "",
+        "observaciones": ""
+    },
+    {
+        "id_api": 23,
+        "activo": true,
+        "id_proyecto": 2,
+        "id_sistema": 2,
+        "nombre": "API prueba 15",
+        "descripcion": "",
+        "estado": "Mantenimiento",
+        "metodo": "POST",
+        "endpoint": "http://localhost:8080/index.php/apis?modulo=ConstanciaAPI",
+        "url": "",
+        "autenticacion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "headers": [],
+        "parametros": [],
+        "ejemplo": [],
+        "respuestas": [],
+        "responsable": "",
+        "observaciones": "",
+        "arquitectura": {
+            "modulo": "API prueba 15",
+            "componentes": [
+                {
+                    "tipo": "Config",
+                    "archivo": "API prueba 15"
+                }
+            ]
+        }
+    },
+    {
+        "id_api": 24,
+        "activo": true,
+        "id_proyecto": 10,
+        "id_sistema": null,
+        "nombre": "API prueba 16",
+        "descripcion": "",
+        "estado": "Mantenimiento",
+        "metodo": "PUT",
+        "endpoint": "http://localhost:8080/index.php/apis?modulo=ConstanciaAPI",
+        "url": "",
+        "autenticacion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "headers": [],
+        "parametros": [],
+        "ejemplo": [],
+        "respuestas": [],
+        "responsable": "",
+        "observaciones": ""
     }
 ]
