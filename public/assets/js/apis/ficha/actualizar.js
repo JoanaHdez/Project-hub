@@ -1,6 +1,6 @@
 import {
-  renderArquitectura,
-} from "./arquitectura.js";
+    renderArquitectura,
+} from "./arquitectura/render.js";
 
 /*==================================================*
 *=            ACTUALIZAR FICHA TÉCNICA             =*
