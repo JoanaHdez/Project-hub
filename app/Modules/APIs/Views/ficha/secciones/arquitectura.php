@@ -57,6 +57,10 @@
                 Editar
             </button>
 
+            <button type="button" class="boton boton--peligro" id="btn-eliminar-arquitectura">
+                Eliminar
+            </button>
+
         </div>
 
         <div class="ficha-arbol">
