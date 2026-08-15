@@ -378,7 +378,28 @@
         "respuestas": [],
         "responsable": "",
         "observaciones": "",
-        "activo": true
+        "activo": true,
+        "arquitectura": {
+            "modulo": "apiPrueba3",
+            "componentes": [
+                {
+                    "tipo": "Controllers",
+                    "archivo": "apiPrueba3"
+                },
+                {
+                    "tipo": "Views",
+                    "archivo": "apiPrueba3"
+                },
+                {
+                    "tipo": "Models",
+                    "archivo": "apiPrueba3"
+                },
+                {
+                    "tipo": "Models",
+                    "archivo": "apiPrueba3"
+                }
+            ]
+        }
     },
     {
         "id_api": 9,
@@ -400,7 +421,16 @@
         "respuestas": [],
         "responsable": "",
         "observaciones": "",
-        "activo": true
+        "activo": true,
+        "arquitectura": {
+            "modulo": "Prueba 4API",
+            "componentes": [
+                {
+                    "tipo": "Controllers",
+                    "archivo": "Prueba 4API"
+                }
+            ]
+        }
     },
     {
         "id_api": 10,
@@ -422,7 +452,28 @@
         "respuestas": [],
         "responsable": "",
         "observaciones": "",
-        "activo": true
+        "activo": true,
+        "arquitectura": {
+            "modulo": "Prueba4API",
+            "componentes": [
+                {
+                    "tipo": "Controllers",
+                    "archivo": "Prueba4API"
+                },
+                {
+                    "tipo": "Services",
+                    "archivo": "Prueba4API"
+                },
+                {
+                    "tipo": "Views",
+                    "archivo": "Prueba4API"
+                },
+                {
+                    "tipo": "Views",
+                    "archivo": "Prueba4API"
+                }
+            ]
+        }
     },
     {
         "id_api": 11,
@@ -444,7 +495,24 @@
         "respuestas": [],
         "responsable": "",
         "observaciones": "",
-        "activo": true
+        "activo": true,
+        "arquitectura": {
+            "modulo": "prueba 5",
+            "componentes": [
+                {
+                    "tipo": "Controllers",
+                    "archivo": "prueba 5"
+                },
+                {
+                    "tipo": "Models",
+                    "archivo": "prueba 5-5"
+                },
+                {
+                    "tipo": "Views",
+                    "archivo": "prueba5"
+                }
+            ]
+        }
     },
     {
         "id_api": 12,
@@ -466,7 +534,24 @@
         "respuestas": [],
         "responsable": "",
         "observaciones": "",
-        "activo": true
+        "activo": true,
+        "arquitectura": {
+            "modulo": "prueba 5",
+            "componentes": [
+                {
+                    "tipo": "Controllers",
+                    "archivo": "prueba 5"
+                },
+                {
+                    "tipo": "Models",
+                    "archivo": "prueba 5-5"
+                },
+                {
+                    "tipo": "Views",
+                    "archivo": "prueba5"
+                }
+            ]
+        }
     },
     {
         "id_api": 13,

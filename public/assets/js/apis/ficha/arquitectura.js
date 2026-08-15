@@ -85,18 +85,30 @@ export function inicializarArquitecturaFicha() {
     });
 
     inicializarFormularioArquitectura({
-        formulario,
+    formulario,
 
-        alGuardar: (arquitectura) => {
-            renderArquitectura(
-                arquitectura,
+    alGuardar: (arquitectura) => {
+        const apiSeleccionada =
+            document.querySelector(
+                ".selector--activo",
             );
 
-            cerrarModalArquitectura(
-                modal,
-            );
-        },
-    });
+        if (apiSeleccionada) {
+            apiSeleccionada.dataset.apiArquitectura =
+                JSON.stringify(
+                    arquitectura,
+                );
+        }
+
+        renderArquitectura(
+            arquitectura,
+        );
+
+        cerrarModalArquitectura(
+            modal,
+        );
+    },
+});
 
 
     /*==================================================*

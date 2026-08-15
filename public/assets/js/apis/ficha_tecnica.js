@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function abrirFichaTecnica() {
+    cambiarSeccionFicha("general");
+
     modal.classList.add("modal-ficha--visible");
     modal.setAttribute("aria-hidden", "false");
 
