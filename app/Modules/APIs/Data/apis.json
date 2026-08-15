@@ -578,8 +578,8 @@
             "modulo": "prueba 3",
             "componentes": [
                 {
-                    "tipo": "Controllers",
-                    "archivo": "prueba 3"
+                    "tipo": "Libraries",
+                    "archivo": "api prueba 7"
                 }
             ]
         }
@@ -704,6 +704,10 @@
                 {
                     "tipo": "Controllers",
                     "archivo": "ConstanciaAPI"
+                },
+                {
+                    "tipo": "Views",
+                    "archivo": "api prueba 7"
                 }
             ]
         }
@@ -901,6 +905,10 @@
                 {
                     "tipo": "Config",
                     "archivo": "API prueba 15"
+                },
+                {
+                    "tipo": "Views",
+                    "archivo": "api prueba 7"
                 }
             ]
         }
