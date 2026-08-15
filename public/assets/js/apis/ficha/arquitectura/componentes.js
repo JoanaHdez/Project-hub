@@ -199,3 +199,68 @@ export function actualizarEstadoVacio(
     estadoVacio.hidden =
         existenComponentes;
 }
+
+/*==================================================*
+*=          CARGAR COMPONENTES                      =*
+*==================================================*/
+
+export function cargarComponentesArquitectura(
+    componentes,
+    contenedor,
+    estadoVacio,
+) {
+    if (
+        !contenedor ||
+        !estadoVacio
+    ) {
+        return;
+    }
+
+    contenedor.innerHTML = "";
+
+    const listaComponentes =
+        Array.isArray(componentes)
+            ? componentes
+            : [];
+
+    listaComponentes.forEach(
+        (componente) => {
+            agregarComponente(
+                contenedor,
+                estadoVacio,
+            );
+
+            const item =
+                contenedor.lastElementChild;
+
+            if (!item) {
+                return;
+            }
+
+            const campoTipo =
+                item.querySelector(
+                    "[data-arquitectura-tipo]",
+                );
+
+            const campoArchivo =
+                item.querySelector(
+                    "[data-arquitectura-archivo]",
+                );
+
+            if (campoTipo) {
+                campoTipo.value =
+                    componente.tipo ?? "";
+            }
+
+            if (campoArchivo) {
+                campoArchivo.value =
+                    componente.archivo ?? "";
+            }
+        },
+    );
+
+    actualizarEstadoVacio(
+        contenedor,
+        estadoVacio,
+    );
+}

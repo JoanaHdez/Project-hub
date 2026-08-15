@@ -4,6 +4,7 @@ import {
 
 import {
     inicializarComponentesArquitectura,
+    cargarComponentesArquitectura,
 } from "./arquitectura/componentes.js";
 
 import {
@@ -15,14 +16,21 @@ import {
     cerrarModalArquitectura,
 } from "./arquitectura/modal.js";
 
+
 /*==================================================*
 *=              ARQUITECTURA DE API                 =*
 *==================================================*/
 
 export function inicializarArquitecturaFicha() {
+
     const botonCompletar =
         document.getElementById(
             "btn-completar-arquitectura",
+        );
+
+    const botonEditar =
+        document.getElementById(
+            "btn-editar-arquitectura",
         );
 
     const modal =
@@ -50,6 +58,7 @@ export function inicializarArquitecturaFicha() {
             "form-arquitectura-api",
         );
 
+
     if (
         !botonCompletar ||
         !modal ||
@@ -62,7 +71,7 @@ export function inicializarArquitecturaFicha() {
 
 
     /*==================================================*
-    *=              ABRIR MODAL                        =*
+    *=              COMPLETAR ARQUITECTURA              =*
     *==================================================*/
 
     botonCompletar.addEventListener(
@@ -78,11 +87,81 @@ export function inicializarArquitecturaFicha() {
     );
 
 
+    /*==================================================*
+    *=              EDITAR ARQUITECTURA                 =*
+    *==================================================*/
+
+    botonEditar?.addEventListener(
+        "click",
+        () => {
+            const apiSeleccionada =
+                document.querySelector(
+                    ".selector--activo",
+                );
+
+            if (!apiSeleccionada) {
+                return;
+            }
+
+
+            let arquitectura = {};
+
+            try {
+                arquitectura =
+                    JSON.parse(
+                        apiSeleccionada
+                            .dataset
+                            .apiArquitectura || "{}",
+                    );
+            } catch (error) {
+                console.error(
+                    "No fue posible leer la arquitectura:",
+                    error,
+                );
+
+                arquitectura = {};
+            }
+
+
+            const campoModulo =
+                document.getElementById(
+                    "arquitectura-modulo",
+                );
+
+            if (campoModulo) {
+                campoModulo.value =
+                    arquitectura.modulo ?? "";
+            }
+
+
+            cargarComponentesArquitectura(
+                arquitectura.componentes,
+                contenedor,
+                estadoVacio,
+            );
+
+
+            abrirModalArquitectura(
+                modal,
+            );
+        },
+    );
+
+
+    /*==================================================*
+    *=              COMPONENTES                         =*
+    *==================================================*/
+
     inicializarComponentesArquitectura({
         botonAgregar,
         contenedor,
         estadoVacio,
     });
+
+
+    /*==================================================*
+    *=              FORMULARIO                          =*
+    *==================================================*/
 
     inicializarFormularioArquitectura({
         formulario,
@@ -109,5 +188,4 @@ export function inicializarArquitecturaFicha() {
             );
         },
     });
-
 }
