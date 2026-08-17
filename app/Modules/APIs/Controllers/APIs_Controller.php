@@ -1257,6 +1257,13 @@ class APIs_Controller extends BaseController
                         JSON_UNESCAPED_UNICODE
                             | JSON_UNESCAPED_SLASHES
                     ),
+
+                    'data-api-dependencias' =>
+                    json_encode(
+                        $api['dependencias'] ?? [],
+                        JSON_UNESCAPED_UNICODE
+                            | JSON_UNESCAPED_SLASHES
+                    ),
                 ],
             ],
             [

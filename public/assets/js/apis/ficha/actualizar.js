@@ -1,6 +1,10 @@
 import {
-    renderArquitectura,
+  renderArquitectura,
 } from "./arquitectura/render.js";
+
+import {
+  renderDependencias,
+} from "./dependencias/render.js";
 
 /*==================================================*
 *=            ACTUALIZAR FICHA TÉCNICA             =*
@@ -19,6 +23,7 @@ export function actualizarFichaTecnica({
   ruta = "",
   servidor = "",
   arquitectura = {},
+  dependencias = [],
 } = {}) {
 
 
@@ -107,6 +112,14 @@ export function actualizarFichaTecnica({
 
   renderArquitectura(
     arquitectura,
+  );
+
+  /*==================================================*
+  *=                  DEPENDENCIAS                    =*
+  *==================================================*/
+
+  renderDependencias(
+    dependencias,
   );
 }
 

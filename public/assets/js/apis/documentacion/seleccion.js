@@ -146,6 +146,11 @@ export function inicializarSeleccionApi() {
           selector.dataset.apiArquitectura,
         );
 
+      const dependencias =
+        obtenerJson(
+          selector.dataset.apiDependencias,
+        );
+
       renderHeaders(
         headers,
       );
@@ -230,6 +235,7 @@ export function inicializarSeleccionApi() {
         ruta,
         servidor,
         arquitectura,
+        dependencias,
       });
 
       /*==================================================*

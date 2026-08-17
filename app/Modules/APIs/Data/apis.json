@@ -884,7 +884,21 @@
         "arquitectura": {
             "modulo": "",
             "componentes": []
-        }
+        },
+        "dependencias": [
+            {
+                "tipo": "Base de datos",
+                "nombre": "prueba 2",
+                "descripcion": "prueba 2",
+                "estado": "Activa"
+            },
+            {
+                "tipo": "Framework",
+                "nombre": "prueba 2",
+                "descripcion": "prueba 2",
+                "estado": "Activa"
+            }
+        ]
     },
     {
         "id_api": 24,
@@ -910,18 +924,6 @@
         "dependencias": [
             {
                 "tipo": "Base de datos",
-                "nombre": "prueba 1",
-                "descripcion": "prueba 1",
-                "estado": "Activa"
-            },
-            {
-                "tipo": "Servicio de correo",
-                "nombre": "prueba 1",
-                "descripcion": "prueba 1",
-                "estado": "Activa"
-            },
-            {
-                "tipo": "Framework",
                 "nombre": "prueba 1",
                 "descripcion": "prueba 1",
                 "estado": "Activa"

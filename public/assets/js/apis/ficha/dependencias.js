@@ -99,10 +99,17 @@ export function inicializarDependenciasFicha() {
         formulario,
 
         alGuardar: (dependencias) => {
-            console.log(
-                "Dependencias guardadas:",
-                dependencias,
-            );
+            const apiSeleccionada =
+                document.querySelector(
+                    ".selector--activo",
+                );
+
+            if (apiSeleccionada) {
+                apiSeleccionada.dataset.apiDependencias =
+                    JSON.stringify(
+                        dependencias,
+                    );
+            }
 
             renderDependencias(
                 dependencias,
