@@ -715,24 +715,6 @@
     {
         "id_api": 18,
         "activo": true,
-        "id_proyecto": 11,
-        "id_sistema": null,
-        "nombre": "Api prueba 7",
-        "descripcion": "",
-        "estado": "Detenido",
-        "metodo": "PUT",
-        "endpoint": "http://localhost:8080/index.php/apis?modulo=ConstanciaAPI",
-        "url": "",
-        "autenticacion": "",
-        "repositorio_url": "",
-        "ruta_local": "",
-        "url_servidor": "",
-        "headers": [],
-        "parametros": [],
-        "ejemplo": [],
-        "respuestas": [],
-        "responsable": "",
-        "observaciones": "",
         "arquitectura": {
             "modulo": "Api prueba 7",
             "componentes": [
@@ -753,7 +735,33 @@
                     "archivo": "Api prueba 7"
                 }
             ]
-        }
+        },
+        "dependencias": [
+            {
+                "tipo": "Base de datos",
+                "nombre": "prueba 1",
+                "descripcion": "prueba 1",
+                "estado": "Activa"
+            }
+        ],
+        "id_proyecto": 11,
+        "id_sistema": null,
+        "nombre": "Api prueba 7",
+        "descripcion": "prueba 7",
+        "estado": "Detenido",
+        "metodo": "PUT",
+        "endpoint": "http://localhost:8080/index.php/apis?modulo=ConstanciaAPI",
+        "url": "",
+        "autenticacion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "headers": [],
+        "parametros": [],
+        "ejemplo": [],
+        "respuestas": [],
+        "responsable": "",
+        "observaciones": ""
     },
     {
         "id_api": 19,

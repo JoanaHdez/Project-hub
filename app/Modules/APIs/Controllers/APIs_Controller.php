@@ -268,10 +268,6 @@ class APIs_Controller extends BaseController
                 ]);
         }
 
-        /*
-         * Conservamos campos que no deben
-         * perderse durante una edición.
-         */
         $apiActualizada =
             $this->construirDatosApi(
                 $datos,
@@ -283,6 +279,12 @@ class APIs_Controller extends BaseController
                     (bool) (
                         $apiExistente['activo'] ?? true
                     ),
+
+                    'arquitectura' =>
+                    $apiExistente['arquitectura'] ?? [],
+
+                    'dependencias' =>
+                    $apiExistente['dependencias'] ?? [],
                 ]
             );
 
@@ -1091,6 +1093,28 @@ class APIs_Controller extends BaseController
                         $datos['observaciones'] ?? ''
                     )
                 ),
+
+                'arquitectura' =>
+                is_array(
+                    $datos['arquitectura']
+                        ?? ($datosBase['arquitectura'] ?? null)
+                )
+                    ? (
+                        $datos['arquitectura']
+                        ?? $datosBase['arquitectura']
+                    )
+                    : [],
+
+                'dependencias' =>
+                is_array(
+                    $datos['dependencias']
+                        ?? ($datosBase['dependencias'] ?? null)
+                )
+                    ? (
+                        $datos['dependencias']
+                        ?? $datosBase['dependencias']
+                    )
+                    : [],
             ]
         );
     }
@@ -1314,13 +1338,6 @@ class APIs_Controller extends BaseController
                 ]);
         }
 
-        /*
-     * Solo eliminamos la información
-     * de Arquitectura.
-     *
-     * La API y el resto de sus datos
-     * permanecen intactos.
-     */
         $apis[$indiceApi]['arquitectura'] = [
             'modulo' => '',
             'componentes' => [],
