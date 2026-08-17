@@ -25,6 +25,8 @@
 
 <?= view('App\Modules\APIs\Views\modals\completar_arquitectura') ?>
 
+<?= view('App\Modules\APIs\Views\modals\completar_dependencia') ?>
+
 <?= view(
     'App\Modules\APIs\Views\modals\nueva_api',
     [

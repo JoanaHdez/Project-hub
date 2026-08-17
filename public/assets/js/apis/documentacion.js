@@ -26,6 +26,10 @@ import {
   inicializarArquitecturaFicha,
 } from "./ficha/arquitectura.js";
 
+import {
+    inicializarDependenciasFicha,
+} from "./ficha/dependencias.js";
+
 /*==================================================
 =              DOCUMENTACIÓN DE APIs                =
 ==================================================*/
@@ -43,3 +47,5 @@ inicializarAdministrarApi();
 inicializarConfirmacionAccionApi();
 
 inicializarArquitecturaFicha();
+
+inicializarDependenciasFicha();

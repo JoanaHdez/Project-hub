@@ -1,109 +1,96 @@
-<section class="ficha-seccion" data-ficha-contenido="dependencias">
-                    <div class="ficha-seccion__encabezado">
-                        <span class="ficha-seccion__numero">04</span>
+<section
+    class="ficha-seccion"
+    data-ficha-contenido="dependencias"
+>
 
-                        <div>
-                            <h3>Dependencias</h3>
-                            <p>Servicios y recursos necesarios para funcionar.</p>
-                        </div>
-                    </div>
+    <div class="ficha-seccion__encabezado">
 
-                    <div class="ficha-dependencias">
+        <span class="ficha-seccion__numero">
+            04
+        </span>
 
-                        <article class="ficha-dependencia">
-                            <div class="ficha-dependencia__icono" aria-hidden="true">
-                                🗄️
-                            </div>
+        <div>
+            <h3>
+                Dependencias
+            </h3>
 
-                            <div class="ficha-dependencia__contenido">
-                                <small>Base de datos</small>
-                                <strong>MySQL</strong>
-                                <span>Base de datos principal del sistema.</span>
-                            </div>
+            <p>
+                Servicios y recursos necesarios para funcionar.
+            </p>
+        </div>
 
-                            <span class="ficha-dependencia__estado">
-                                Activa
-                            </span>
-                        </article>
+    </div>
 
-                        <article class="ficha-dependencia">
-                            <div class="ficha-dependencia__icono" aria-hidden="true">
-                                ✉️
-                            </div>
 
-                            <div class="ficha-dependencia__contenido">
-                                <small>Servicio de correo</small>
-                                <strong>SMTP</strong>
-                                <span>Responsable del envío de constancias.</span>
-                            </div>
+    <!-- =========================================
+         ESTADO PENDIENTE
+    ========================================== -->
 
-                            <span class="ficha-dependencia__estado">
-                                Activa
-                            </span>
-                        </article>
+    <div
+        id="ficha-dependencias-pendiente"
+        class="ficha-pendiente"
+    >
 
-                        <article class="ficha-dependencia">
-                            <div class="ficha-dependencia__icono" aria-hidden="true">
-                                ⚙️
-                            </div>
+        <span class="ficha-pendiente__estado">
+            Pendiente
+        </span>
 
-                            <div class="ficha-dependencia__contenido">
-                                <small>Framework</small>
-                                <strong>CodeIgniter 4</strong>
-                                <span>Base de desarrollo y estructura modular.</span>
-                            </div>
+        <strong>
+            Dependencias sin documentar
+        </strong>
 
-                            <span class="ficha-dependencia__estado">
-                                Activa
-                            </span>
-                        </article>
+        <p>
+            Todavía no se han registrado los servicios
+            o recursos necesarios para esta API.
+        </p>
 
-                        <article class="ficha-dependencia">
-                            <div class="ficha-dependencia__icono" aria-hidden="true">
-                                🔑
-                            </div>
+        <button
+            type="button"
+            class="boton boton--secundario"
+            id="btn-completar-dependencias"
+        >
+            Completar información
+        </button>
 
-                            <div class="ficha-dependencia__contenido">
-                                <small>Autenticación</small>
-                                <strong>API Token</strong>
-                                <span>Valida las solicitudes recibidas por la API.</span>
-                            </div>
+    </div>
 
-                            <span class="ficha-dependencia__estado">
-                                Requerida
-                            </span>
-                        </article>
 
-                        <article class="ficha-dependencia">
-                            <div class="ficha-dependencia__icono" aria-hidden="true">
-                                📄
-                            </div>
+    <!-- =========================================
+         DEPENDENCIAS DOCUMENTADAS
+    ========================================== -->
 
-                            <div class="ficha-dependencia__contenido">
-                                <small>Configuración</small>
-                                <strong>Archivo .env</strong>
-                                <span>Almacena las credenciales y parámetros sensibles.</span>
-                            </div>
+    <div
+        id="ficha-dependencias-contenido"
+        hidden
+    >
 
-                            <span class="ficha-dependencia__estado">
-                                Requerida
-                            </span>
-                        </article>
+        <div class="ficha-seccion__acciones">
 
-                        <article class="ficha-dependencia">
-                            <div class="ficha-dependencia__icono" aria-hidden="true">
-                                🧩
-                            </div>
+            <button
+                type="button"
+                class="boton boton--secundario"
+                id="btn-editar-dependencias"
+            >
+                Editar
+            </button>
 
-                            <div class="ficha-dependencia__contenido">
-                                <small>Servicio interno</small>
-                                <strong>ConstanciaCorreoService</strong>
-                                <span>Construye y procesa el correo de constancia.</span>
-                            </div>
+            <button
+                type="button"
+                class="boton boton--peligro"
+                id="btn-eliminar-dependencias"
+            >
+                Eliminar
+            </button>
 
-                            <span class="ficha-dependencia__estado">
-                                Interna
-                            </span>
-                        </article>
-                    </div>
-                </section>
+        </div>
+
+
+        <div
+            class="ficha-dependencias"
+            id="ficha-dependencias-lista"
+        >
+        </div>
+
+    </div>
+
+</section>
