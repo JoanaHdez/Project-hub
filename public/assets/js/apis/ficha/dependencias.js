@@ -1,12 +1,20 @@
 import {
-    abrirModalDependencias,
-} from "./dependencias/modal.js";
-
-import {
     inicializarItemsDependencias,
     inicializarEliminacionDependencias,
 } from "./dependencias/componentes.js";
 
+import {
+    inicializarFormularioDependencias,
+} from "./dependencias/formulario.js";
+
+import {
+    abrirModalDependencias,
+    cerrarModalDependencias,
+} from "./dependencias/modal.js";
+
+import {
+    renderDependencias,
+} from "./dependencias/render.js";
 
 /*==================================================*
 *=              DEPENDENCIAS DE API                 =*
@@ -38,13 +46,18 @@ export function inicializarDependenciasFicha() {
             "dependencias-vacio",
         );
 
+    const formulario =
+        document.getElementById(
+            "form-dependencias-api",
+        );
 
     if (
         !botonCompletar ||
         !modal ||
         !botonAgregar ||
         !contenedor ||
-        !estadoVacio
+        !estadoVacio ||
+        !formulario
     ) {
         return;
     }
@@ -80,5 +93,24 @@ export function inicializarDependenciasFicha() {
     inicializarEliminacionDependencias({
         contenedor,
         estadoVacio,
+    });
+
+    inicializarFormularioDependencias({
+        formulario,
+
+        alGuardar: (dependencias) => {
+            console.log(
+                "Dependencias guardadas:",
+                dependencias,
+            );
+
+            renderDependencias(
+                dependencias,
+            );
+
+            cerrarModalDependencias(
+                modal,
+            );
+        },
     });
 }

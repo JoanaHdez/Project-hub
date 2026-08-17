@@ -906,6 +906,26 @@
         "ejemplo": [],
         "respuestas": [],
         "responsable": "",
-        "observaciones": ""
+        "observaciones": "",
+        "dependencias": [
+            {
+                "tipo": "Base de datos",
+                "nombre": "prueba 1",
+                "descripcion": "prueba 1",
+                "estado": "Activa"
+            },
+            {
+                "tipo": "Servicio de correo",
+                "nombre": "prueba 1",
+                "descripcion": "prueba 1",
+                "estado": "Activa"
+            },
+            {
+                "tipo": "Framework",
+                "nombre": "prueba 1",
+                "descripcion": "prueba 1",
+                "estado": "Activa"
+            }
+        ]
     }
 ]

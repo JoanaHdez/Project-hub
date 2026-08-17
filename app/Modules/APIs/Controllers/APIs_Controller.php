@@ -425,6 +425,164 @@ class APIs_Controller extends BaseController
 
 
     /*==================================================
+    =             ACTUALIZAR DEPENDENCIAS              =
+    ==================================================*/
+
+    public function actualizarDependencias(
+        int $idApi
+    ) {
+        $datos =
+            $this->request
+            ->getJSON(true);
+
+        if (!is_array($datos)) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'Los datos enviados no son válidos.',
+                ]);
+        }
+
+        $dependencias =
+            $datos['dependencias']
+            ?? null;
+
+        if (!is_array($dependencias)) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'Las dependencias enviadas no son válidas.',
+                ]);
+        }
+
+        $apis =
+            $this->storage
+            ->obtenerTodos();
+
+        $indiceApi = null;
+
+        foreach (
+            $apis as
+            $indice => $api
+        ) {
+            if (
+                (int) (
+                    $api['id_api']
+                    ?? 0
+                ) === $idApi
+            ) {
+                $indiceApi =
+                    $indice;
+
+                break;
+            }
+        }
+
+        if ($indiceApi === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'No se encontró la API solicitada.',
+                ]);
+        }
+
+        $dependenciasNormalizadas = [];
+
+        foreach (
+            $dependencias as
+            $dependencia
+        ) {
+            if (!is_array($dependencia)) {
+                continue;
+            }
+
+            $tipo =
+                trim(
+                    (string) (
+                        $dependencia['tipo']
+                        ?? ''
+                    )
+                );
+
+            $nombre =
+                trim(
+                    (string) (
+                        $dependencia['nombre']
+                        ?? ''
+                    )
+                );
+
+            $descripcion =
+                trim(
+                    (string) (
+                        $dependencia['descripcion']
+                        ?? ''
+                    )
+                );
+
+            $estado =
+                trim(
+                    (string) (
+                        $dependencia['estado']
+                        ?? ''
+                    )
+                );
+
+            if (
+                $tipo === '' &&
+                $nombre === '' &&
+                $descripcion === '' &&
+                $estado === ''
+            ) {
+                continue;
+            }
+
+            $dependenciasNormalizadas[] = [
+                'tipo' =>
+                $tipo,
+
+                'nombre' =>
+                $nombre,
+
+                'descripcion' =>
+                $descripcion,
+
+                'estado' =>
+                $estado,
+            ];
+        }
+
+        $apis[$indiceApi]['dependencias'] =
+            $dependenciasNormalizadas;
+
+        $this->storage
+            ->guardarTodos(
+                $apis
+            );
+
+        return $this->response
+            ->setJSON([
+                'ok' => true,
+
+                'mensaje' =>
+                'Dependencias guardadas correctamente.',
+
+                'dependencias' =>
+                $apis[$indiceApi]['dependencias'],
+            ]);
+    }
+
+
+    /*==================================================
     =                  DESACTIVAR API                   =
     ==================================================*/
 
