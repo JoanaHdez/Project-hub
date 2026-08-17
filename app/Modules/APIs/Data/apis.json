@@ -932,8 +932,14 @@
         "dependencias": [
             {
                 "tipo": "Base de datos",
-                "nombre": "prueba 1",
+                "nombre": "prueba 12",
                 "descripcion": "prueba 1",
+                "estado": "Requerida"
+            },
+            {
+                "tipo": "Configuración",
+                "nombre": "prueba 2",
+                "descripcion": "prueba 2",
                 "estado": "Activa"
             }
         ]

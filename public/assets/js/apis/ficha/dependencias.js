@@ -1,6 +1,7 @@
 import {
     inicializarItemsDependencias,
     inicializarEliminacionDependencias,
+    cargarDependencias,
 } from "./dependencias/componentes.js";
 
 import {
@@ -15,6 +16,7 @@ import {
 import {
     renderDependencias,
 } from "./dependencias/render.js";
+
 
 /*==================================================*
 *=              DEPENDENCIAS DE API                 =*
@@ -51,6 +53,11 @@ export function inicializarDependenciasFicha() {
             "form-dependencias-api",
         );
 
+    const botonEditar =
+        document.getElementById(
+            "btn-editar-dependencias",
+        );
+
     if (
         !botonCompletar ||
         !modal ||
@@ -75,6 +82,53 @@ export function inicializarDependenciasFicha() {
                 {
                     limpiar: true,
                 },
+            );
+        },
+    );
+
+
+    /*==================================================*
+    *=              EDITAR DEPENDENCIAS                 =*
+    *==================================================*/
+
+    botonEditar?.addEventListener(
+        "click",
+        () => {
+            const apiSeleccionada =
+                document.querySelector(
+                    ".selector--activo",
+                );
+
+            if (!apiSeleccionada) {
+                return;
+            }
+
+            let dependencias = [];
+
+            try {
+                dependencias =
+                    JSON.parse(
+                        apiSeleccionada
+                            .dataset
+                            .apiDependencias || "[]",
+                    );
+            } catch (error) {
+                console.error(
+                    "No fue posible leer las dependencias:",
+                    error,
+                );
+
+                dependencias = [];
+            }
+
+            cargarDependencias(
+                dependencias,
+                contenedor,
+                estadoVacio,
+            );
+
+            abrirModalDependencias(
+                modal,
             );
         },
     );

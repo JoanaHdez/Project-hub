@@ -231,3 +231,88 @@ function actualizarEstadoVacio(
     estadoVacio.hidden =
         tieneDependencias;
 }
+
+/*==================================================*
+*=          CARGAR DEPENDENCIAS                     =*
+*==================================================*/
+
+export function cargarDependencias(
+    dependencias,
+    contenedor,
+    estadoVacio,
+) {
+    if (
+        !contenedor ||
+        !estadoVacio
+    ) {
+        return;
+    }
+
+    contenedor.innerHTML = "";
+
+    const listaDependencias =
+        Array.isArray(dependencias)
+            ? dependencias
+            : [];
+
+    listaDependencias.forEach(
+        (dependencia) => {
+            agregarDependencia(
+                contenedor,
+                estadoVacio,
+            );
+
+            const item =
+                contenedor.lastElementChild;
+
+            if (!item) {
+                return;
+            }
+
+            const campoTipo =
+                item.querySelector(
+                    "[data-dependencia-tipo]",
+                );
+
+            const campoNombre =
+                item.querySelector(
+                    "[data-dependencia-nombre]",
+                );
+
+            const campoDescripcion =
+                item.querySelector(
+                    "[data-dependencia-descripcion]",
+                );
+
+            const campoEstado =
+                item.querySelector(
+                    "[data-dependencia-estado]",
+                );
+
+            if (campoTipo) {
+                campoTipo.value =
+                    dependencia.tipo ?? "";
+            }
+
+            if (campoNombre) {
+                campoNombre.value =
+                    dependencia.nombre ?? "";
+            }
+
+            if (campoDescripcion) {
+                campoDescripcion.value =
+                    dependencia.descripcion ?? "";
+            }
+
+            if (campoEstado) {
+                campoEstado.value =
+                    dependencia.estado ?? "";
+            }
+        },
+    );
+
+    actualizarEstadoVacio(
+        contenedor,
+        estadoVacio,
+    );
+}
