@@ -16,6 +16,9 @@ import {
     cerrarModalArquitectura,
 } from "./arquitectura/modal.js";
 
+import {
+    abrirConfirmacionApi,
+} from "../acciones/administrar/confirmacion.js";
 
 /*==================================================*
 *=              ARQUITECTURA DE API                 =*
@@ -159,7 +162,7 @@ export function inicializarArquitecturaFicha() {
 
     botonEliminar?.addEventListener(
         "click",
-        async () => {
+        () => {
             const apiSeleccionada =
                 document.querySelector(
                     ".selector--activo",
@@ -172,71 +175,26 @@ export function inicializarArquitecturaFicha() {
             const idApi =
                 apiSeleccionada.dataset.apiId ?? "";
 
+            const nombreApi =
+                apiSeleccionada.dataset.apiNombre ??
+                "API";
+
             if (!idApi) {
                 return;
             }
 
-            const confirmar =
-                window.confirm(
-                    "¿Deseas eliminar únicamente la información de Arquitectura de esta API?",
-                );
+            abrirConfirmacionApi({
+                accion:
+                    "eliminar-arquitectura",
 
-            if (!confirmar) {
-                return;
-            }
+                idApi,
 
-            try {
-                const respuesta =
-                    await fetch(
-                        `/apis/${idApi}/arquitectura`,
-                        {
-                            method: "DELETE",
-
-                            headers: {
-                                "X-Requested-With":
-                                    "XMLHttpRequest",
-                            },
-                        },
-                    );
-
-                const resultado =
-                    await respuesta.json();
-
-                if (
-                    !respuesta.ok ||
-                    !resultado.ok
-                ) {
-                    throw new Error(
-                        resultado.mensaje ||
-                        "No fue posible eliminar la arquitectura.",
-                    );
-                }
-
-                const arquitecturaVacia =
-                    resultado.arquitectura ?? {
-                        modulo: "",
-                        componentes: [],
-                    };
-
-                apiSeleccionada.dataset.apiArquitectura =
-                    JSON.stringify(
-                        arquitecturaVacia,
-                    );
-
-                renderArquitectura(
-                    arquitecturaVacia,
-                );
-
-            } catch (error) {
-                console.error(
-                    "Error al eliminar arquitectura:",
-                    error,
-                );
-            }
+                nombreApi,
+            });
         },
     );
 
-    
+
     /*==================================================*
     *=              COMPONENTES                         =*
     *==================================================*/

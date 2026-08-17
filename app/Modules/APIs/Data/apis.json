@@ -808,17 +808,8 @@
         "responsable": "",
         "observaciones": "",
         "arquitectura": {
-            "modulo": "API prueba 12",
-            "componentes": [
-                {
-                    "tipo": "Services",
-                    "archivo": "API prueba 12"
-                },
-                {
-                    "tipo": "Config",
-                    "archivo": "API prueba 12"
-                }
-            ]
+            "modulo": "",
+            "componentes": []
         }
     },
     {

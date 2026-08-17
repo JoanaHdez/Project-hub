@@ -41,6 +41,7 @@ export function inicializarConfirmacionAccionApi() {
           "activar",
           "desactivar",
           "eliminar",
+          "eliminar-arquitectura",
         ].includes(accion)
       ) {
         return;
@@ -50,6 +51,59 @@ export function inicializarConfirmacionAccionApi() {
         true;
 
       try {
+
+        /*==================================================
+        =             ELIMINAR ARQUITECTURA                =
+        ==================================================*/
+
+        if (accion === "eliminar-arquitectura") {
+          const resultado =
+            await eliminarArquitectura(
+              idApi,
+            );
+
+          const selector =
+            document.querySelector(
+              `.api-selector[data-api-id="${idApi}"]`,
+            );
+
+          const arquitecturaVacia =
+            resultado.arquitectura ?? {
+              modulo: "",
+              componentes: [],
+            };
+
+          if (selector) {
+            selector.dataset.apiArquitectura =
+              JSON.stringify(
+                arquitecturaVacia,
+              );
+          }
+
+          mostrarNotificacion({
+            tipo: "success",
+
+            titulo:
+              "Arquitectura eliminada",
+
+            mensaje:
+              resultado.mensaje ||
+              "La información de Arquitectura fue eliminada correctamente.",
+          });
+
+          cerrarModalConfirmacion(
+            modalConfirmacion,
+          );
+
+          limpiarDatosTemporales(
+            modalConfirmacion,
+          );
+
+          selector?.click();
+
+          return;
+        }
+        
         /*==================================================
         =                   ELIMINAR                        =
         ==================================================*/
@@ -180,13 +234,48 @@ async function cambiarEstadoApi(
   ) {
     throw new Error(
       resultado.mensaje ||
-        "No fue posible cambiar el estado de la API.",
+      "No fue posible cambiar el estado de la API.",
     );
   }
 
   return resultado;
 }
 
+/*==================================================
+=         ELIMINAR ARQUITECTURA                     =
+==================================================*/
+
+async function eliminarArquitectura(
+  idApi,
+) {
+  const respuesta =
+    await fetch(
+      `/apis/${idApi}/arquitectura`,
+      {
+        method: "DELETE",
+
+        headers: {
+          "X-Requested-With":
+            "XMLHttpRequest",
+        },
+      },
+    );
+
+  const resultado =
+    await respuesta.json();
+
+  if (
+    !respuesta.ok ||
+    !resultado.ok
+  ) {
+    throw new Error(
+      resultado.mensaje ||
+      "No fue posible eliminar la Arquitectura.",
+    );
+  }
+
+  return resultado;
+}
 
 /*==================================================
 =              PETICIÓN DELETE                      =
@@ -216,7 +305,7 @@ async function eliminarApi(
   ) {
     throw new Error(
       resultado.mensaje ||
-        "No fue posible eliminar la API.",
+      "No fue posible eliminar la API.",
     );
   }
 
