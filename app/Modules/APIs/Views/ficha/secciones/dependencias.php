@@ -1,7 +1,4 @@
-<section
-    class="ficha-seccion"
-    data-ficha-contenido="dependencias"
->
+<section class="ficha-seccion" data-ficha-contenido="dependencias">
 
     <div class="ficha-seccion__encabezado">
 
@@ -26,10 +23,7 @@
          ESTADO PENDIENTE
     ========================================== -->
 
-    <div
-        id="ficha-dependencias-pendiente"
-        class="ficha-pendiente"
-    >
+    <div id="ficha-dependencias-pendiente" class="ficha-pendiente">
 
         <span class="ficha-pendiente__estado">
             Pendiente
@@ -44,11 +38,7 @@
             o recursos necesarios para esta API.
         </p>
 
-        <button
-            type="button"
-            class="boton boton--secundario"
-            id="btn-completar-dependencias"
-        >
+        <button type="button" class="boton boton--secundario" id="btn-completar-dependencias">
             Completar información
         </button>
 
@@ -59,36 +49,22 @@
          DEPENDENCIAS DOCUMENTADAS
     ========================================== -->
 
-    <div
-        id="ficha-dependencias-contenido"
-        hidden
-    >
+    <div id="ficha-dependencias-contenido" hidden>
 
         <div class="ficha-seccion__acciones">
 
-            <button
-                type="button"
-                class="boton boton--secundario"
-                id="btn-editar-dependencias"
-            >
+            <button type="button" class="boton boton--secundario" id="btn-editar-dependencias">
                 Editar
             </button>
 
-            <button
-                type="button"
-                class="boton boton--peligro"
-                id="btn-eliminar-dependencias"
-            >
+            <button type="button" class="boton boton--peligro" id="btn-eliminar-dependencias">
                 Eliminar
             </button>
 
         </div>
 
 
-        <div
-            class="ficha-dependencias"
-            id="ficha-dependencias-lista"
-        >
+        <div class="ficha-dependencias" id="ficha-dependencias-lista">
         </div>
 
     </div>

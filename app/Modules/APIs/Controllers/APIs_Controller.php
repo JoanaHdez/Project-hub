@@ -1299,7 +1299,7 @@ class APIs_Controller extends BaseController
         );
     }
 
-    
+
     /*==================================================
     =             ELIMINAR ARQUITECTURA                =
     ==================================================*/
@@ -1362,6 +1362,66 @@ class APIs_Controller extends BaseController
                     'modulo' => '',
                     'componentes' => [],
                 ],
+            ]);
+    }
+
+    
+    /*==================================================
+    =             ELIMINAR DEPENDENCIAS                =
+    ==================================================*/
+
+    public function eliminarDependencias(
+        int $idApi
+    ) {
+        $apis =
+            $this->storage
+            ->obtenerTodos();
+
+        $indiceApi = null;
+
+        foreach (
+            $apis as
+            $indice => $api
+        ) {
+            if (
+                (int) (
+                    $api['id_api']
+                    ?? 0
+                ) === $idApi
+            ) {
+                $indiceApi =
+                    $indice;
+
+                break;
+            }
+        }
+
+        if ($indiceApi === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'No se encontró la API solicitada.',
+                ]);
+        }
+
+        $apis[$indiceApi]['dependencias'] = [];
+
+        $this->storage
+            ->guardarTodos(
+                $apis
+            );
+
+        return $this->response
+            ->setJSON([
+                'ok' => true,
+
+                'mensaje' =>
+                'Dependencias eliminadas correctamente.',
+
+                'dependencias' => [],
             ]);
     }
 }

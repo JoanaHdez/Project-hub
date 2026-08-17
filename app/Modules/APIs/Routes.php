@@ -25,4 +25,6 @@ $routes->patch('(:num)/arquitectura', 'APIs_Controller::actualizarArquitectura/$
 $routes->delete('(:num)/arquitectura', 'APIs_Controller::eliminarArquitectura/$1');
 
 $routes->patch('(:num)/dependencias', 'APIs_Controller::actualizarDependencias/$1');
+
+$routes->delete('(:num)/dependencias', 'APIs_Controller::eliminarDependencias/$1');
 });

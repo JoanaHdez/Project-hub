@@ -42,6 +42,7 @@ export function inicializarConfirmacionAccionApi() {
           "desactivar",
           "eliminar",
           "eliminar-arquitectura",
+          "eliminar-dependencias",
         ].includes(accion)
       ) {
         return;
@@ -103,7 +104,58 @@ export function inicializarConfirmacionAccionApi() {
 
           return;
         }
-        
+
+
+        /*==================================================
+        =             ELIMINAR DEPENDENCIAS                =
+        ==================================================*/
+
+        if (accion === "eliminar-dependencias") {
+          const resultado =
+            await eliminarDependencias(
+              idApi,
+            );
+
+          const selector =
+            document.querySelector(
+              `.api-selector[data-api-id="${idApi}"]`,
+            );
+
+          const dependenciasVacias =
+            resultado.dependencias ?? [];
+
+          if (selector) {
+            selector.dataset.apiDependencias =
+              JSON.stringify(
+                dependenciasVacias,
+              );
+          }
+
+          mostrarNotificacion({
+            tipo: "success",
+
+            titulo:
+              "Dependencias eliminadas",
+
+            mensaje:
+              resultado.mensaje ||
+              "La información de Dependencias fue eliminada correctamente.",
+          });
+
+          cerrarModalConfirmacion(
+            modalConfirmacion,
+          );
+
+          limpiarDatosTemporales(
+            modalConfirmacion,
+          );
+
+          selector?.click();
+
+          return;
+        }
+
+
         /*==================================================
         =                   ELIMINAR                        =
         ==================================================*/
@@ -180,6 +232,7 @@ export function inicializarConfirmacionAccionApi() {
         limpiarDatosTemporales(
           modalConfirmacion,
         );
+
       } catch (error) {
         console.error(
           "Error al ejecutar la acción de la API:",
@@ -196,6 +249,7 @@ export function inicializarConfirmacionAccionApi() {
             error.message ||
             "Ocurrió un error al realizar la acción sobre la API.",
         });
+
       } finally {
         botonConfirmar.disabled =
           false;
@@ -213,17 +267,18 @@ async function cambiarEstadoApi(
   idApi,
   accion,
 ) {
-  const respuesta = await fetch(
-    `/apis/${idApi}/${accion}`,
-    {
-      method: "PATCH",
+  const respuesta =
+    await fetch(
+      `/apis/${idApi}/${accion}`,
+      {
+        method: "PATCH",
 
-      headers: {
-        "X-Requested-With":
-          "XMLHttpRequest",
+        headers: {
+          "X-Requested-With":
+            "XMLHttpRequest",
+        },
       },
-    },
-  );
+    );
 
   const resultado =
     await respuesta.json();
@@ -240,6 +295,7 @@ async function cambiarEstadoApi(
 
   return resultado;
 }
+
 
 /*==================================================
 =         ELIMINAR ARQUITECTURA                     =
@@ -277,6 +333,44 @@ async function eliminarArquitectura(
   return resultado;
 }
 
+
+/*==================================================
+=         ELIMINAR DEPENDENCIAS                    =
+==================================================*/
+
+async function eliminarDependencias(
+  idApi,
+) {
+  const respuesta =
+    await fetch(
+      `/apis/${idApi}/dependencias`,
+      {
+        method: "DELETE",
+
+        headers: {
+          "X-Requested-With":
+            "XMLHttpRequest",
+        },
+      },
+    );
+
+  const resultado =
+    await respuesta.json();
+
+  if (
+    !respuesta.ok ||
+    !resultado.ok
+  ) {
+    throw new Error(
+      resultado.mensaje ||
+      "No fue posible eliminar las Dependencias.",
+    );
+  }
+
+  return resultado;
+}
+
+
 /*==================================================
 =              PETICIÓN DELETE                      =
 ==================================================*/
@@ -284,17 +378,18 @@ async function eliminarArquitectura(
 async function eliminarApi(
   idApi,
 ) {
-  const respuesta = await fetch(
-    `/apis/${idApi}`,
-    {
-      method: "DELETE",
+  const respuesta =
+    await fetch(
+      `/apis/${idApi}`,
+      {
+        method: "DELETE",
 
-      headers: {
-        "X-Requested-With":
-          "XMLHttpRequest",
+        headers: {
+          "X-Requested-With":
+            "XMLHttpRequest",
+        },
       },
-    },
-  );
+    );
 
   const resultado =
     await respuesta.json();

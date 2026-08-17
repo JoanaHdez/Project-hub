@@ -146,6 +146,7 @@ export function abrirConfirmacionApi({
     }
   }
 
+
   /*==================================================
   =          ELIMINAR ARQUITECTURA                    =
   ==================================================*/
@@ -172,6 +173,34 @@ export function abrirConfirmacionApi({
     }
   }
 
+
+  /*==================================================
+  =             ELIMINAR DEPENDENCIAS                =
+  ==================================================*/
+
+  if (accion === "eliminar-dependencias") {
+    if (titulo) {
+      titulo.textContent =
+        "Eliminar dependencias";
+    }
+
+    if (mensaje) {
+      mensaje.textContent =
+        `¿Confirmas que deseas eliminar únicamente la información de Dependencias de la API "${nombreApi}"? ` +
+        "La API y el resto de su información permanecerán intactos.";
+    }
+
+    if (botonConfirmar) {
+      botonConfirmar.textContent =
+        "Eliminar dependencias";
+
+      botonConfirmar.classList.add(
+        "boton--peligro",
+      );
+    }
+  }
+
+  
   /*==================================================
   =                 ABRIR MODAL                      =
   ==================================================*/

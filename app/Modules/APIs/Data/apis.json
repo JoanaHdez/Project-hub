@@ -893,20 +893,7 @@
             "modulo": "",
             "componentes": []
         },
-        "dependencias": [
-            {
-                "tipo": "Base de datos",
-                "nombre": "prueba 2",
-                "descripcion": "prueba 2",
-                "estado": "Activa"
-            },
-            {
-                "tipo": "Framework",
-                "nombre": "prueba 2",
-                "descripcion": "prueba 2",
-                "estado": "Activa"
-            }
-        ]
+        "dependencias": []
     },
     {
         "id_api": 24,
@@ -929,19 +916,6 @@
         "respuestas": [],
         "responsable": "",
         "observaciones": "",
-        "dependencias": [
-            {
-                "tipo": "Base de datos",
-                "nombre": "prueba 12",
-                "descripcion": "prueba 1",
-                "estado": "Requerida"
-            },
-            {
-                "tipo": "Configuración",
-                "nombre": "prueba 2",
-                "descripcion": "prueba 2",
-                "estado": "Activa"
-            }
-        ]
+        "dependencias": []
     }
 ]

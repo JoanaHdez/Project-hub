@@ -17,6 +17,10 @@ import {
     renderDependencias,
 } from "./dependencias/render.js";
 
+import {
+    abrirConfirmacionApi,
+} from "../acciones/administrar/confirmacion.js";
+
 
 /*==================================================*
 *=              DEPENDENCIAS DE API                 =*
@@ -56,6 +60,11 @@ export function inicializarDependenciasFicha() {
     const botonEditar =
         document.getElementById(
             "btn-editar-dependencias",
+        );
+
+    const botonEliminar =
+        document.getElementById(
+            "btn-eliminar-dependencias",
         );
 
     if (
@@ -130,6 +139,45 @@ export function inicializarDependenciasFicha() {
             abrirModalDependencias(
                 modal,
             );
+        },
+    );
+
+
+    /*==================================================*
+    *=              ELIMINAR DEPENDENCIAS              =*
+    *==================================================*/
+
+    botonEliminar?.addEventListener(
+        "click",
+        () => {
+            const apiSeleccionada =
+                document.querySelector(
+                    ".selector--activo",
+                );
+
+            if (!apiSeleccionada) {
+                return;
+            }
+
+            const idApi =
+                apiSeleccionada.dataset.apiId ?? "";
+
+            const nombreApi =
+                apiSeleccionada.dataset.apiNombre ??
+                "API";
+
+            if (!idApi) {
+                return;
+            }
+
+            abrirConfirmacionApi({
+                accion:
+                    "eliminar-dependencias",
+
+                idApi,
+
+                nombreApi,
+            });
         },
     );
 
