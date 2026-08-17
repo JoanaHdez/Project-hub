@@ -107,6 +107,11 @@
                             $api['dependencias'] ?? [],
                             JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
                         ),
+
+                        'data-api-observaciones' => json_encode(
+                            $api['observaciones'] ?? [],
+                            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                        ),
                     ],
                 ]
             ) ?>

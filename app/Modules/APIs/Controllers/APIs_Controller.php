@@ -585,6 +585,154 @@ class APIs_Controller extends BaseController
 
 
     /*==================================================
+    =             ACTUALIZAR OBSERVACIONES              =
+    ==================================================*/
+
+    public function actualizarObservaciones(
+        int $idApi
+    ) {
+        $datos =
+            $this->request
+            ->getJSON(true);
+
+        if (!is_array($datos)) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'Los datos enviados no son válidos.',
+                ]);
+        }
+
+        $observaciones =
+            $datos['observaciones']
+            ?? null;
+
+        if (!is_array($observaciones)) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'Las observaciones enviadas no son válidas.',
+                ]);
+        }
+
+        $apis =
+            $this->storage
+            ->obtenerTodos();
+
+        $indiceApi = null;
+
+        foreach (
+            $apis as
+            $indice => $api
+        ) {
+            if (
+                (int) (
+                    $api['id_api']
+                    ?? 0
+                ) === $idApi
+            ) {
+                $indiceApi =
+                    $indice;
+
+                break;
+            }
+        }
+
+        if ($indiceApi === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'No se encontró la API solicitada.',
+                ]);
+        }
+
+
+        /*==================================================
+        =          NORMALIZAR OBSERVACIONES               =
+        ==================================================*/
+
+        $observacionesNormalizadas = [];
+
+        foreach (
+            $observaciones as
+            $observacion
+        ) {
+            if (!is_array($observacion)) {
+                continue;
+            }
+
+            $tipo =
+                trim(
+                    (string) (
+                        $observacion['tipo']
+                        ?? ''
+                    )
+                );
+
+            $mensaje =
+                trim(
+                    (string) (
+                        $observacion['mensaje']
+                        ?? ''
+                    )
+                );
+
+            /*
+         * Ignorar observaciones
+         * completamente vacías.
+         */
+            if (
+                $tipo === '' &&
+                $mensaje === ''
+            ) {
+                continue;
+            }
+
+            $observacionesNormalizadas[] = [
+                'tipo' =>
+                $tipo,
+
+                'mensaje' =>
+                $mensaje,
+            ];
+        }
+
+
+        /*==================================================
+        =                  GUARDAR                        =
+        ==================================================*/
+
+        $apis[$indiceApi]['observaciones'] =
+            $observacionesNormalizadas;
+
+        $this->storage
+            ->guardarTodos(
+                $apis
+            );
+
+        return $this->response
+            ->setJSON([
+                'ok' => true,
+
+                'mensaje' =>
+                'Observaciones guardadas correctamente.',
+
+                'observaciones' =>
+                $apis[$indiceApi]['observaciones'],
+            ]);
+    }
+
+
+    /*==================================================
     =                  DESACTIVAR API                   =
     ==================================================*/
 
@@ -1290,6 +1438,13 @@ class APIs_Controller extends BaseController
                         JSON_UNESCAPED_UNICODE
                             | JSON_UNESCAPED_SLASHES
                     ),
+
+                    'data-api-observaciones' =>
+                    json_encode(
+                        $api['observaciones'] ?? [],
+                        JSON_UNESCAPED_UNICODE
+                            | JSON_UNESCAPED_SLASHES
+                    ),
                 ],
             ],
             [
@@ -1365,7 +1520,7 @@ class APIs_Controller extends BaseController
             ]);
     }
 
-    
+
     /*==================================================
     =             ELIMINAR DEPENDENCIAS                =
     ==================================================*/

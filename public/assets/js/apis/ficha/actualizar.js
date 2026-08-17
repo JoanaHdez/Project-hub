@@ -6,6 +6,10 @@ import {
   renderDependencias,
 } from "./dependencias/render.js";
 
+import {
+  renderObservaciones,
+} from "./observaciones/render.js";
+
 /*==================================================*
 *=            ACTUALIZAR FICHA TÉCNICA             =*
 *==================================================*/
@@ -24,6 +28,7 @@ export function actualizarFichaTecnica({
   servidor = "",
   arquitectura = {},
   dependencias = [],
+  observaciones = [],
 } = {}) {
 
 
@@ -120,6 +125,14 @@ export function actualizarFichaTecnica({
 
   renderDependencias(
     dependencias,
+  );
+
+  /*==================================================*
+  *=                  OBSERVACIONES                   =*
+  *==================================================*/
+
+  renderObservaciones(
+    observaciones,
   );
 }
 

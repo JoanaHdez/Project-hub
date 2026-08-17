@@ -27,6 +27,8 @@
 
 <?= view('App\Modules\APIs\Views\modals\completar_dependencia') ?>
 
+<?= view('App\Modules\APIs\Views\modals\completar_observacion') ?>
+
 <?= view(
     'App\Modules\APIs\Views\modals\nueva_api',
     [

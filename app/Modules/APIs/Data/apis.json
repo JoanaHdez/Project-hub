@@ -915,7 +915,20 @@
         "ejemplo": [],
         "respuestas": [],
         "responsable": "",
-        "observaciones": "",
+        "observaciones": [
+            {
+                "tipo": "informacion",
+                "mensaje": "prueba 1"
+            },
+            {
+                "tipo": "recomendacion",
+                "mensaje": "prueba 1"
+            },
+            {
+                "tipo": "importante",
+                "mensaje": "prueba 1"
+            }
+        ],
         "dependencias": []
     }
 ]
