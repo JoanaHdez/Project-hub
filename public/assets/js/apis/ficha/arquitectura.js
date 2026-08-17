@@ -33,6 +33,11 @@ export function inicializarArquitecturaFicha() {
             "btn-editar-arquitectura",
         );
 
+    const botonEliminar =
+        document.getElementById(
+            "btn-eliminar-arquitectura",
+        );
+
     const modal =
         document.getElementById(
             "modal-arquitectura-api",
@@ -148,6 +153,90 @@ export function inicializarArquitecturaFicha() {
     );
 
 
+    /*==================================================*
+    *=              ELIMINAR ARQUITECTURA               =*
+    *==================================================*/
+
+    botonEliminar?.addEventListener(
+        "click",
+        async () => {
+            const apiSeleccionada =
+                document.querySelector(
+                    ".selector--activo",
+                );
+
+            if (!apiSeleccionada) {
+                return;
+            }
+
+            const idApi =
+                apiSeleccionada.dataset.apiId ?? "";
+
+            if (!idApi) {
+                return;
+            }
+
+            const confirmar =
+                window.confirm(
+                    "¿Deseas eliminar únicamente la información de Arquitectura de esta API?",
+                );
+
+            if (!confirmar) {
+                return;
+            }
+
+            try {
+                const respuesta =
+                    await fetch(
+                        `/apis/${idApi}/arquitectura`,
+                        {
+                            method: "DELETE",
+
+                            headers: {
+                                "X-Requested-With":
+                                    "XMLHttpRequest",
+                            },
+                        },
+                    );
+
+                const resultado =
+                    await respuesta.json();
+
+                if (
+                    !respuesta.ok ||
+                    !resultado.ok
+                ) {
+                    throw new Error(
+                        resultado.mensaje ||
+                        "No fue posible eliminar la arquitectura.",
+                    );
+                }
+
+                const arquitecturaVacia =
+                    resultado.arquitectura ?? {
+                        modulo: "",
+                        componentes: [],
+                    };
+
+                apiSeleccionada.dataset.apiArquitectura =
+                    JSON.stringify(
+                        arquitecturaVacia,
+                    );
+
+                renderArquitectura(
+                    arquitecturaVacia,
+                );
+
+            } catch (error) {
+                console.error(
+                    "Error al eliminar arquitectura:",
+                    error,
+                );
+            }
+        },
+    );
+
+    
     /*==================================================*
     *=              COMPONENTES                         =*
     *==================================================*/

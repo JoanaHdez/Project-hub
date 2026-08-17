@@ -843,17 +843,8 @@
         "responsable": "",
         "observaciones": "",
         "arquitectura": {
-            "modulo": "API prueba 13",
-            "componentes": [
-                {
-                    "tipo": "Libraries",
-                    "archivo": "API prueba 13"
-                },
-                {
-                    "tipo": "Config",
-                    "archivo": "API prueba 13"
-                }
-            ]
+            "modulo": "",
+            "componentes": []
         }
     },
     {
@@ -900,17 +891,8 @@
         "responsable": "",
         "observaciones": "",
         "arquitectura": {
-            "modulo": "API prueba 15",
-            "componentes": [
-                {
-                    "tipo": "Config",
-                    "archivo": "API prueba 15"
-                },
-                {
-                    "tipo": "Views",
-                    "archivo": "api prueba 7"
-                }
-            ]
+            "modulo": "",
+            "componentes": []
         }
     },
     {
