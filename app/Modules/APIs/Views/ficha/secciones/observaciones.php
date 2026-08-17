@@ -1,7 +1,6 @@
 <section
     class="ficha-seccion"
-    data-ficha-contenido="observaciones"
->
+    data-ficha-contenido="observaciones">
 
     <div class="ficha-seccion__encabezado">
 
@@ -21,79 +20,69 @@
 
     </div>
 
-    <div class="ficha-alertas">
 
-        <article
-            class="ficha-alerta ficha-alerta--info"
-        >
+    <!-- =========================================
+         ESTADO PENDIENTE
+    ========================================== -->
 
-            <div class="ficha-alerta__encabezado">
+    <div
+        id="ficha-observaciones-pendiente"
+        class="ficha-pendiente">
 
-                <span
-                    class="ficha-alerta__punto"
-                ></span>
+        <span class="ficha-pendiente__estado">
+            Pendiente
+        </span>
 
-                <strong>
-                    Información
-                </strong>
+        <strong>
+            Observaciones sin documentar
+        </strong>
 
-            </div>
+        <p>
+            Todavía no se han registrado notas u observaciones
+            relacionadas con esta API.
+        </p>
 
-            <p>
-                La API únicamente acepta solicitudes mediante
-                el método HTTP <strong>POST</strong>.
-            </p>
+        <button
+            type="button"
+            class="boton boton--secundario"
+            id="btn-completar-observaciones">
+            Completar información
+        </button>
 
-        </article>
-
-
-        <article
-            class="ficha-alerta ficha-alerta--warning"
-        >
-
-            <div class="ficha-alerta__encabezado">
-
-                <span
-                    class="ficha-alerta__punto"
-                ></span>
-
-                <strong>
-                    Recomendación
-                </strong>
-
-            </div>
-
-            <p>
-                Verificar la configuración SMTP antes de
-                desplegar el servicio en producción.
-            </p>
-
-        </article>
+    </div>
 
 
-        <article
-            class="ficha-alerta ficha-alerta--danger"
-        >
+    <!-- =========================================
+         OBSERVACIONES DOCUMENTADAS
+    ========================================== -->
 
-            <div class="ficha-alerta__encabezado">
+    <div
+        id="ficha-observaciones-contenido"
+        hidden>
 
-                <span
-                    class="ficha-alerta__punto"
-                ></span>
+        <div class="ficha-seccion__acciones">
 
-                <strong>
-                    Importante
-                </strong>
+            <button
+                type="button"
+                class="boton boton--secundario"
+                id="btn-editar-observaciones">
+                Editar
+            </button>
 
-            </div>
+            <button
+                type="button"
+                class="boton boton--peligro"
+                id="btn-eliminar-observaciones">
+                Eliminar
+            </button>
 
-            <p>
-                El API Token debe permanecer en el archivo
-                <strong>.env</strong> y nunca exponerse desde
-                aplicaciones cliente.
-            </p>
+        </div>
 
-        </article>
+
+        <div
+            class="ficha-alertas"
+            id="ficha-observaciones-lista">
+        </div>
 
     </div>
 
