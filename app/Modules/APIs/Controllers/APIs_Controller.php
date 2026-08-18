@@ -285,6 +285,12 @@ class APIs_Controller extends BaseController
 
                     'dependencias' =>
                     $apiExistente['dependencias'] ?? [],
+
+                    'observaciones_tecnicas' =>
+                    $apiExistente['observaciones_tecnicas'] ?? [],
+
+                    'historial' =>
+                    $apiExistente['historial'] ?? [],
                 ]
             );
 
@@ -857,7 +863,7 @@ class APIs_Controller extends BaseController
         =                  GUARDAR                        =
         ==================================================*/
 
-        $apis[$indiceApi]['observaciones'] =
+        $apis[$indiceApi]['observaciones_tecnicas'] =
             $observacionesNormalizadas;
 
         $this->storage
@@ -873,7 +879,7 @@ class APIs_Controller extends BaseController
                 'Observaciones guardadas correctamente.',
 
                 'observaciones' =>
-                $apis[$indiceApi]['observaciones'],
+                $apis[$indiceApi]['observaciones_tecnicas'],
             ]);
     }
 
@@ -1411,6 +1417,31 @@ class APIs_Controller extends BaseController
                         ?? $datosBase['dependencias']
                     )
                     : [],
+
+                'observaciones_tecnicas' =>
+                is_array(
+                    $datos['observaciones_tecnicas']
+                        ?? (
+                            $datosBase['observaciones_tecnicas']
+                            ?? null
+                        )
+                )
+                    ? (
+                        $datos['observaciones_tecnicas']
+                        ?? $datosBase['observaciones_tecnicas']
+                    )
+                    : [],
+
+                'historial' =>
+                is_array(
+                    $datos['historial']
+                        ?? ($datosBase['historial'] ?? null)
+                )
+                    ? (
+                        $datos['historial']
+                        ?? $datosBase['historial']
+                    )
+                    : [],
             ]
         );
     }
@@ -1587,7 +1618,7 @@ class APIs_Controller extends BaseController
 
                     'data-api-observaciones' =>
                     json_encode(
-                        $api['observaciones'] ?? [],
+                        $api['observaciones_tecnicas'] ?? [],
                         JSON_UNESCAPED_UNICODE
                             | JSON_UNESCAPED_SLASHES
                     ),
@@ -1774,7 +1805,7 @@ class APIs_Controller extends BaseController
                 ]);
         }
 
-        $apis[$indiceApi]['observaciones'] = [];
+        $apis[$indiceApi]['observaciones_tecnicas'] = [];
 
         $this->storage
             ->guardarTodos(

@@ -910,6 +910,36 @@
     {
         "id_api": 24,
         "activo": true,
+        "arquitectura": {
+            "modulo": "API prueba 16",
+            "componentes": [
+                {
+                    "tipo": "Controllers",
+                    "archivo": "API prueba 16"
+                }
+            ]
+        },
+        "dependencias": [
+            {
+                "tipo": "Servicio de correo",
+                "nombre": "API prueba 16",
+                "descripcion": "API prueba 16",
+                "estado": "Activa"
+            }
+        ],
+        "observaciones_tecnicas": [
+            {
+                "tipo": "informacion",
+                "mensaje": "API prueba 16"
+            }
+        ],
+        "historial": [
+            {
+                "version": "1.0",
+                "descripcion": "API prueba 16",
+                "fecha": "API prueba 16"
+            }
+        ],
         "id_proyecto": 10,
         "id_sistema": null,
         "nombre": "API prueba 16",
@@ -927,8 +957,6 @@
         "ejemplo": [],
         "respuestas": [],
         "responsable": "",
-        "observaciones": [],
-        "dependencias": [],
-        "historial": []
+        "observaciones": "[{\"tipo\":\"informacion\",\"mensaje\":\"API prueba 16\"}]"
     }
 ]

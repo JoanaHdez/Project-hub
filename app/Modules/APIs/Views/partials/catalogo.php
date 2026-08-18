@@ -109,7 +109,7 @@
                         ),
 
                         'data-api-observaciones' => json_encode(
-                            $api['observaciones'] ?? [],
+                            $api['observaciones_tecnicas'] ?? [],
                             JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
                         ),
 
