@@ -920,16 +920,7 @@
         "ejemplo": [],
         "respuestas": [],
         "responsable": "",
-        "observaciones": [
-            {
-                "tipo": "informacion",
-                "mensaje": "prueba 1"
-            },
-            {
-                "tipo": "importante",
-                "mensaje": "prueba 12"
-            }
-        ],
+        "observaciones": [],
         "dependencias": []
     }
 ]

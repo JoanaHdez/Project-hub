@@ -43,6 +43,7 @@ export function inicializarConfirmacionAccionApi() {
           "eliminar",
           "eliminar-arquitectura",
           "eliminar-dependencias",
+          "eliminar-observaciones",
         ].includes(accion)
       ) {
         return;
@@ -140,6 +141,56 @@ export function inicializarConfirmacionAccionApi() {
             mensaje:
               resultado.mensaje ||
               "La información de Dependencias fue eliminada correctamente.",
+          });
+
+          cerrarModalConfirmacion(
+            modalConfirmacion,
+          );
+
+          limpiarDatosTemporales(
+            modalConfirmacion,
+          );
+
+          selector?.click();
+
+          return;
+        }
+
+
+        /*==================================================
+        =          ELIMINAR OBSERVACIONES                  =
+        ==================================================*/
+
+        if (accion === "eliminar-observaciones") {
+          const resultado =
+            await eliminarObservaciones(
+              idApi,
+            );
+
+          const selector =
+            document.querySelector(
+              `.api-selector[data-api-id="${idApi}"]`,
+            );
+
+          const observacionesVacias =
+            resultado.observaciones ?? [];
+
+          if (selector) {
+            selector.dataset.apiObservaciones =
+              JSON.stringify(
+                observacionesVacias,
+              );
+          }
+
+          mostrarNotificacion({
+            tipo: "success",
+
+            titulo:
+              "Observaciones eliminadas",
+
+            mensaje:
+              resultado.mensaje ||
+              "La información de Observaciones fue eliminada correctamente.",
           });
 
           cerrarModalConfirmacion(
@@ -364,6 +415,43 @@ async function eliminarDependencias(
     throw new Error(
       resultado.mensaje ||
       "No fue posible eliminar las Dependencias.",
+    );
+  }
+
+  return resultado;
+}
+
+
+/*==================================================
+=         ELIMINAR OBSERVACIONES                   =
+==================================================*/
+
+async function eliminarObservaciones(
+  idApi,
+) {
+  const respuesta =
+    await fetch(
+      `/apis/${idApi}/observaciones`,
+      {
+        method: "DELETE",
+
+        headers: {
+          "X-Requested-With":
+            "XMLHttpRequest",
+        },
+      },
+    );
+
+  const resultado =
+    await respuesta.json();
+
+  if (
+    !respuesta.ok ||
+    !resultado.ok
+  ) {
+    throw new Error(
+      resultado.mensaje ||
+      "No fue posible eliminar las Observaciones.",
     );
   }
 
