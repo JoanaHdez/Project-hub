@@ -1,0 +1,11 @@
+[
+    {
+        "id_modulo": 1,
+        "id_sistema": 1,
+        "nombre": "Formulario principal",
+        "tipo": "Registro",
+        "descripcion": "Captura y validación de participantes.",
+        "url": "",
+        "activo": true
+    }
+]

@@ -62,7 +62,7 @@ Módulos | Project Hub
             </div>
         </div>
 
-        <div class="sistemas-grid">
+        <!-- <div class="sistemas-grid">
 
             <article class="sistema-card" data-sistema="extorsion" tabindex="0" role="button"
                 aria-label="Explorar Registro de Pláticas">
@@ -187,7 +187,91 @@ Módulos | Project Hub
 
             </article>
 
-        </div>
+        </div> -->
+
+        <div class="sistemas-grid">
+
+    <?php foreach (($sistemas ?? []) as $sistema): ?>
+
+        <article
+            class="sistema-card"
+            data-sistema-id="<?= esc(
+                (string) (
+                    $sistema['id_sistema']
+                    ?? ''
+                ),
+                'attr'
+            ) ?>"
+            tabindex="0"
+            role="button"
+            aria-label="Explorar <?= esc(
+                $sistema['nombre']
+                ?? 'Sistema'
+            ) ?>"
+        >
+
+            <span
+                class="sistema-card__estado sistema-card__estado--azul"
+            ></span>
+
+
+            <div
+                class="sistema-card__imagen sistema-card__imagen--extorsion"
+            >
+
+                <div class="sistema-card__overlay"></div>
+
+                <div class="sistema-card__titulo-banner">
+
+                    <span>
+                        <?= esc(
+                            strtoupper(
+                                $sistema['tipo']
+                                ?? 'SISTEMA'
+                            )
+                        ) ?>
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="sistema-card__contenido">
+
+                <h3>
+                    <?= esc(
+                        $sistema['nombre']
+                        ?? 'Sistema sin nombre'
+                    ) ?>
+                </h3>
+
+                <span class="sistema-card__proyecto">
+                    <?= esc(
+                        $sistema['proyecto_nombre']
+                        ?? 'Sin proyecto'
+                    ) ?>
+                </span>
+
+                <div class="sistema-card__meta">
+
+                    <span class="sistema-card__badge">
+                        <?= (int) (
+                            $sistema['total_modulos']
+                            ?? 0
+                        ) ?>
+                        módulos
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    <?php endforeach; ?>
+
+</div>
 
     </section>
 
