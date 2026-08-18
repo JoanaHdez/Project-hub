@@ -29,7 +29,14 @@
     box-shadow:0 4px 12px rgba(16,24,40,.08);
 }
 
-.api-selector--activo{
+.selector--activo{
+    background:#EFF6FF;
+    border-color:#175CD3;
+    box-shadow:0 0 0 3px rgba(23,92,211,.10);
+}
+
+.selector--activo:hover{
+    background:#EFF6FF;
     border-color:#175CD3;
     box-shadow:0 0 0 3px rgba(23,92,211,.10);
 }
