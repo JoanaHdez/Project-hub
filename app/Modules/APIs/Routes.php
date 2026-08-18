@@ -29,4 +29,6 @@ $routes->patch('(:num)/dependencias', 'APIs_Controller::actualizarDependencias/$
 $routes->delete('(:num)/dependencias', 'APIs_Controller::eliminarDependencias/$1');
 
 $routes->patch('(:num)/observaciones', 'APIs_Controller::actualizarObservaciones/$1');
+
+$routes->delete('(:num)/observaciones', 'APIs_Controller::eliminarObservaciones/$1');
 });

@@ -888,7 +888,12 @@
         "ejemplo": [],
         "respuestas": [],
         "responsable": "",
-        "observaciones": "",
+        "observaciones": [
+            {
+                "tipo": "recomendacion",
+                "mensaje": "prueba 2"
+            }
+        ],
         "arquitectura": {
             "modulo": "",
             "componentes": []
@@ -921,12 +926,8 @@
                 "mensaje": "prueba 1"
             },
             {
-                "tipo": "recomendacion",
-                "mensaje": "prueba 1"
-            },
-            {
                 "tipo": "importante",
-                "mensaje": "prueba 1"
+                "mensaje": "prueba 12"
             }
         ],
         "dependencias": []

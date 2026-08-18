@@ -200,7 +200,34 @@ export function abrirConfirmacionApi({
     }
   }
 
-  
+
+  /*==================================================
+  =             ELIMINAR OBSERVACIONES               =
+  ==================================================*/
+
+  if (accion === "eliminar-observaciones") {
+    if (titulo) {
+      titulo.textContent =
+        "Eliminar observaciones";
+    }
+
+    if (mensaje) {
+      mensaje.textContent =
+        `¿Confirmas que deseas eliminar únicamente la información de Observaciones de la API "${nombreApi}"? ` +
+        "La API y el resto de su información permanecerán intactos.";
+    }
+
+    if (botonConfirmar) {
+      botonConfirmar.textContent =
+        "Eliminar observaciones";
+
+      botonConfirmar.classList.add(
+        "boton--peligro",
+      );
+    }
+  }
+
+
   /*==================================================
   =                 ABRIR MODAL                      =
   ==================================================*/

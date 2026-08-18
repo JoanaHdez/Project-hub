@@ -1,6 +1,7 @@
 import {
     inicializarItemsObservaciones,
     inicializarEliminacionObservaciones,
+    cargarObservaciones,
 } from "./observaciones/componentes.js";
 
 import {
@@ -16,6 +17,9 @@ import {
     renderObservaciones,
 } from "./observaciones/render.js";
 
+import {
+    abrirConfirmacionApi,
+} from "../acciones/administrar/confirmacion.js";
 
 /*==================================================*
 *=              OBSERVACIONES DE API                =*
@@ -52,6 +56,15 @@ export function inicializarObservacionesFicha() {
             "form-observaciones-api",
         );
 
+    const botonEditar =
+        document.getElementById(
+            "btn-editar-observaciones",
+        );
+
+    const botonEliminar =
+        document.getElementById(
+            "btn-eliminar-observaciones",
+        );
 
     if (
         !botonCompletar ||
@@ -78,6 +91,92 @@ export function inicializarObservacionesFicha() {
                     limpiar: true,
                 },
             );
+        },
+    );
+
+
+    /*==================================================*
+    *=              EDITAR OBSERVACIONES                =*
+    *==================================================*/
+
+    botonEditar?.addEventListener(
+        "click",
+        () => {
+            const apiSeleccionada =
+                document.querySelector(
+                    ".selector--activo",
+                );
+
+            if (!apiSeleccionada) {
+                return;
+            }
+
+            let observaciones = [];
+
+            try {
+                observaciones =
+                    JSON.parse(
+                        apiSeleccionada
+                            .dataset
+                            .apiObservaciones || "[]",
+                    );
+            } catch (error) {
+                console.error(
+                    "No fue posible leer las observaciones:",
+                    error,
+                );
+
+                observaciones = [];
+            }
+
+            cargarObservaciones(
+                observaciones,
+                contenedor,
+                estadoVacio,
+            );
+
+            abrirModalObservaciones(
+                modal,
+            );
+        },
+    );
+
+
+    /*==================================================*
+    *=              ELIMINAR OBSERVACIONES             =*
+    *==================================================*/
+
+    botonEliminar?.addEventListener(
+        "click",
+        () => {
+            const apiSeleccionada =
+                document.querySelector(
+                    ".selector--activo",
+                );
+
+            if (!apiSeleccionada) {
+                return;
+            }
+
+            const idApi =
+                apiSeleccionada.dataset.apiId ?? "";
+
+            const nombreApi =
+                apiSeleccionada.dataset.apiNombre ??
+                "API";
+
+            if (!idApi) {
+                return;
+            }
+
+            abrirConfirmacionApi({
+                accion:
+                    "eliminar-observaciones",
+
+                idApi,
+
+                nombreApi,
+            });
         },
     );
 
