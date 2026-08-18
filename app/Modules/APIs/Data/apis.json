@@ -929,12 +929,6 @@
         "responsable": "",
         "observaciones": [],
         "dependencias": [],
-        "historial": [
-            {
-                "version": "1.0",
-                "descripcion": "prueba 1",
-                "fecha": "agosto 2026"
-            }
-        ]
+        "historial": []
     }
 ]

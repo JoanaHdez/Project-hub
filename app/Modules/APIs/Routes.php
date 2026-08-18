@@ -33,4 +33,6 @@ $routes->patch('(:num)/observaciones', 'APIs_Controller::actualizarObservaciones
 $routes->delete('(:num)/observaciones', 'APIs_Controller::eliminarObservaciones/$1');
 
 $routes->patch('(:num)/historial', 'APIs_Controller::actualizarHistorial/$1');
+
+$routes->delete('(:num)/historial', 'APIs_Controller::eliminarHistorial/$1');
 });

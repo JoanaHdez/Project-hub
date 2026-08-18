@@ -1,57 +1,33 @@
-import {
-  mostrarNotificacion,
-} from "../../../proyectos/notificaciones.js";
-
+import { mostrarNotificacion } from "../../../proyectos/notificaciones.js";
 
 /*==================================================
 =          MODAL DE CONFIRMACIÓN DE API             =
 ==================================================*/
 
-export function abrirConfirmacionApi({
-  accion,
-  idApi,
-  nombreApi,
-}) {
-  const modal =
-    document.getElementById(
-      "modal-confirmar-accion-api",
-    );
+export function abrirConfirmacionApi({ accion, idApi, nombreApi }) {
+  const modal = document.getElementById("modal-confirmar-accion-api");
 
   if (!modal) {
     mostrarNotificacion({
       tipo: "error",
       titulo: "No se pudo continuar",
-      mensaje:
-        "No se encontró el modal de confirmación de la API.",
+      mensaje: "No se encontró el modal de confirmación de la API.",
     });
 
     return;
   }
 
-  const titulo =
-    modal.querySelector(
-      "[data-confirmacion-api-titulo]",
-    );
+  const titulo = modal.querySelector("[data-confirmacion-api-titulo]");
 
-  const mensaje =
-    modal.querySelector(
-      "[data-confirmacion-api-mensaje]",
-    );
+  const mensaje = modal.querySelector("[data-confirmacion-api-mensaje]");
 
-  const botonConfirmar =
-    modal.querySelector(
-      "[data-confirmar-accion-api]",
-    );
+  const botonConfirmar = modal.querySelector("[data-confirmar-accion-api]");
 
-  modal.dataset.accion =
-    accion;
+  modal.dataset.accion = accion;
 
-  modal.dataset.apiId =
-    idApi;
+  modal.dataset.apiId = idApi;
 
-  modal.dataset.apiNombre =
-    nombreApi;
-
+  modal.dataset.apiNombre = nombreApi;
 
   /*==================================================
   =           LIMPIAR ESTILO DEL BOTÓN               =
@@ -65,15 +41,13 @@ export function abrirConfirmacionApi({
     );
   }
 
-
   /*==================================================
   =                 DESACTIVAR                       =
   ==================================================*/
 
   if (accion === "desactivar") {
     if (titulo) {
-      titulo.textContent =
-        "Confirmar desactivación";
+      titulo.textContent = "Confirmar desactivación";
     }
 
     if (mensaje) {
@@ -83,15 +57,11 @@ export function abrirConfirmacionApi({
     }
 
     if (botonConfirmar) {
-      botonConfirmar.textContent =
-        "Desactivar";
+      botonConfirmar.textContent = "Desactivar";
 
-      botonConfirmar.classList.add(
-        "boton--advertencia",
-      );
+      botonConfirmar.classList.add("boton--advertencia");
     }
   }
-
 
   /*==================================================
   =                   ACTIVAR                        =
@@ -99,8 +69,7 @@ export function abrirConfirmacionApi({
 
   if (accion === "activar") {
     if (titulo) {
-      titulo.textContent =
-        "Confirmar activación";
+      titulo.textContent = "Confirmar activación";
     }
 
     if (mensaje) {
@@ -110,15 +79,11 @@ export function abrirConfirmacionApi({
     }
 
     if (botonConfirmar) {
-      botonConfirmar.textContent =
-        "Activar";
+      botonConfirmar.textContent = "Activar";
 
-      botonConfirmar.classList.add(
-        "boton--primario",
-      );
+      botonConfirmar.classList.add("boton--primario");
     }
   }
-
 
   /*==================================================
   =                   ELIMINAR                       =
@@ -126,8 +91,7 @@ export function abrirConfirmacionApi({
 
   if (accion === "eliminar") {
     if (titulo) {
-      titulo.textContent =
-        "Confirmar eliminación";
+      titulo.textContent = "Confirmar eliminación";
     }
 
     if (mensaje) {
@@ -137,15 +101,11 @@ export function abrirConfirmacionApi({
     }
 
     if (botonConfirmar) {
-      botonConfirmar.textContent =
-        "Eliminar";
+      botonConfirmar.textContent = "Eliminar";
 
-      botonConfirmar.classList.add(
-        "boton--peligro",
-      );
+      botonConfirmar.classList.add("boton--peligro");
     }
   }
-
 
   /*==================================================
   =          ELIMINAR ARQUITECTURA                    =
@@ -153,8 +113,7 @@ export function abrirConfirmacionApi({
 
   if (accion === "eliminar-arquitectura") {
     if (titulo) {
-      titulo.textContent =
-        "Eliminar Arquitectura";
+      titulo.textContent = "Eliminar Arquitectura";
     }
 
     if (mensaje) {
@@ -164,15 +123,11 @@ export function abrirConfirmacionApi({
     }
 
     if (botonConfirmar) {
-      botonConfirmar.textContent =
-        "Eliminar Arquitectura";
+      botonConfirmar.textContent = "Eliminar Arquitectura";
 
-      botonConfirmar.classList.add(
-        "boton--peligro",
-      );
+      botonConfirmar.classList.add("boton--peligro");
     }
   }
-
 
   /*==================================================
   =             ELIMINAR DEPENDENCIAS                =
@@ -180,8 +135,7 @@ export function abrirConfirmacionApi({
 
   if (accion === "eliminar-dependencias") {
     if (titulo) {
-      titulo.textContent =
-        "Eliminar dependencias";
+      titulo.textContent = "Eliminar dependencias";
     }
 
     if (mensaje) {
@@ -191,15 +145,11 @@ export function abrirConfirmacionApi({
     }
 
     if (botonConfirmar) {
-      botonConfirmar.textContent =
-        "Eliminar dependencias";
+      botonConfirmar.textContent = "Eliminar dependencias";
 
-      botonConfirmar.classList.add(
-        "boton--peligro",
-      );
+      botonConfirmar.classList.add("boton--peligro");
     }
   }
-
 
   /*==================================================
   =             ELIMINAR OBSERVACIONES               =
@@ -207,8 +157,7 @@ export function abrirConfirmacionApi({
 
   if (accion === "eliminar-observaciones") {
     if (titulo) {
-      titulo.textContent =
-        "Eliminar observaciones";
+      titulo.textContent = "Eliminar observaciones";
     }
 
     if (mensaje) {
@@ -218,29 +167,41 @@ export function abrirConfirmacionApi({
     }
 
     if (botonConfirmar) {
-      botonConfirmar.textContent =
-        "Eliminar observaciones";
+      botonConfirmar.textContent = "Eliminar observaciones";
 
-      botonConfirmar.classList.add(
-        "boton--peligro",
-      );
+      botonConfirmar.classList.add("boton--peligro");
     }
   }
 
+  /*==================================================
+=               ELIMINAR HISTORIAL                 =
+==================================================*/
+
+  if (accion === "eliminar-historial") {
+    if (titulo) {
+      titulo.textContent = "Eliminar historial";
+    }
+
+    if (mensaje) {
+      mensaje.textContent =
+        `¿Confirmas que deseas eliminar únicamente la información de Historial de la API "${nombreApi}"? ` +
+        "La API y el resto de su información permanecerán intactos.";
+    }
+
+    if (botonConfirmar) {
+      botonConfirmar.textContent = "Eliminar historial";
+
+      botonConfirmar.classList.add("boton--peligro");
+    }
+  }
 
   /*==================================================
   =                 ABRIR MODAL                      =
   ==================================================*/
 
-  modal.classList.add(
-    "modal--visible",
-  );
+  modal.classList.add("modal--visible");
 
-  modal.setAttribute(
-    "aria-hidden",
-    "false",
-  );
+  modal.setAttribute("aria-hidden", "false");
 
-  document.body.style.overflow =
-    "hidden";
+  document.body.style.overflow = "hidden";
 }

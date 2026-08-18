@@ -44,6 +44,7 @@ export function inicializarConfirmacionAccionApi() {
           "eliminar-arquitectura",
           "eliminar-dependencias",
           "eliminar-observaciones",
+          "eliminar-historial",
         ].includes(accion)
       ) {
         return;
@@ -201,6 +202,60 @@ export function inicializarConfirmacionAccionApi() {
             modalConfirmacion,
           );
 
+          selector?.click();
+
+          return;
+        }
+
+
+        /*==================================================
+        =               ELIMINAR HISTORIAL                 =
+        ==================================================*/
+
+        if (accion === "eliminar-historial") {
+          const resultado =
+            await eliminarHistorial(
+              idApi,
+            );
+
+          const selector =
+            document.querySelector(
+              `.api-selector[data-api-id="${idApi}"]`,
+            );
+
+          const historialVacio =
+            resultado.historial ?? [];
+
+          if (selector) {
+            selector.dataset.apiHistorial =
+              JSON.stringify(
+                historialVacio,
+              );
+          }
+
+          mostrarNotificacion({
+            tipo: "success",
+
+            titulo:
+              "Historial eliminado",
+
+            mensaje:
+              resultado.mensaje ||
+              "La información de Historial fue eliminada correctamente.",
+          });
+
+          cerrarModalConfirmacion(
+            modalConfirmacion,
+          );
+
+          limpiarDatosTemporales(
+            modalConfirmacion,
+          );
+
+          /*
+           * Volvemos a seleccionar la API
+           * para refrescar la ficha técnica.
+           */
           selector?.click();
 
           return;
@@ -452,6 +507,43 @@ async function eliminarObservaciones(
     throw new Error(
       resultado.mensaje ||
       "No fue posible eliminar las Observaciones.",
+    );
+  }
+
+  return resultado;
+}
+
+
+/*==================================================
+=               ELIMINAR HISTORIAL                 =
+==================================================*/
+
+async function eliminarHistorial(
+  idApi,
+) {
+  const respuesta =
+    await fetch(
+      `/apis/${idApi}/historial`,
+      {
+        method: "DELETE",
+
+        headers: {
+          "X-Requested-With":
+            "XMLHttpRequest",
+        },
+      },
+    );
+
+  const resultado =
+    await respuesta.json();
+
+  if (
+    !respuesta.ok ||
+    !resultado.ok
+  ) {
+    throw new Error(
+      resultado.mensaje ||
+      "No fue posible eliminar el Historial.",
     );
   }
 
