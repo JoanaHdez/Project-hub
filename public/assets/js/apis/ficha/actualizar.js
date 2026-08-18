@@ -14,6 +14,7 @@ import {
   renderHistorial,
 } from "./historial/render.js";
 
+
 /*==================================================*
 *=            ACTUALIZAR FICHA TÉCNICA             =*
 *==================================================*/
@@ -58,6 +59,28 @@ export function actualizarFichaTecnica({
 
   actualizarTexto(
     "ficha-encabezado-estado-texto",
+    estado || "—",
+  );
+
+
+  /*==================================================*
+  *=                    RESUMEN                       =*
+  *==================================================*/
+
+  actualizarTexto(
+    "ficha-resumen-metodo",
+    metodo || "—",
+  );
+
+  actualizarTexto(
+    "ficha-resumen-version",
+    obtenerVersionActual(
+      historial,
+    ),
+  );
+
+  actualizarTexto(
+    "ficha-resumen-estado",
     estado || "—",
   );
 
@@ -116,6 +139,7 @@ export function actualizarFichaTecnica({
     endpoint || "—",
   );
 
+
   /*==================================================*
   *=                  ARQUITECTURA                    =*
   *==================================================*/
@@ -123,6 +147,7 @@ export function actualizarFichaTecnica({
   renderArquitectura(
     arquitectura,
   );
+
 
   /*==================================================*
   *=                  DEPENDENCIAS                    =*
@@ -132,6 +157,7 @@ export function actualizarFichaTecnica({
     dependencias,
   );
 
+
   /*==================================================*
   *=                  OBSERVACIONES                   =*
   *==================================================*/
@@ -140,12 +166,39 @@ export function actualizarFichaTecnica({
     observaciones,
   );
 
+
   /*==================================================*
   *=                  HISTORIAL                       =*
   *==================================================*/
 
   renderHistorial(
     historial,
+  );
+}
+
+
+/*==================================================*
+*=              OBTENER VERSIÓN ACTUAL             =*
+*==================================================*/
+
+function obtenerVersionActual(
+  historial,
+) {
+  if (
+    !Array.isArray(historial) ||
+    historial.length === 0
+  ) {
+    return "—";
+  }
+
+  const ultimoRegistro =
+    historial[
+      historial.length - 1
+    ];
+
+  return (
+    ultimoRegistro?.version ||
+    "—"
   );
 }
 

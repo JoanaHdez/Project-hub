@@ -54,10 +54,6 @@ selectoresSistema.forEach((selector) => {
       visorNombre.textContent = nombre || "Sistema seleccionado";
     }
 
-    /*
-     * La ficha de ubicación siempre se habilita
-     * cuando existe un sistema seleccionado.
-     */
     if (botonFichaUbicacion) {
       botonFichaUbicacion.disabled = false;
     }

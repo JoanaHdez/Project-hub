@@ -2,7 +2,11 @@
 
     <div class="catalogo__buscador">
 
-        <input type="search" id="buscar-api" class="input" placeholder="Buscar API...">
+        <input
+            type="search"
+            id="buscar-api"
+            class="input"
+            placeholder="Buscar API...">
 
     </div>
 

@@ -38,6 +38,10 @@ import {
     inicializarHistorialFicha,
 } from "./ficha/historial.js";
 
+import {
+    inicializarBuscadorApis,
+} from "./catalogo/buscador.js";
+
 /*==================================================
 =              DOCUMENTACIÓN DE APIs                =
 ==================================================*/
@@ -61,3 +65,5 @@ inicializarDependenciasFicha();
 inicializarObservacionesFicha();
 
 inicializarHistorialFicha();
+
+inicializarBuscadorApis();
