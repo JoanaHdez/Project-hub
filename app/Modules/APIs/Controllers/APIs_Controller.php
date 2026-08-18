@@ -585,6 +585,152 @@ class APIs_Controller extends BaseController
 
 
     /*==================================================
+    =               ACTUALIZAR HISTORIAL               =
+    ==================================================*/
+
+    public function actualizarHistorial(
+        int $idApi
+    ) {
+        $datos =
+            $this->request
+            ->getJSON(true);
+
+        if (!is_array($datos)) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'Los datos enviados no son válidos.',
+                ]);
+        }
+
+        $historial =
+            $datos['historial']
+            ?? null;
+
+        if (!is_array($historial)) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'El historial enviado no es válido.',
+                ]);
+        }
+
+        $apis =
+            $this->storage
+            ->obtenerTodos();
+
+        $indiceApi = null;
+
+        foreach (
+            $apis as
+            $indice => $api
+        ) {
+            if (
+                (int) (
+                    $api['id_api']
+                    ?? 0
+                ) === $idApi
+            ) {
+                $indiceApi =
+                    $indice;
+
+                break;
+            }
+        }
+
+        if ($indiceApi === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'No se encontró la API solicitada.',
+                ]);
+        }
+
+        $historialNormalizado = [];
+
+        foreach (
+            $historial as
+            $registro
+        ) {
+            if (!is_array($registro)) {
+                continue;
+            }
+
+            $version =
+                trim(
+                    (string) (
+                        $registro['version']
+                        ?? ''
+                    )
+                );
+
+            $descripcion =
+                trim(
+                    (string) (
+                        $registro['descripcion']
+                        ?? ''
+                    )
+                );
+
+            $fecha =
+                trim(
+                    (string) (
+                        $registro['fecha']
+                        ?? ''
+                    )
+                );
+
+            if (
+                $version === '' &&
+                $descripcion === '' &&
+                $fecha === ''
+            ) {
+                continue;
+            }
+
+            $historialNormalizado[] = [
+                'version' =>
+                $version,
+
+                'descripcion' =>
+                $descripcion,
+
+                'fecha' =>
+                $fecha,
+            ];
+        }
+
+        $apis[$indiceApi]['historial'] =
+            $historialNormalizado;
+
+        $this->storage
+            ->guardarTodos(
+                $apis
+            );
+
+        return $this->response
+            ->setJSON([
+                'ok' => true,
+
+                'mensaje' =>
+                'Historial guardado correctamente.',
+
+                'historial' =>
+                $apis[$indiceApi]['historial'],
+            ]);
+    }
+
+
+    /*==================================================
     =             ACTUALIZAR OBSERVACIONES              =
     ==================================================*/
 
@@ -1442,6 +1588,13 @@ class APIs_Controller extends BaseController
                     'data-api-observaciones' =>
                     json_encode(
                         $api['observaciones'] ?? [],
+                        JSON_UNESCAPED_UNICODE
+                            | JSON_UNESCAPED_SLASHES
+                    ),
+
+                    'data-api-historial' =>
+                    json_encode(
+                        $api['historial'] ?? [],
                         JSON_UNESCAPED_UNICODE
                             | JSON_UNESCAPED_SLASHES
                     ),

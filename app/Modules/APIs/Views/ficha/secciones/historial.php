@@ -1,65 +1,96 @@
-<section class="ficha-seccion" data-ficha-contenido="historial">
+<section
+    class="ficha-seccion"
+    data-ficha-contenido="historial"
+>
 
-                    <div class="ficha-seccion__encabezado">
+    <div class="ficha-seccion__encabezado">
 
-                        <span class="ficha-seccion__numero">
-                            06
-                        </span>
+        <span class="ficha-seccion__numero">
+            06
+        </span>
 
-                        <div>
-                            <h3>Historial</h3>
+        <div>
+            <h3>
+                Historial
+            </h3>
 
-                            <p>
-                                Cambios importantes realizados en la API.
-                            </p>
-                        </div>
+            <p>
+                Cambios importantes realizados en la API.
+            </p>
+        </div>
 
-                    </div>
+    </div>
 
-                    <div class="ficha-historial">
 
-                        <article class="ficha-historial__item">
+    <!-- =========================================
+         ESTADO PENDIENTE
+    ========================================== -->
 
-                            <span>Versión 1.0</span>
+    <div
+        id="ficha-historial-pendiente"
+        class="ficha-pendiente"
+    >
 
-                            <strong>
-                                Creación inicial de la API.
-                            </strong>
+        <span class="ficha-pendiente__estado">
+            Pendiente
+        </span>
 
-                            <small>
-                                Julio de 2026
-                            </small>
+        <strong>
+            Historial sin documentar
+        </strong>
 
-                        </article>
+        <p>
+            Todavía no se han registrado cambios
+            importantes relacionados con esta API.
+        </p>
 
-                        <article class="ficha-historial__item">
+        <button
+            type="button"
+            class="boton boton--secundario"
+            id="btn-completar-historial"
+        >
+            Completar información
+        </button>
 
-                            <span>Versión 1.1</span>
+    </div>
 
-                            <strong>
-                                Se agregaron validaciones de correo e identificador.
-                            </strong>
 
-                            <small>
-                                Julio de 2026
-                            </small>
+    <!-- =========================================
+         HISTORIAL DOCUMENTADO
+    ========================================== -->
 
-                        </article>
+    <div
+        id="ficha-historial-contenido"
+        hidden
+    >
 
-                        <article class="ficha-historial__item">
+        <div class="ficha-seccion__acciones">
 
-                            <span>Versión 1.2</span>
+            <button
+                type="button"
+                class="boton boton--secundario"
+                id="btn-editar-historial"
+            >
+                Editar
+            </button>
 
-                            <strong>
-                                Se modularizó el servicio de correo.
-                            </strong>
+            <button
+                type="button"
+                class="boton boton--peligro"
+                id="btn-eliminar-historial"
+            >
+                Eliminar
+            </button>
 
-                            <small>
-                                Julio de 2026
-                            </small>
+        </div>
 
-                        </article>
 
-                    </div>
+        <div
+            class="ficha-historial"
+            id="ficha-historial-lista"
+        >
+        </div>
 
-                </section>
+    </div>
+
+</section>

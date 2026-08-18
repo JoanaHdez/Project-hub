@@ -156,6 +156,11 @@ export function inicializarSeleccionApi() {
           selector.dataset.apiObservaciones,
         );
 
+      const historial =
+        obtenerJson(
+          selector.dataset.apiHistorial,
+        );
+
       renderHeaders(
         headers,
       );
@@ -242,6 +247,7 @@ export function inicializarSeleccionApi() {
         arquitectura,
         dependencias,
         observaciones,
+        historial,
       });
 
       /*==================================================*

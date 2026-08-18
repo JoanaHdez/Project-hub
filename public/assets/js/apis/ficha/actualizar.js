@@ -10,6 +10,10 @@ import {
   renderObservaciones,
 } from "./observaciones/render.js";
 
+import {
+  renderHistorial,
+} from "./historial/render.js";
+
 /*==================================================*
 *=            ACTUALIZAR FICHA TÉCNICA             =*
 *==================================================*/
@@ -29,6 +33,7 @@ export function actualizarFichaTecnica({
   arquitectura = {},
   dependencias = [],
   observaciones = [],
+  historial = [],
 } = {}) {
 
 
@@ -133,6 +138,14 @@ export function actualizarFichaTecnica({
 
   renderObservaciones(
     observaciones,
+  );
+
+  /*==================================================*
+  *=                  HISTORIAL                       =*
+  *==================================================*/
+
+  renderHistorial(
+    historial,
   );
 }
 

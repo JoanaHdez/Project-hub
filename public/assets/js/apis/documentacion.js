@@ -34,6 +34,10 @@ import {
     inicializarObservacionesFicha,
 } from "./ficha/observaciones.js";
 
+import {
+    inicializarHistorialFicha,
+} from "./ficha/historial.js";
+
 /*==================================================
 =              DOCUMENTACIÓN DE APIs                =
 ==================================================*/
@@ -55,3 +59,5 @@ inicializarArquitecturaFicha();
 inicializarDependenciasFicha();
 
 inicializarObservacionesFicha();
+
+inicializarHistorialFicha();

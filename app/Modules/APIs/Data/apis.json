@@ -898,7 +898,14 @@
             "modulo": "",
             "componentes": []
         },
-        "dependencias": []
+        "dependencias": [],
+        "historial": [
+            {
+                "version": "1.0",
+                "descripcion": "prueba 2",
+                "fecha": "agosto 2026"
+            }
+        ]
     },
     {
         "id_api": 24,
@@ -921,6 +928,13 @@
         "respuestas": [],
         "responsable": "",
         "observaciones": [],
-        "dependencias": []
+        "dependencias": [],
+        "historial": [
+            {
+                "version": "1.0",
+                "descripcion": "prueba 1",
+                "fecha": "agosto 2026"
+            }
+        ]
     }
 ]

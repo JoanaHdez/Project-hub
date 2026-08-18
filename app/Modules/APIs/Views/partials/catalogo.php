@@ -112,6 +112,11 @@
                             $api['observaciones'] ?? [],
                             JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
                         ),
+
+                        'data-api-historial' => json_encode(
+                            $api['historial'] ?? [],
+                            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                        ),
                     ],
                 ]
             ) ?>
