@@ -14,6 +14,11 @@ import {
     renderModulos,
 } from "./render.js";
 
+import {
+    mostrarNotificacion,
+} from "../../proyectos/notificaciones.js";
+
+
 /*==================================================*
 *=                NUEVO MÓDULO                     =*
 *==================================================*/
@@ -50,6 +55,7 @@ export function inicializarNuevoModulo() {
 
             evento.preventDefault();
 
+
             /*==================================================*
             *=              VALIDAR MODO NUEVO                 =*
             *==================================================*/
@@ -60,6 +66,7 @@ export function inicializarNuevoModulo() {
             ) {
                 return;
             }
+
 
             /*==================================================*
             *=                VALIDACIÓN                       =*
@@ -81,9 +88,21 @@ export function inicializarNuevoModulo() {
                 );
 
             if (!datosModulo) {
+
                 console.error(
                     "No fue posible obtener los datos del módulo.",
                 );
+
+                mostrarNotificacion({
+                    tipo:
+                        "error",
+
+                    titulo:
+                        "No se pudo registrar",
+
+                    mensaje:
+                        "No fue posible obtener los datos del módulo.",
+                });
 
                 return;
             }
@@ -92,7 +111,9 @@ export function inicializarNuevoModulo() {
             /*==================================================*
             *=                   GUARDAR                        =*
             *==================================================*/
+
             try {
+
                 const resultado =
                     await guardarNuevoModulo(
                         datosModulo,
@@ -124,14 +145,19 @@ export function inicializarNuevoModulo() {
                 *==================================================*/
 
                 if (contenedorDatos) {
+
                     let modulos = [];
 
                     try {
+
                         modulos =
                             JSON.parse(
-                                contenedorDatos.textContent || "[]",
+                                contenedorDatos.textContent ||
+                                "[]",
                             );
+
                     } catch {
+
                         modulos = [];
                     }
 
@@ -166,14 +192,21 @@ export function inicializarNuevoModulo() {
                         contenedorModulos,
                 });
 
+
+                /*==================================================*
+                *=          CONTADOR DEL EXPLORADOR               =*
+                *==================================================*/
+
                 if (totalModulos) {
+
                     totalModulos.textContent =
                         resultado.total_modulos ??
                         modulosSistema.length;
                 }
 
+
                 /*==================================================*
-                *=          ACTUALIZAR TARJETA DEL SISTEMA         =*
+                *=          ACTUALIZAR TARJETA DEL SISTEMA        =*
                 *==================================================*/
 
                 const tarjetaSistema =
@@ -182,29 +215,34 @@ export function inicializarNuevoModulo() {
                     );
 
                 if (tarjetaSistema) {
+
                     const badge =
                         tarjetaSistema.querySelector(
                             ".sistema-card__badge",
                         );
 
                     if (badge) {
+
                         const total =
                             resultado.total_modulos ??
                             modulosSistema.length;
 
                         badge.textContent =
-                            `${total} ${total === 1
-                                ? "módulo"
-                                : "módulos"
+                            `${total} ${
+                                total === 1
+                                    ? "módulo"
+                                    : "módulos"
                             }`;
                     }
                 }
+
 
                 /*==================================================*
                 *=              CERRAR MODAL                      =*
                 *==================================================*/
 
                 if (modal) {
+
                     if (
                         document.activeElement
                         instanceof HTMLElement
@@ -232,11 +270,46 @@ export function inicializarNuevoModulo() {
 
                 formulario.reset();
 
+
+                /*==================================================*
+                *=              NOTIFICACIÓN                      =*
+                *==================================================*/
+
+                mostrarNotificacion({
+                    tipo:
+                        "success",
+
+                    titulo:
+                        "Módulo registrado",
+
+                    mensaje:
+                        resultado.mensaje ||
+                        "El módulo fue registrado correctamente.",
+                });
+
             } catch (error) {
+
                 console.error(
                     "Error al registrar el módulo:",
                     error,
                 );
+
+
+                /*==================================================*
+                *=          NOTIFICACIÓN DE ERROR                 =*
+                *==================================================*/
+
+                mostrarNotificacion({
+                    tipo:
+                        "error",
+
+                    titulo:
+                        "No se pudo registrar",
+
+                    mensaje:
+                        error.message ||
+                        "Ocurrió un error al registrar el módulo.",
+                });
             }
         },
     );

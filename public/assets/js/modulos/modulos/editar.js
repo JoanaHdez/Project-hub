@@ -10,6 +10,10 @@ import {
     renderModulos,
 } from "./render.js";
 
+import {
+    mostrarNotificacion,
+} from "../../proyectos/notificaciones.js";
+
 
 /*==================================================*
 *=                EDITAR MÓDULO                    =*
@@ -37,6 +41,11 @@ export function inicializarEditarModulo() {
 
             evento.preventDefault();
 
+
+            /*==================================================*
+            *=                VALIDAR MODO                      =*
+            *==================================================*/
+
             if (
                 formulario.dataset.modo !==
                 "editar"
@@ -44,10 +53,20 @@ export function inicializarEditarModulo() {
                 return;
             }
 
+
+            /*==================================================*
+            *=                VALIDACIÓN                        =*
+            *==================================================*/
+
             if (!formulario.checkValidity()) {
                 formulario.reportValidity();
                 return;
             }
+
+
+            /*==================================================*
+            *=              ID DEL MÓDULO                       =*
+            *==================================================*/
 
             const idModulo =
                 document.getElementById(
@@ -55,12 +74,29 @@ export function inicializarEditarModulo() {
                 )?.value ?? "";
 
             if (!idModulo) {
+
                 console.error(
                     "No se encontró el módulo seleccionado.",
                 );
 
+                mostrarNotificacion({
+                    tipo:
+                        "error",
+
+                    titulo:
+                        "No se pudo actualizar",
+
+                    mensaje:
+                        "No se encontró el módulo seleccionado.",
+                });
+
                 return;
             }
+
+
+            /*==================================================*
+            *=                OBTENER DATOS                     =*
+            *==================================================*/
 
             const datosModulo =
                 obtenerDatosNuevoModulo(
@@ -68,10 +104,28 @@ export function inicializarEditarModulo() {
                 );
 
             if (!datosModulo) {
+
+                mostrarNotificacion({
+                    tipo:
+                        "error",
+
+                    titulo:
+                        "No se pudo actualizar",
+
+                    mensaje:
+                        "No fue posible obtener los datos del módulo.",
+                });
+
                 return;
             }
 
+
+            /*==================================================*
+            *=                  ACTUALIZAR                      =*
+            *==================================================*/
+
             try {
+
                 const resultado =
                     await actualizarModulo(
                         idModulo,
@@ -89,14 +143,19 @@ export function inicializarEditarModulo() {
                     );
 
                 if (contenedorDatos) {
+
                     let modulos = [];
 
                     try {
+
                         modulos =
                             JSON.parse(
-                                contenedorDatos.textContent || "[]",
+                                contenedorDatos.textContent ||
+                                "[]",
                             );
+
                     } catch {
+
                         modulos = [];
                     }
 
@@ -105,7 +164,8 @@ export function inicializarEditarModulo() {
                             (modulo) =>
                                 String(
                                     modulo.id_modulo ?? "",
-                                ) === String(idModulo)
+                                ) ===
+                                String(idModulo)
                                     ? resultado.modulo
                                     : modulo,
                         );
@@ -141,7 +201,7 @@ export function inicializarEditarModulo() {
 
 
                 /*==================================================*
-                *=              CERRAR MODAL                      =*
+                *=              CERRAR MODAL                       =*
                 *==================================================*/
 
                 const modal =
@@ -150,6 +210,14 @@ export function inicializarEditarModulo() {
                     );
 
                 if (modal) {
+
+                    if (
+                        document.activeElement
+                        instanceof HTMLElement
+                    ) {
+                        document.activeElement.blur();
+                    }
+
                     modal.classList.remove(
                         "modal--visible",
                     );
@@ -163,11 +231,46 @@ export function inicializarEditarModulo() {
                         "";
                 }
 
+
+                /*==================================================*
+                *=              NOTIFICACIÓN                       =*
+                *==================================================*/
+
+                mostrarNotificacion({
+                    tipo:
+                        "success",
+
+                    titulo:
+                        "Módulo actualizado",
+
+                    mensaje:
+                        resultado.mensaje ||
+                        "Los cambios fueron guardados correctamente.",
+                });
+
             } catch (error) {
+
                 console.error(
                     "Error al editar módulo:",
                     error,
                 );
+
+
+                /*==================================================*
+                *=          NOTIFICACIÓN DE ERROR                 =*
+                *==================================================*/
+
+                mostrarNotificacion({
+                    tipo:
+                        "error",
+
+                    titulo:
+                        "No se pudo actualizar",
+
+                    mensaje:
+                        error.message ||
+                        "Ocurrió un error al actualizar el módulo.",
+                });
             }
         },
     );
@@ -186,7 +289,8 @@ async function actualizarModulo(
         await fetch(
             `/modulos/${idModulo}`,
             {
-                method: "PUT",
+                method:
+                    "PUT",
 
                 headers: {
                     "Content-Type":

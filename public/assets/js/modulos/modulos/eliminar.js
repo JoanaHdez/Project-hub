@@ -6,6 +6,10 @@ import {
     renderModulos,
 } from "./render.js";
 
+import {
+    mostrarNotificacion,
+} from "../../proyectos/notificaciones.js";
+
 
 /*==================================================*
 *=               ELIMINAR MÓDULO                   =*
@@ -265,12 +269,41 @@ export function inicializarEliminarModulo() {
                 document.body.style.overflow =
                     "";
 
+
+                /*==================================================*
+                *=              NOTIFICACIÓN                       =*
+                *==================================================*/
+
+                mostrarNotificacion({
+                    tipo:
+                        "success",
+
+                    titulo:
+                        "Módulo eliminado",
+
+                    mensaje:
+                        resultado.mensaje ||
+                        "El módulo fue eliminado correctamente.",
+                });
+
             } catch (error) {
 
                 console.error(
                     "Error al eliminar módulo:",
                     error,
                 );
+
+                mostrarNotificacion({
+                    tipo:
+                        "error",
+
+                    titulo:
+                        "No se pudo eliminar",
+
+                    mensaje:
+                        error.message ||
+                        "Ocurrió un error al eliminar el módulo.",
+                });
 
             } finally {
 
