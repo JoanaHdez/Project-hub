@@ -196,4 +196,18 @@ document.addEventListener('DOMContentLoaded', () => {
         vistaSistemas.classList.add('modulos-entrada');
     });
 
-});
+});import {
+    inicializarSeleccionSistema,
+} from "./sistemas/seleccion.js";
+
+
+/*==================================================*
+*=                  MÓDULOS                        =*
+*==================================================*/
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+        inicializarSeleccionSistema();
+    },
+);

@@ -1,0 +1,140 @@
+/*==================================================*
+*=              RENDER DE MÓDULOS                  =*
+*==================================================*/
+
+export function renderModulos({
+    modulos,
+    contenedor,
+}) {
+    if (!contenedor) {
+        return;
+    }
+
+    const lista =
+        Array.isArray(modulos)
+            ? modulos
+            : [];
+
+    contenedor.innerHTML = "";
+
+    if (lista.length === 0) {
+        contenedor.innerHTML = `
+            <div class="estado-vacio">
+                No hay módulos registrados para este sistema.
+            </div>
+        `;
+
+        return;
+    }
+
+    contenedor.innerHTML =
+        lista
+            .map(
+                (modulo) =>
+                    crearTarjetaModulo(
+                        modulo,
+                    ),
+            )
+            .join("");
+}
+
+
+/*==================================================*
+*=              CREAR TARJETA                      =*
+*==================================================*/
+
+function crearTarjetaModulo(
+    modulo,
+) {
+    const tipo =
+        escaparHtml(
+            modulo.tipo || "Módulo",
+        );
+
+    const nombre =
+        escaparHtml(
+            modulo.nombre ||
+            "Módulo sin nombre",
+        );
+
+    const descripcion =
+        escaparHtml(
+            modulo.descripcion ||
+            "Sin descripción.",
+        );
+
+    const url =
+        modulo.url || "";
+
+    return `
+        <article
+            class="modulo-card"
+            data-modulo-id="${modulo.id_modulo ?? ""}"
+        >
+
+            <div class="modulo-card__imagen">
+                Vista previa
+            </div>
+
+            <div class="modulo-card__contenido">
+
+                <span class="modulo-card__tipo">
+                    ${tipo}
+                </span>
+
+                <h3>
+                    ${nombre}
+                </h3>
+
+                <p>
+                    ${descripcion}
+                </p>
+
+                <div class="modulo-card__acciones">
+
+                    <button
+                        type="button"
+                        class="modulo-card__detalle"
+                        data-ver-modulo
+                    >
+                        Ver ficha
+                    </button>
+
+                    <a
+                        href="${escaparHtml(url || "#")}"
+                        class="modulo-card__abrir"
+                        ${
+                            url
+                                ? 'target="_blank" rel="noopener noreferrer"'
+                                : 'aria-disabled="true"'
+                        }
+                    >
+                        Abrir
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+    `;
+}
+
+
+/*==================================================*
+*=                ESCAPAR HTML                     =*
+*==================================================*/
+
+function escaparHtml(
+    valor,
+) {
+    const elemento =
+        document.createElement(
+            "div",
+        );
+
+    elemento.textContent =
+        valor ?? "";
+
+    return elemento.innerHTML;
+}

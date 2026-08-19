@@ -127,15 +127,11 @@ class Modulos_Controller extends BaseController
                         $sistema,
                         [
                             'proyecto_nombre' =>
-                                $nombresProyectos[
-                                    $idProyecto
-                                ]
+                            $nombresProyectos[$idProyecto]
                                 ?? 'Sin proyecto',
 
                             'total_modulos' =>
-                                $totalesModulos[
-                                    $idSistema
-                                ]
+                            $totalesModulos[$idSistema]
                                 ?? 0,
                         ]
                     );
@@ -152,7 +148,10 @@ class Modulos_Controller extends BaseController
             'App\Modules\Modulos\Views\index',
             [
                 'sistemas' =>
-                    $sistemasVista,
+                $sistemasVista,
+
+                'modulos' =>
+                $modulos,
             ]
         );
     }

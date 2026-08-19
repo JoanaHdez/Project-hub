@@ -321,6 +321,17 @@ Módulos | Project Hub
 
 </section>
 
+<script
+    type="application/json"
+    id="datos-modulos"
+>
+<?= json_encode(
+    $modulos ?? [],
+    JSON_UNESCAPED_UNICODE
+    | JSON_UNESCAPED_SLASHES
+) ?>
+</script>
+
 <script src="<?= base_url('assets/js/modulos/modulos.js') ?>"></script>
 
 <?= $this->endSection() ?>
