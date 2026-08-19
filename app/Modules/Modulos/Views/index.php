@@ -62,53 +62,36 @@ Módulos | Project Hub
             </div>
         </div>
 
-        <!-- <div class="sistemas-grid">
+        <div class="sistemas-grid">
 
-            <article class="sistema-card" data-sistema="extorsion" tabindex="0" role="button"
-                aria-label="Explorar Registro de Pláticas">
+            <?php foreach (($sistemas ?? []) as $sistema): ?>
+
+            <article class="sistema-card" data-sistema-id="<?= esc(
+        (string) (
+            $sistema['id_sistema']
+            ?? ''
+        ),
+        'attr'
+    ) ?>" data-sistema-nombre="<?= esc(
+        $sistema['nombre']
+        ?? '',
+        'attr'
+    ) ?>" data-sistema-proyecto="<?= esc(
+        $sistema['proyecto_nombre']
+        ?? '',
+        'attr'
+    ) ?>" data-sistema-descripcion-valor="<?= esc(
+    $sistema['descripcion']
+    ?? '',
+    'attr'
+) ?>" tabindex="0" role="button" aria-label="Explorar <?= esc(
+        $sistema['nombre']
+        ?? 'Sistema',
+        'attr'
+    ) ?>">
 
                 <span class="sistema-card__estado sistema-card__estado--azul"></span>
 
-                <div class="sistema-card__imagen sistema-card__imagen--extorsion">
-
-                    <div class="sistema-card__overlay"></div>
-
-                    <div class="sistema-card__titulo-banner">
-
-                        <span>
-                            EXTORSIÓN
-                        </span>
-
-                    </div>
-
-                </div>
-
-                <div class="sistema-card__contenido">
-
-                    <h3>
-                        Registro de Pláticas
-                    </h3>
-
-                    <span class="sistema-card__proyecto">
-                        Proyecto Extorsión
-                    </span>
-
-                    <div class="sistema-card__meta">
-
-                        <span class="sistema-card__badge">
-                            4 módulos
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-            <article class="sistema-card" data-sistema="eventos" tabindex="0" role="button"
-                aria-label="Explorar Sistema de Eventos">
-
-                <span class="sistema-card__estado sistema-card__estado--morado"></span>
 
                 <div class="sistema-card__imagen sistema-card__imagen--extorsion">
 
@@ -117,161 +100,54 @@ Módulos | Project Hub
                     <div class="sistema-card__titulo-banner">
 
                         <span>
-                            EVENTOS
-                        </span>
-
-                    </div>
-
-                </div>
-
-                <div class="sistema-card__contenido">
-
-                    <h3>
-                        Sistema de Eventos
-                    </h3>
-
-                    <span class="sistema-card__proyecto">
-                        Proyecto Eventos
-                    </span>
-
-                    <div class="sistema-card__meta">
-
-                        <span class="sistema-card__badge">
-                            4 módulos
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-            <article class="sistema-card" data-sistema="optica" tabindex="0" role="button"
-                aria-label="Explorar Gestión Óptica">
-
-                <span class="sistema-card__estado sistema-card__estado--morado"></span>
-
-                <div class="sistema-card__imagen sistema-card__imagen--extorsion">
-
-                    <div class="sistema-card__overlay"></div>
-
-                    <div class="sistema-card__titulo-banner">
-
-                        <span>
-                            ÓPTICA
-                        </span>
-
-                    </div>
-
-                </div>
-
-                <div class="sistema-card__contenido">
-
-                    <h3>
-                        Gestión Óptica
-                    </h3>
-
-                    <span class="sistema-card__proyecto">
-                        Proyecto Óptica
-                    </span>
-
-                    <div class="sistema-card__meta">
-
-                        <span class="sistema-card__badge">
-                            4 módulos
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-        </div> -->
-
-        <div class="sistemas-grid">
-
-    <?php foreach (($sistemas ?? []) as $sistema): ?>
-
-        <article
-            class="sistema-card"
-            data-sistema-id="<?= esc(
-                (string) (
-                    $sistema['id_sistema']
-                    ?? ''
-                ),
-                'attr'
-            ) ?>"
-            tabindex="0"
-            role="button"
-            aria-label="Explorar <?= esc(
-                $sistema['nombre']
-                ?? 'Sistema'
-            ) ?>"
-        >
-
-            <span
-                class="sistema-card__estado sistema-card__estado--azul"
-            ></span>
-
-
-            <div
-                class="sistema-card__imagen sistema-card__imagen--extorsion"
-            >
-
-                <div class="sistema-card__overlay"></div>
-
-                <div class="sistema-card__titulo-banner">
-
-                    <span>
-                        <?= esc(
+                            <?= esc(
                             strtoupper(
                                 $sistema['tipo']
                                 ?? 'SISTEMA'
                             )
                         ) ?>
-                    </span>
+                        </span>
+
+                    </div>
 
                 </div>
 
-            </div>
 
+                <div class="sistema-card__contenido">
 
-            <div class="sistema-card__contenido">
-
-                <h3>
-                    <?= esc(
+                    <h3>
+                        <?= esc(
                         $sistema['nombre']
                         ?? 'Sistema sin nombre'
                     ) ?>
-                </h3>
+                    </h3>
 
-                <span class="sistema-card__proyecto">
-                    <?= esc(
+                    <span class="sistema-card__proyecto">
+                        <?= esc(
                         $sistema['proyecto_nombre']
                         ?? 'Sin proyecto'
                     ) ?>
-                </span>
+                    </span>
 
-                <div class="sistema-card__meta">
+                    <div class="sistema-card__meta">
 
-                    <span class="sistema-card__badge">
-                        <?= (int) (
+                        <span class="sistema-card__badge">
+                            <?= (int) (
                             $sistema['total_modulos']
                             ?? 0
                         ) ?>
-                        módulos
-                    </span>
+                            módulos
+                        </span>
+
+                    </div>
 
                 </div>
 
-            </div>
+            </article>
 
-        </article>
+            <?php endforeach; ?>
 
-    <?php endforeach; ?>
-
-</div>
+        </div>
 
     </section>
 
@@ -321,17 +197,12 @@ Módulos | Project Hub
 
 </section>
 
-<script
-    type="application/json"
-    id="datos-modulos"
->
+<script type="application/json" id="datos-modulos">
 <?= json_encode(
     $modulos ?? [],
     JSON_UNESCAPED_UNICODE
     | JSON_UNESCAPED_SLASHES
 ) ?>
 </script>
-
-<script src="<?= base_url('assets/js/modulos/modulos.js') ?>"></script>
 
 <?= $this->endSection() ?>

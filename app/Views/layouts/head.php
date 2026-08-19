@@ -29,7 +29,7 @@
     <?= $this->include('components/footer') ?>
 
     <script type="module" src="<?= base_url('assets/js/apis/documentacion.js') ?>"></script>
-    
+
     <script src="<?= base_url('assets/js/apis/ficha_tecnica.js') ?>" defer></script>
 
     <script src="<?= base_url('assets/js/core/modales.js') ?>" defer></script>
@@ -40,8 +40,8 @@
 
     <script src="<?= base_url('assets/js/core/util.js') ?>" defer></script>
 
-    <script src="<?= base_url('assets/js/modulos/modulos.js') ?>" defer></script>
-
+    <script type="module" src="<?= base_url('assets/js/modulos/modulos.js') ?>"></script>
+    
     <script type="module" src="<?= base_url('assets/js/sistemas/sistemas.js') ?>"></script>
 
 

@@ -94,7 +94,7 @@ export function inicializarSeleccionSistema() {
 
                         if (descripcionSistema) {
                             descripcionSistema.textContent =
-                                tarjeta.dataset.sistemaDescripcion ||
+                                tarjeta.dataset.sistemaDescripcionValor ||
                                 "Explora los módulos disponibles en este sistema.";
                         }
 
