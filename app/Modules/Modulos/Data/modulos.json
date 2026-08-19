@@ -7,5 +7,41 @@
         "descripcion": "Captura y validación de participantes.",
         "url": "",
         "activo": true
+    },
+    {
+        "id_modulo": 2,
+        "id_sistema": 1,
+        "nombre": "prueba",
+        "tipo": "prueba",
+        "descripcion": "prueba",
+        "url": "",
+        "activo": true
+    },
+    {
+        "id_modulo": 3,
+        "id_sistema": 2,
+        "nombre": "prueba 2",
+        "tipo": "prueba 2",
+        "descripcion": "prueba 2",
+        "url": "",
+        "activo": true
+    },
+    {
+        "id_modulo": 4,
+        "id_sistema": 10,
+        "nombre": "prueba 3",
+        "tipo": "prueba 3",
+        "descripcion": "prueba 3",
+        "url": "",
+        "activo": true
+    },
+    {
+        "id_modulo": 5,
+        "id_sistema": 9,
+        "nombre": "prueba 4",
+        "tipo": "prueba 4",
+        "descripcion": "prueba 4",
+        "url": "",
+        "activo": true
     }
 ]

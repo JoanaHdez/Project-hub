@@ -160,35 +160,47 @@ Módulos | Project Hub
 
         <div class="explorador-modulos__encabezado">
 
-            <div>
+    <div>
 
-                <span class="explorador-modulos__proyecto">
-                    Proyecto Extorsión
-                </span>
+        <span class="explorador-modulos__proyecto">
+            Proyecto Extorsión
+        </span>
 
-                <h2 data-sistema-titulo>
-                    Registro de Pláticas
-                </h2>
+        <h2 data-sistema-titulo>
+            Registro de Pláticas
+        </h2>
 
-                <p data-sistema-descripcion>
-                    Explora las pantallas internas disponibles en este sistema.
-                </p>
+        <p data-sistema-descripcion>
+            Explora las pantallas internas disponibles en este sistema.
+        </p>
 
-            </div>
+    </div>
 
-            <div class="explorador-modulos__contador">
+    <div class="explorador-modulos__acciones">
 
-                <strong data-total-modulos>
-                    4
-                </strong>
+        <button
+            type="button"
+            class="boton boton--primario"
+            id="btn-nuevo-modulo"
+        >
+            + Nuevo módulo
+        </button>
 
-                <span>
-                    módulos registrados
-                </span>
+        <div class="explorador-modulos__contador">
 
-            </div>
+            <strong data-total-modulos>
+                0
+            </strong>
+
+            <span>
+                módulos registrados
+            </span>
 
         </div>
+
+    </div>
+
+</div>
 
         <div class="modulos-grid" data-contenedor-modulos>
         </div>
@@ -196,6 +208,10 @@ Módulos | Project Hub
     </section>
 
 </section>
+
+<?= view(
+    'App\Modules\Modulos\Views\modals\nuevo_modulo'
+) ?>
 
 <script type="application/json" id="datos-modulos">
 <?= json_encode(

@@ -12,6 +12,16 @@ import {
 *==================================================*/
 
 export function inicializarSeleccionSistema() {
+    const vistaSistemas =
+        document.querySelector(
+            "[data-vista-sistemas]",
+        );
+
+    const botonVolver =
+        document.querySelector(
+            "[data-volver-sistemas]",
+        );
+
     const vistaModulos =
         document.querySelector(
             "[data-vista-modulos]",
@@ -69,6 +79,9 @@ export function inicializarSeleccionSistema() {
                         if (!idSistema) {
                             return;
                         }
+
+                        document.body.dataset.sistemaSeleccionadoId =
+                            idSistema;
 
                         const modulos =
                             obtenerModulosPorSistema(
@@ -177,4 +190,32 @@ export function inicializarSeleccionSistema() {
                 );
             },
         );
+    /*==================================================*
+    *=              CAMBIAR SISTEMA                    =*
+    *==================================================*/
+
+    botonVolver?.addEventListener(
+        "click",
+        () => {
+            if (vistaModulos) {
+                vistaModulos.hidden =
+                    true;
+            }
+
+            if (vistaSistemas) {
+                vistaSistemas.hidden =
+                    false;
+
+                vistaSistemas.classList.remove(
+                    "modulos-entrada",
+                );
+
+                void vistaSistemas.offsetWidth;
+
+                vistaSistemas.classList.add(
+                    "modulos-entrada",
+                );
+            }
+        },
+    );
 }

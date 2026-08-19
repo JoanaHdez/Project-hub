@@ -263,6 +263,14 @@
   gap: 24px;
 }
 
+.explorador-modulos[hidden] {
+  display: none;
+}
+
+.selector-sistemas[hidden] {
+  display: none;
+}
+
 .explorador-modulos__volver {
   width: max-content;
   display: inline-flex;

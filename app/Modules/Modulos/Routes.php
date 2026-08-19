@@ -7,5 +7,14 @@ use CodeIgniter\Router\RouteCollection;
 $routes->group('modulos', [
     'namespace' => 'App\Modules\Modulos\Controllers',
 ], static function ($routes) {
-    $routes->get('/', 'Modulos_Controller::index');
+
+    $routes->get(
+        '/',
+        'Modulos_Controller::index'
+    );
+
+    $routes->post(
+        '/',
+        'Modulos_Controller::crear'
+    );
 });
