@@ -29,9 +29,9 @@
     {
         "id_modulo": 4,
         "id_sistema": 10,
-        "nombre": "prueba 3",
-        "tipo": "prueba 3",
-        "descripcion": "prueba 3",
+        "nombre": "prueba de proyecto 1c",
+        "tipo": "prueba de proyecto 1c",
+        "descripcion": "prueba de proyecto 1c",
         "url": "",
         "activo": true
     },
@@ -65,9 +65,9 @@
     {
         "id_modulo": 8,
         "id_sistema": 10,
-        "nombre": "prueba 6",
-        "tipo": "prueba 6",
-        "descripcion": "prueba 6",
+        "nombre": "prueba de proyecto 1c",
+        "tipo": "prueba de proyecto 1c",
+        "descripcion": "prueba de proyecto 1c",
         "url": "",
         "activo": true
     },

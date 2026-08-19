@@ -14,6 +14,10 @@ import {
     inicializarDetalleModulo,
 } from "./modulos/detalle.js";
 
+import {
+    inicializarEditarModulo,
+} from "./modulos/editar.js";
+
 /*==================================================*
 *=                  MÓDULOS                        =*
 *==================================================*/
@@ -28,5 +32,7 @@ document.addEventListener(
         inicializarDetalleModulo();
 
         inicializarModalNuevoModulo();
+
+        inicializarEditarModulo();
     },
 );

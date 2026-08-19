@@ -17,4 +17,9 @@ $routes->group('modulos', [
         '/',
         'Modulos_Controller::crear'
     );
+
+    $routes->put(
+        '(:num)',
+        'Modulos_Controller::actualizar/$1'
+    );
 });

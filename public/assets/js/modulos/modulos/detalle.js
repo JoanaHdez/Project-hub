@@ -126,6 +126,13 @@ export function inicializarDetalleModulo() {
             formulario.dataset.modo =
                 "detalle";
 
+            const idSistema =
+                document.body.dataset
+                    .sistemaSeleccionadoId ?? "";
+
+            formulario.dataset.sistemaId =
+                idSistema;
+
             if (campoId) {
                 campoId.value =
                     idModulo;
@@ -219,6 +226,113 @@ export function inicializarDetalleModulo() {
 
             document.body.style.overflow =
                 "hidden";
+        },
+    );
+
+    /*==================================================*
+*=                  EDITAR MÓDULO                   =*
+*==================================================*/
+
+    botonEditar?.addEventListener(
+        "click",
+        () => {
+
+            if (
+                formulario.dataset.modo !==
+                "detalle"
+            ) {
+                return;
+            }
+
+
+            /*==================================================*
+            *=                MODO EDICIÓN                     =*
+            *==================================================*/
+
+            formulario.dataset.modo =
+                "editar";
+
+
+            /*==================================================*
+            *=              HABILITAR CAMPOS                   =*
+            *==================================================*/
+
+            if (campoTipo) {
+                campoTipo.disabled =
+                    false;
+            }
+
+            if (campoNombre) {
+                campoNombre.disabled =
+                    false;
+            }
+
+            if (campoDescripcion) {
+                campoDescripcion.disabled =
+                    false;
+            }
+
+            if (campoUrl) {
+                campoUrl.disabled =
+                    false;
+            }
+
+
+            /*==================================================*
+            *=                  TÍTULO                         =*
+            *==================================================*/
+
+            const tituloModal =
+                document.getElementById(
+                    "modal-nuevo-modulo-titulo",
+                );
+
+            if (tituloModal) {
+                tituloModal.textContent =
+                    "Editar módulo";
+            }
+
+
+            /*==================================================*
+            *=                  BOTONES                        =*
+            *==================================================*/
+
+            if (botonEliminar) {
+                botonEliminar.hidden =
+                    true;
+            }
+
+            if (botonEditar) {
+                botonEditar.hidden =
+                    true;
+            }
+
+            if (botonGuardar) {
+                botonGuardar.hidden =
+                    false;
+            }
+
+            const textoGuardar =
+                modal.querySelector(
+                    "[data-modulo-texto-guardar]",
+                );
+
+            if (textoGuardar) {
+                textoGuardar.textContent =
+                    "Guardar cambios";
+            }
+
+            if (textoCerrar) {
+                textoCerrar.textContent =
+                    "Cancelar";
+            }
+
+
+            /*==================================================*
+            *=                  FOCO                            =*
+            *==================================================*/
+
+            campoNombre?.focus();
         },
     );
 }

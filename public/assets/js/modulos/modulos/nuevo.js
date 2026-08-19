@@ -50,6 +50,16 @@ export function inicializarNuevoModulo() {
 
             evento.preventDefault();
 
+            /*==================================================*
+            *=              VALIDAR MODO NUEVO                 =*
+            *==================================================*/
+
+            if (
+                formulario.dataset.modo !==
+                "nuevo"
+            ) {
+                return;
+            }
 
             /*==================================================*
             *=                VALIDACIÓN                       =*

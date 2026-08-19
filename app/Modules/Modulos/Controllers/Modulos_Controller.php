@@ -144,14 +144,14 @@ class Modulos_Controller extends BaseController
         =                    VISTA                          =
         ==================================================*/
 
-                return view(
+        return view(
             'App\Modules\Modulos\Views\index',
             [
                 'sistemas' =>
-                    $sistemasVista,
+                $sistemasVista,
 
                 'modulos' =>
-                    $modulos,
+                $modulos,
             ]
         );
     }
@@ -173,7 +173,7 @@ class Modulos_Controller extends BaseController
                 ->setJSON([
                     'ok' => false,
                     'mensaje' =>
-                        'Los datos enviados no son válidos.',
+                    'Los datos enviados no son válidos.',
                 ]);
         }
 
@@ -189,7 +189,7 @@ class Modulos_Controller extends BaseController
                 ->setJSON([
                     'ok' => false,
                     'mensaje' =>
-                        'No se encontró el sistema asociado.',
+                    'No se encontró el sistema asociado.',
                 ]);
         }
 
@@ -205,7 +205,7 @@ class Modulos_Controller extends BaseController
                 ->setJSON([
                     'ok' => false,
                     'mensaje' =>
-                        'El sistema seleccionado no existe.',
+                    'El sistema seleccionado no existe.',
                 ]);
         }
 
@@ -223,7 +223,7 @@ class Modulos_Controller extends BaseController
                 ->setJSON([
                     'ok' => false,
                     'mensaje' =>
-                        'El nombre del módulo es obligatorio.',
+                    'El nombre del módulo es obligatorio.',
                 ]);
         }
 
@@ -257,28 +257,28 @@ class Modulos_Controller extends BaseController
 
         $modulo = [
             'id_modulo' =>
-                $this->moduloStorage
-                    ->generarNuevoId(
-                        $modulos
-                    ),
+            $this->moduloStorage
+                ->generarNuevoId(
+                    $modulos
+                ),
 
             'id_sistema' =>
-                $idSistema,
+            $idSistema,
 
             'nombre' =>
-                $nombre,
+            $nombre,
 
             'tipo' =>
-                $tipo,
+            $tipo,
 
             'descripcion' =>
-                $descripcion,
+            $descripcion,
 
             'url' =>
-                $url,
+            $url,
 
             'activo' =>
-                true,
+            true,
         ];
 
         $modulos[] =
@@ -303,13 +303,196 @@ class Modulos_Controller extends BaseController
                 'ok' => true,
 
                 'mensaje' =>
-                    'Módulo registrado correctamente.',
+                'Módulo registrado correctamente.',
 
                 'modulo' =>
-                    $modulo,
+                $modulo,
 
                 'total_modulos' =>
-                    $totalModulos,
+                $totalModulos,
+            ]);
+    }
+
+    /*==================================================
+=                  ACTUALIZAR MÓDULO               =
+==================================================*/
+
+    public function actualizar(
+        int $idModulo
+    ) {
+        $datos =
+            $this->request
+            ->getJSON(true);
+
+        if (!is_array($datos)) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'Los datos enviados no son válidos.',
+                ]);
+        }
+
+        $modulos =
+            $this->moduloStorage
+            ->obtenerTodos();
+
+        $indiceModulo = null;
+        $moduloExistente = null;
+
+        foreach (
+            $modulos as
+            $indice => $modulo
+        ) {
+            if (
+                (int) (
+                    $modulo['id_modulo']
+                    ?? 0
+                ) === $idModulo
+            ) {
+                $indiceModulo =
+                    $indice;
+
+                $moduloExistente =
+                    $modulo;
+
+                break;
+            }
+        }
+
+        if (
+            $indiceModulo === null ||
+            $moduloExistente === null
+        ) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'No se encontró el módulo solicitado.',
+                ]);
+        }
+
+        $idSistema =
+            (int) (
+                $datos['id_sistema']
+                ?? (
+                    $moduloExistente['id_sistema']
+                    ?? 0
+                )
+            );
+
+        if ($idSistema <= 0) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'No se encontró el sistema asociado.',
+                ]);
+        }
+
+        $sistema =
+            $this->sistemaStorage
+            ->obtenerPorId(
+                $idSistema
+            );
+
+        if ($sistema === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'El sistema asociado no existe.',
+                ]);
+        }
+
+        $nombre =
+            trim(
+                (string) (
+                    $datos['nombre']
+                    ?? ''
+                )
+            );
+
+        if ($nombre === '') {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'El nombre del módulo es obligatorio.',
+                ]);
+        }
+
+        $moduloActualizado = [
+            'id_modulo' =>
+            $idModulo,
+
+            'id_sistema' =>
+            $idSistema,
+
+            'nombre' =>
+            $nombre,
+
+            'tipo' =>
+            trim(
+                (string) (
+                    $datos['tipo']
+                    ?? ''
+                )
+            ),
+
+            'descripcion' =>
+            trim(
+                (string) (
+                    $datos['descripcion']
+                    ?? ''
+                )
+            ),
+
+            'url' =>
+            trim(
+                (string) (
+                    $datos['url']
+                    ?? ''
+                )
+            ),
+
+            /*
+         * Conservamos el estado actual.
+         */
+            'activo' =>
+            (bool) (
+                $moduloExistente['activo']
+                ?? true
+            ),
+        ];
+
+        $modulos[$indiceModulo] =
+            $moduloActualizado;
+
+        $this->moduloStorage
+            ->guardarTodos(
+                $modulos
+            );
+
+        return $this->response
+            ->setJSON([
+                'ok' => true,
+
+                'mensaje' =>
+                'Módulo actualizado correctamente.',
+
+                'modulo' =>
+                $moduloActualizado,
             ]);
     }
 }
