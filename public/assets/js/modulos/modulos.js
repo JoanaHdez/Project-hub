@@ -18,6 +18,10 @@ import {
     inicializarEditarModulo,
 } from "./modulos/editar.js";
 
+import {
+    inicializarEliminarModulo,
+} from "./modulos/eliminar.js";
+
 /*==================================================*
 *=                  MÓDULOS                        =*
 *==================================================*/
@@ -34,5 +38,7 @@ document.addEventListener(
         inicializarModalNuevoModulo();
 
         inicializarEditarModulo();
+
+        inicializarEliminarModulo();
     },
 );

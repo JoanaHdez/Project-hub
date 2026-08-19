@@ -213,6 +213,10 @@ Módulos | Project Hub
     'App\Modules\Modulos\Views\modals\nuevo_modulo'
 ) ?>
 
+<?= view(
+    'App\Modules\Modulos\Views\modals\confirmar_eliminar_modulo'
+) ?>
+
 <script type="application/json" id="datos-modulos">
 <?= json_encode(
     $modulos ?? [],

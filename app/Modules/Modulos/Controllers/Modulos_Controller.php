@@ -314,8 +314,8 @@ class Modulos_Controller extends BaseController
     }
 
     /*==================================================
-=                  ACTUALIZAR MÓDULO               =
-==================================================*/
+    =                  ACTUALIZAR MÓDULO               =
+    ==================================================*/
 
     public function actualizar(
         int $idModulo
@@ -493,6 +493,118 @@ class Modulos_Controller extends BaseController
 
                 'modulo' =>
                 $moduloActualizado,
+            ]);
+    }
+
+    /*==================================================
+    =                  ELIMINAR MÓDULO                 =
+    ==================================================*/
+
+    public function eliminar(
+        int $idModulo
+    ) {
+        $modulos =
+            $this->moduloStorage
+            ->obtenerTodos();
+
+        $moduloEncontrado = null;
+
+        foreach ($modulos as $modulo) {
+            if (
+                (int) (
+                    $modulo['id_modulo']
+                    ?? 0
+                ) === $idModulo
+            ) {
+                $moduloEncontrado =
+                    $modulo;
+
+                break;
+            }
+        }
+
+
+        /*==================================================
+        =              VALIDAR EXISTENCIA                  =
+        ==================================================*/
+
+        if ($moduloEncontrado === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'No se encontró el módulo solicitado.',
+                ]);
+        }
+
+
+        /*==================================================
+        =              OBTENER SISTEMA                     =
+        ==================================================*/
+
+        $idSistema =
+            (int) (
+                $moduloEncontrado['id_sistema']
+                ?? 0
+            );
+
+
+        /*==================================================
+        =                ELIMINAR                          =
+        ==================================================*/
+
+        $modulos =
+            array_values(
+                array_filter(
+                    $modulos,
+                    static fn(array $modulo): bool =>
+                    (int) (
+                        $modulo['id_modulo']
+                        ?? 0
+                    ) !== $idModulo
+                )
+            );
+
+        $this->moduloStorage
+            ->guardarTodos(
+                $modulos
+            );
+
+
+        /*==================================================
+        =             TOTAL ACTUALIZADO                    =
+        ==================================================*/
+
+        $totalModulos =
+            count(
+                $this->moduloStorage
+                    ->obtenerPorSistema(
+                        $idSistema
+                    )
+            );
+
+
+        /*==================================================
+        =                  RESPUESTA                       =
+        ==================================================*/
+
+        return $this->response
+            ->setJSON([
+                'ok' => true,
+
+                'mensaje' =>
+                'Módulo eliminado correctamente.',
+
+                'id_modulo' =>
+                $idModulo,
+
+                'id_sistema' =>
+                $idSistema,
+
+                'total_modulos' =>
+                $totalModulos,
             ]);
     }
 }

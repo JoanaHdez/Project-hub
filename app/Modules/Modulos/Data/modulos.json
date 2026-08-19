@@ -9,38 +9,11 @@
         "activo": true
     },
     {
-        "id_modulo": 2,
-        "id_sistema": 1,
-        "nombre": "prueba",
-        "tipo": "prueba",
-        "descripcion": "prueba",
-        "url": "",
-        "activo": true
-    },
-    {
         "id_modulo": 3,
         "id_sistema": 2,
         "nombre": "prueba 2",
         "tipo": "prueba 2",
         "descripcion": "prueba 2",
-        "url": "",
-        "activo": true
-    },
-    {
-        "id_modulo": 4,
-        "id_sistema": 10,
-        "nombre": "prueba de proyecto 1c",
-        "tipo": "prueba de proyecto 1c",
-        "descripcion": "prueba de proyecto 1c",
-        "url": "",
-        "activo": true
-    },
-    {
-        "id_modulo": 5,
-        "id_sistema": 9,
-        "nombre": "prueba 4",
-        "tipo": "prueba 4",
-        "descripcion": "prueba 4",
         "url": "",
         "activo": true
     },
@@ -59,24 +32,6 @@
         "nombre": "prueba 6",
         "tipo": "prueba 6",
         "descripcion": "prueba 6",
-        "url": "",
-        "activo": true
-    },
-    {
-        "id_modulo": 8,
-        "id_sistema": 10,
-        "nombre": "prueba de proyecto 1c",
-        "tipo": "prueba de proyecto 1c",
-        "descripcion": "prueba de proyecto 1c",
-        "url": "",
-        "activo": true
-    },
-    {
-        "id_modulo": 9,
-        "id_sistema": 2,
-        "nombre": "8.º Congreso",
-        "tipo": "8.º Congreso",
-        "descripcion": "8.º Congreso",
         "url": "",
         "activo": true
     },
