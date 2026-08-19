@@ -477,6 +477,16 @@
   animation: modulosEntrada 0.28s ease;
 }
 
+/*======================================
+=       BOTONES OCULTOS DEL MODAL     =
+======================================*/
+
+[data-modulo-eliminar][hidden],
+[data-modulo-editar][hidden],
+[data-modulo-guardar][hidden] {
+  display: none !important;
+}
+
 @keyframes modulosEntrada {
   from {
     opacity: 0;

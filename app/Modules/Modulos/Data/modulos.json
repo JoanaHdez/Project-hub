@@ -43,5 +43,59 @@
         "descripcion": "prueba 4",
         "url": "",
         "activo": true
+    },
+    {
+        "id_modulo": 6,
+        "id_sistema": 8,
+        "nombre": "prueba 5",
+        "tipo": "prueba 5",
+        "descripcion": "prueba 5",
+        "url": "",
+        "activo": true
+    },
+    {
+        "id_modulo": 7,
+        "id_sistema": 6,
+        "nombre": "prueba 6",
+        "tipo": "prueba 6",
+        "descripcion": "prueba 6",
+        "url": "",
+        "activo": true
+    },
+    {
+        "id_modulo": 8,
+        "id_sistema": 10,
+        "nombre": "prueba 6",
+        "tipo": "prueba 6",
+        "descripcion": "prueba 6",
+        "url": "",
+        "activo": true
+    },
+    {
+        "id_modulo": 9,
+        "id_sistema": 2,
+        "nombre": "8.º Congreso",
+        "tipo": "8.º Congreso",
+        "descripcion": "8.º Congreso",
+        "url": "",
+        "activo": true
+    },
+    {
+        "id_modulo": 10,
+        "id_sistema": 3,
+        "nombre": "Project Hub",
+        "tipo": "Project Hub",
+        "descripcion": "Project Hub",
+        "url": "",
+        "activo": true
+    },
+    {
+        "id_modulo": 11,
+        "id_sistema": 9,
+        "nombre": "prueba extorsion",
+        "tipo": "prueba extorsion",
+        "descripcion": "prueba extorsion",
+        "url": "",
+        "activo": true
     }
 ]

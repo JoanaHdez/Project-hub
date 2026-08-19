@@ -4,7 +4,15 @@ $contenido = '
     <form
         id="form-nuevo-modulo"
         autocomplete="off"
+        data-modo="nuevo"
     >
+
+        <input
+            type="hidden"
+            id="modulo-id"
+            name="id_modulo"
+            value=""
+        >
 
         <div class="form-grid">
 
@@ -80,15 +88,38 @@ $acciones = '
         class="boton boton--secundario"
         data-modal-cerrar
     >
-        Cancelar
+        <span data-modulo-texto-cerrar>
+            Cancelar
+        </span>
+    </button>
+
+    <button
+        type="button"
+        class="boton boton--peligro"
+        data-modulo-eliminar
+        hidden
+    >
+        Eliminar
+    </button>
+
+    <button
+        type="button"
+        class="boton boton--primario"
+        data-modulo-editar
+        hidden
+    >
+        Editar
     </button>
 
     <button
         type="submit"
         form="form-nuevo-modulo"
         class="boton boton--primario"
+        data-modulo-guardar
     >
-        Guardar módulo
+        <span data-modulo-texto-guardar>
+            Guardar módulo
+        </span>
     </button>
 ';
 

@@ -1,76 +1,58 @@
 /*==================================================*
-*=              RENDER DE MÓDULOS                  =*
-*==================================================*/
+ *=              RENDER DE MÓDULOS                  =*
+ *==================================================*/
 
-export function renderModulos({
-    modulos,
-    contenedor,
-}) {
-    if (!contenedor) {
-        return;
-    }
+export function renderModulos({ modulos, contenedor }) {
+  if (!contenedor) {
+    return;
+  }
 
-    const lista =
-        Array.isArray(modulos)
-            ? modulos
-            : [];
+  const lista = Array.isArray(modulos) ? modulos : [];
 
-    contenedor.innerHTML = "";
+  contenedor.innerHTML = "";
 
-    if (lista.length === 0) {
-        contenedor.innerHTML = `
+  if (lista.length === 0) {
+    contenedor.innerHTML = `
             <div class="estado-vacio">
                 No hay módulos registrados para este sistema.
             </div>
         `;
 
-        return;
-    }
+    return;
+  }
 
-    contenedor.innerHTML =
-        lista
-            .map(
-                (modulo) =>
-                    crearTarjetaModulo(
-                        modulo,
-                    ),
-            )
-            .join("");
+  contenedor.innerHTML = lista
+    .map((modulo) => crearTarjetaModulo(modulo))
+    .join("");
 }
 
-
 /*==================================================*
-*=              CREAR TARJETA                      =*
-*==================================================*/
+ *=              CREAR TARJETA                      =*
+ *==================================================*/
 
-function crearTarjetaModulo(
-    modulo,
-) {
-    const tipo =
-        escaparHtml(
-            modulo.tipo || "Módulo",
-        );
+function crearTarjetaModulo(modulo) {
+  const tipo = escaparHtml(modulo.tipo || "Módulo");
 
-    const nombre =
-        escaparHtml(
-            modulo.nombre ||
-            "Módulo sin nombre",
-        );
+  const nombre = escaparHtml(modulo.nombre || "Módulo sin nombre");
 
-    const descripcion =
-        escaparHtml(
-            modulo.descripcion ||
-            "Sin descripción.",
-        );
+  const descripcion = escaparHtml(modulo.descripcion || "Sin descripción.");
 
-    const url =
-        modulo.url || "";
+  const url = modulo.url || "";
 
-    return `
+  return `
         <article
-            class="modulo-card"
-            data-modulo-id="${modulo.id_modulo ?? ""}"
-        >
+    class="modulo-card"
+
+    data-modulo-id="${escaparHtml(modulo.id_modulo ?? "")}"
+
+    data-modulo-tipo="${escaparHtml(modulo.tipo ?? "")}"
+
+    data-modulo-nombre="${escaparHtml(modulo.nombre ?? "")}"
+
+    data-modulo-descripcion="${escaparHtml(modulo.descripcion ?? "")}"
+
+    data-modulo-url="${escaparHtml(modulo.url ?? "")}"
+>
 
             <div class="modulo-card__imagen">
                 Vista previa
@@ -104,9 +86,9 @@ function crearTarjetaModulo(
                         href="${escaparHtml(url || "#")}"
                         class="modulo-card__abrir"
                         ${
-                            url
-                                ? 'target="_blank" rel="noopener noreferrer"'
-                                : 'aria-disabled="true"'
+                          url
+                            ? 'target="_blank" rel="noopener noreferrer"'
+                            : 'aria-disabled="true"'
                         }
                     >
                         Abrir
@@ -120,21 +102,14 @@ function crearTarjetaModulo(
     `;
 }
 
-
 /*==================================================*
-*=                ESCAPAR HTML                     =*
-*==================================================*/
+ *=                ESCAPAR HTML                     =*
+ *==================================================*/
 
-function escaparHtml(
-    valor,
-) {
-    const elemento =
-        document.createElement(
-            "div",
-        );
+function escaparHtml(valor) {
+  const elemento = document.createElement("div");
 
-    elemento.textContent =
-        valor ?? "";
+  elemento.textContent = valor ?? "";
 
-    return elemento.innerHTML;
+  return elemento.innerHTML;
 }

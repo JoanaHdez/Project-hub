@@ -4,11 +4,6 @@
 
 export function inicializarModalNuevoModulo() {
 
-    const botonNuevoModulo =
-        document.getElementById(
-            "btn-nuevo-modulo",
-        );
-
     const modal =
         document.getElementById(
             "modal-nuevo-modulo",
@@ -20,20 +15,29 @@ export function inicializarModalNuevoModulo() {
         );
 
     if (
-        !botonNuevoModulo ||
-        !modal
+        !modal ||
+        !formulario
     ) {
         return;
     }
 
 
     /*==================================================*
-    *=                ABRIR MODAL                      =*
+    *=                ABRIR NUEVO                     =*
     *==================================================*/
 
-    botonNuevoModulo.addEventListener(
+    document.addEventListener(
         "click",
-        () => {
+        (evento) => {
+
+            const botonNuevoModulo =
+                evento.target.closest(
+                    "#btn-nuevo-modulo",
+                );
+
+            if (!botonNuevoModulo) {
+                return;
+            }
 
             const idSistema =
                 document.body.dataset
@@ -49,17 +53,144 @@ export function inicializarModalNuevoModulo() {
 
 
             /*==================================================*
-            *=          ASOCIAR SISTEMA AL FORMULARIO          =*
+            *=              MODO NUEVO                         =*
             *==================================================*/
 
-            if (formulario) {
-                formulario.dataset.sistemaId =
-                    idSistema;
+            formulario.dataset.modo =
+                "nuevo";
+
+            formulario.dataset.sistemaId =
+                idSistema;
+
+            formulario.reset();
+
+
+            /*==================================================*
+            *=                 CAMPOS                          =*
+            *==================================================*/
+
+            const campoId =
+                document.getElementById(
+                    "modulo-id",
+                );
+
+            const campoTipo =
+                document.getElementById(
+                    "modulo-tipo",
+                );
+
+            const campoNombre =
+                document.getElementById(
+                    "modulo-nombre",
+                );
+
+            const campoDescripcion =
+                document.getElementById(
+                    "modulo-descripcion",
+                );
+
+            const campoUrl =
+                document.getElementById(
+                    "modulo-url",
+                );
+
+            if (campoId) {
+                campoId.value = "";
+            }
+
+            if (campoTipo) {
+                campoTipo.disabled =
+                    false;
+            }
+
+            if (campoNombre) {
+                campoNombre.disabled =
+                    false;
+            }
+
+            if (campoDescripcion) {
+                campoDescripcion.disabled =
+                    false;
+            }
+
+            if (campoUrl) {
+                campoUrl.disabled =
+                    false;
             }
 
 
             /*==================================================*
-            *=                 MOSTRAR MODAL                    =*
+            *=                  TÍTULO                         =*
+            *==================================================*/
+
+            const tituloModal =
+                document.getElementById(
+                    "modal-nuevo-modulo-titulo",
+                );
+
+            if (tituloModal) {
+                tituloModal.textContent =
+                    "Nuevo módulo";
+            }
+
+
+            /*==================================================*
+            *=                  BOTONES                        =*
+            *==================================================*/
+
+            const botonEliminar =
+                modal.querySelector(
+                    "[data-modulo-eliminar]",
+                );
+
+            const botonEditar =
+                modal.querySelector(
+                    "[data-modulo-editar]",
+                );
+
+            const botonGuardar =
+                modal.querySelector(
+                    "[data-modulo-guardar]",
+                );
+
+            const textoGuardar =
+                modal.querySelector(
+                    "[data-modulo-texto-guardar]",
+                );
+
+            const textoCerrar =
+                modal.querySelector(
+                    "[data-modulo-texto-cerrar]",
+                );
+
+            if (botonEliminar) {
+                botonEliminar.hidden =
+                    true;
+            }
+
+            if (botonEditar) {
+                botonEditar.hidden =
+                    true;
+            }
+
+            if (botonGuardar) {
+                botonGuardar.hidden =
+                    false;
+            }
+
+            if (textoGuardar) {
+                textoGuardar.textContent =
+                    "Guardar módulo";
+            }
+
+            if (textoCerrar) {
+                textoCerrar.textContent =
+                    "Cancelar";
+            }
+
+
+            /*==================================================*
+            *=                MOSTRAR MODAL                    =*
             *==================================================*/
 
             modal.classList.add(

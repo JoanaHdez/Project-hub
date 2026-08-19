@@ -162,6 +162,33 @@ export function inicializarNuevoModulo() {
                         modulosSistema.length;
                 }
 
+                /*==================================================*
+                *=          ACTUALIZAR TARJETA DEL SISTEMA         =*
+                *==================================================*/
+
+                const tarjetaSistema =
+                    document.querySelector(
+                        `.sistema-card[data-sistema-id="${idSistema}"]`,
+                    );
+
+                if (tarjetaSistema) {
+                    const badge =
+                        tarjetaSistema.querySelector(
+                            ".sistema-card__badge",
+                        );
+
+                    if (badge) {
+                        const total =
+                            resultado.total_modulos ??
+                            modulosSistema.length;
+
+                        badge.textContent =
+                            `${total} ${total === 1
+                                ? "módulo"
+                                : "módulos"
+                            }`;
+                    }
+                }
 
                 /*==================================================*
                 *=              CERRAR MODAL                      =*

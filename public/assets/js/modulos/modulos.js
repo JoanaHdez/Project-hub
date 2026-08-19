@@ -10,6 +10,9 @@ import {
     inicializarNuevoModulo,
 } from "./modulos/nuevo.js";
 
+import {
+    inicializarDetalleModulo,
+} from "./modulos/detalle.js";
 
 /*==================================================*
 *=                  MÓDULOS                        =*
@@ -18,11 +21,12 @@ import {
 document.addEventListener(
     "DOMContentLoaded",
     () => {
-
         inicializarSeleccionSistema();
 
-        inicializarModalNuevoModulo();
-
         inicializarNuevoModulo();
+
+        inicializarDetalleModulo();
+
+        inicializarModalNuevoModulo();
     },
 );
