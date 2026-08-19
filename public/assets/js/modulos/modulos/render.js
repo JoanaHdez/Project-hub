@@ -206,23 +206,49 @@ function crearTarjetaModulo(
                     </button>
 
 
-                    <a
-                        href="${
-                            escaparHtml(
-                                url || "#",
-                            )
-                        }"
+                    ${
+                        url
+                            ? `
+                                <a
+    href="${url ? escaparHtml(url) : "#"}"
 
-                        class="modulo-card__abrir"
+    class="
+        modulo-card__abrir
+        ${
+            url
+                ? ""
+                : "modulo-card__abrir--deshabilitado"
+        }
+    "
 
-                        ${
-                            url
-                                ? 'target="_blank" rel="noopener noreferrer"'
-                                : 'aria-disabled="true"'
-                        }
-                    >
-                        Abrir
-                    </a>
+    ${
+        url
+            ? 'target="_blank" rel="noopener noreferrer"'
+            : 'aria-disabled="true" tabindex="-1"'
+    }
+
+    title="${
+        url
+            ? "Abrir módulo"
+            : "URL no disponible"
+    }"
+>
+    Abrir
+</a>
+                            `
+                            : `
+                                <span
+                                    class="
+                                        modulo-card__abrir
+                                        modulo-card__abrir--deshabilitado
+                                    "
+                                    aria-disabled="true"
+                                    title="URL no disponible"
+                                >
+                                    Abrir
+                                </span>
+                            `
+                    }
 
                 </div>
 

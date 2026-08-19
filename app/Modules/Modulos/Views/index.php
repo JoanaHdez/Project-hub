@@ -39,10 +39,6 @@ Módulos | Project Hub
 
             <div>
 
-                <span class="selector-sistemas__etiqueta">
-                    Paso 1
-                </span>
-
                 <h2>
                     Selecciona un sistema
                 </h2>
@@ -53,13 +49,7 @@ Módulos | Project Hub
 
             </div>
 
-            <div class="sistema-card__meta">
 
-                <span class="sistema-card__badge">
-                    4 módulos
-                </span>
-
-            </div>
         </div>
 
         <div class="sistemas-grid">
