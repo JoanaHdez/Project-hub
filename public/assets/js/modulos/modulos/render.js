@@ -2,67 +2,185 @@
  *=              RENDER DE MÓDULOS                  =*
  *==================================================*/
 
-export function renderModulos({ modulos, contenedor }) {
-  if (!contenedor) {
-    return;
-  }
+export function renderModulos({
+    modulos,
+    contenedor,
+}) {
 
-  const lista = Array.isArray(modulos) ? modulos : [];
+    if (!contenedor) {
+        return;
+    }
 
-  contenedor.innerHTML = "";
+    const lista =
+        Array.isArray(modulos)
+            ? modulos
+            : [];
 
-  if (lista.length === 0) {
-    contenedor.innerHTML = `
+    contenedor.innerHTML = "";
+
+    if (lista.length === 0) {
+
+        contenedor.innerHTML = `
             <div class="estado-vacio">
                 No hay módulos registrados para este sistema.
             </div>
         `;
 
-    return;
-  }
+        return;
+    }
 
-  contenedor.innerHTML = lista
-    .map((modulo) => crearTarjetaModulo(modulo))
-    .join("");
+    contenedor.innerHTML =
+        lista
+            .map(
+                (modulo) =>
+                    crearTarjetaModulo(
+                        modulo,
+                    ),
+            )
+            .join("");
 }
+
 
 /*==================================================*
  *=              CREAR TARJETA                      =*
  *==================================================*/
 
-function crearTarjetaModulo(modulo) {
-  const tipo = escaparHtml(modulo.tipo || "Módulo");
+function crearTarjetaModulo(
+    modulo,
+) {
 
-  const nombre = escaparHtml(modulo.nombre || "Módulo sin nombre");
+    const tipo =
+        escaparHtml(
+            modulo.tipo ||
+            "Módulo",
+        );
 
-  const descripcion = escaparHtml(modulo.descripcion || "Sin descripción.");
+    const nombre =
+        escaparHtml(
+            modulo.nombre ||
+            "Módulo sin nombre",
+        );
 
-  const url = modulo.url || "";
+    const descripcion =
+        escaparHtml(
+            modulo.descripcion ||
+            "Sin descripción.",
+        );
 
-  return `
+    const url =
+        modulo.url || "";
+
+    const activo =
+        Boolean(
+            modulo.activo ?? true,
+        );
+
+
+    return `
         <article
-    class="modulo-card"
+            class="modulo-card"
 
-    data-modulo-id="${escaparHtml(modulo.id_modulo ?? "")}"
+            data-modulo-id="${escaparHtml(
+                modulo.id_modulo ?? "",
+            )}"
 
-    data-modulo-tipo="${escaparHtml(modulo.tipo ?? "")}"
+            data-modulo-tipo="${escaparHtml(
+                modulo.tipo ?? "",
+            )}"
 
-    data-modulo-nombre="${escaparHtml(modulo.nombre ?? "")}"
+            data-modulo-nombre="${escaparHtml(
+                modulo.nombre ?? "",
+            )}"
 
-    data-modulo-descripcion="${escaparHtml(modulo.descripcion ?? "")}"
+            data-modulo-descripcion="${escaparHtml(
+                modulo.descripcion ?? "",
+            )}"
 
-    data-modulo-url="${escaparHtml(modulo.url ?? "")}"
->
+            data-modulo-url="${escaparHtml(
+                modulo.url ?? "",
+            )}"
+
+            data-modulo-activo="${
+                activo ? "1" : "0"
+            }"
+        >
+
+
+            <!--==========================================
+            =              VISTA PREVIA                 =
+            ===========================================-->
 
             <div class="modulo-card__imagen">
                 Vista previa
             </div>
 
+
+            <!--==========================================
+            =                 CONTENIDO                  =
+            ===========================================-->
+
             <div class="modulo-card__contenido">
 
-                <span class="modulo-card__tipo">
-                    ${tipo}
-                </span>
+
+                <!--======================================
+                =          TIPO Y ESTADO                =
+                =======================================-->
+
+                <div class="modulo-card__encabezado">
+
+                    <span class="modulo-card__tipo">
+                        ${tipo}
+                    </span>
+
+
+                    <button
+                        type="button"
+
+                        class="
+                            modulo-card__estado-toggle
+                            ${
+                                activo
+                                    ? "modulo-card__estado-toggle--activo"
+                                    : "modulo-card__estado-toggle--inactivo"
+                            }
+                        "
+
+                        data-modulo-estado
+
+                        data-activo="${
+                            activo ? "1" : "0"
+                        }"
+
+                        aria-pressed="${
+                            activo ? "true" : "false"
+                        }"
+
+                        aria-label="${
+                            activo
+                                ? "Desactivar módulo"
+                                : "Activar módulo"
+                        }"
+
+                        title="${
+                            activo
+                                ? "Activo"
+                                : "Inactivo"
+                        }"
+                    >
+
+                        <span
+                            class="modulo-card__estado-toggle-punto"
+                            aria-hidden="true"
+                        ></span>
+
+                    </button>
+
+                </div>
+
+
+                <!--======================================
+                =              INFORMACIÓN              =
+                =======================================-->
 
                 <h3>
                     ${nombre}
@@ -71,6 +189,11 @@ function crearTarjetaModulo(modulo) {
                 <p>
                     ${descripcion}
                 </p>
+
+
+                <!--======================================
+                =                ACCIONES               =
+                =======================================-->
 
                 <div class="modulo-card__acciones">
 
@@ -82,13 +205,20 @@ function crearTarjetaModulo(modulo) {
                         Ver ficha
                     </button>
 
+
                     <a
-                        href="${escaparHtml(url || "#")}"
+                        href="${
+                            escaparHtml(
+                                url || "#",
+                            )
+                        }"
+
                         class="modulo-card__abrir"
+
                         ${
-                          url
-                            ? 'target="_blank" rel="noopener noreferrer"'
-                            : 'aria-disabled="true"'
+                            url
+                                ? 'target="_blank" rel="noopener noreferrer"'
+                                : 'aria-disabled="true"'
                         }
                     >
                         Abrir
@@ -102,14 +232,22 @@ function crearTarjetaModulo(modulo) {
     `;
 }
 
+
 /*==================================================*
  *=                ESCAPAR HTML                     =*
  *==================================================*/
 
-function escaparHtml(valor) {
-  const elemento = document.createElement("div");
+function escaparHtml(
+    valor,
+) {
 
-  elemento.textContent = valor ?? "";
+    const elemento =
+        document.createElement(
+            "div",
+        );
 
-  return elemento.innerHTML;
+    elemento.textContent =
+        valor ?? "";
+
+    return elemento.innerHTML;
 }

@@ -487,6 +487,66 @@
   display: none !important;
 }
 
+
+/*======================================
+=       ESTADO DEL MÓDULO             =
+======================================*/
+
+.modulo-card__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modulo-card__estado-toggle {
+  position: relative;
+
+  width: 38px;
+  height: 22px;
+
+  flex: 0 0 auto;
+
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.modulo-card__estado-toggle--activo {
+  background-color: #22c55e;
+}
+
+.modulo-card__estado-toggle--inactivo {
+  background-color: #ef4444;
+}
+
+.modulo-card__estado-toggle-punto {
+  position: absolute;
+
+  top: 3px;
+  left: 3px;
+
+  width: 16px;
+  height: 16px;
+
+  border-radius: 50%;
+  background-color: #ffffff;
+
+  transition: transform 0.2s ease;
+}
+
+.modulo-card__estado-toggle--activo
+.modulo-card__estado-toggle-punto {
+  transform: translateX(16px);
+}
+
+
 @keyframes modulosEntrada {
   from {
     opacity: 0;

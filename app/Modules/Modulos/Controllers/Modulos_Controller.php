@@ -607,4 +607,147 @@ class Modulos_Controller extends BaseController
                 $totalModulos,
             ]);
     }
+
+    /*==================================================
+    =              CAMBIAR ESTADO MÓDULO               =
+    ==================================================*/
+
+    public function cambiarEstado(
+        int $idModulo
+    ) {
+        $datos =
+            $this->request
+            ->getJSON(true);
+
+        if (!is_array($datos)) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'Los datos enviados no son válidos.',
+                ]);
+        }
+
+
+        /*==================================================
+        =              VALIDAR ESTADO                     =
+        ==================================================*/
+
+        if (
+            !array_key_exists(
+                'activo',
+                $datos
+            )
+        ) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'No se recibió el estado del módulo.',
+                ]);
+        }
+
+        $activo =
+            filter_var(
+                $datos['activo'],
+                FILTER_VALIDATE_BOOLEAN,
+                FILTER_NULL_ON_FAILURE
+            );
+
+        if ($activo === null) {
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'El estado enviado no es válido.',
+                ]);
+        }
+
+
+        /*==================================================
+        =              BUSCAR MÓDULO                      =
+        ==================================================*/
+
+        $modulos =
+            $this->moduloStorage
+            ->obtenerTodos();
+
+        $indiceModulo = null;
+
+        foreach (
+            $modulos as
+            $indice => $modulo
+        ) {
+            if (
+                (int) (
+                    $modulo['id_modulo']
+                    ?? 0
+                ) === $idModulo
+            ) {
+                $indiceModulo =
+                    $indice;
+
+                break;
+            }
+        }
+
+
+        /*==================================================
+        =              VALIDAR EXISTENCIA                 =
+        ==================================================*/
+
+        if ($indiceModulo === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                    'No se encontró el módulo solicitado.',
+                ]);
+        }
+
+
+        /*==================================================
+        =              ACTUALIZAR ESTADO                  =
+        ==================================================*/
+
+        $modulos[$indiceModulo]['activo'] =
+            $activo;
+
+        $this->moduloStorage
+            ->guardarTodos(
+                $modulos
+            );
+
+
+        /*==================================================
+        =                  RESPUESTA                       =
+        ==================================================*/
+
+        return $this->response
+            ->setJSON([
+                'ok' => true,
+
+                'mensaje' =>
+                $activo
+                    ? 'Módulo activado correctamente.'
+                    : 'Módulo desactivado correctamente.',
+
+                'id_modulo' =>
+                $idModulo,
+
+                'activo' =>
+                $activo,
+
+                'modulo' =>
+                $modulos[$indiceModulo],
+            ]);
+    }
 }

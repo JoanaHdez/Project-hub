@@ -15,4 +15,6 @@ $routes->group('modulos', [
     $routes->put('(:num)', 'Modulos_Controller::actualizar/$1');
 
     $routes->delete('(:num)', 'Modulos_Controller::eliminar/$1');
+
+    $routes->patch('(:num)/estado', 'Modulos_Controller::cambiarEstado/$1');
 });

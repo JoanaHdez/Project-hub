@@ -22,6 +22,10 @@ import {
     inicializarEliminarModulo,
 } from "./modulos/eliminar.js";
 
+import {
+    inicializarEstadoModulo,
+} from "./modulos/estado.js";
+
 /*==================================================*
 *=                  MÓDULOS                        =*
 *==================================================*/
@@ -40,5 +44,7 @@ document.addEventListener(
         inicializarEditarModulo();
 
         inicializarEliminarModulo();
+
+        inicializarEstadoModulo();
     },
 );
