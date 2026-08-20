@@ -3,7 +3,7 @@
         "id_modulo": 1,
         "id_sistema": 1,
         "nombre": "Formulario principal",
-        "tipo": "Registro",
+        "tipo": "Registro 1",
         "descripcion": "Captura y validación de participantes.",
         "url": "",
         "imagen": "http://localhost:8080/uploads/modulos/modulo-1-1787185840.png",

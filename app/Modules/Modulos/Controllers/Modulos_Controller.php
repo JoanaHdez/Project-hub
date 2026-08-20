@@ -8,12 +8,15 @@ use App\Modules\Sistemas\Services\Sistema_StorageService;
 use App\Modules\Proyectos\Services\Proyecto_StorageService;
 use App\Modules\Modulos\Services\Modulo_StorageService;
 
+use App\Services\Actividad_StorageService;
+
 
 class Modulos_Controller extends BaseController
 {
     private Sistema_StorageService $sistemaStorage;
     private Proyecto_StorageService $proyectoStorage;
     private Modulo_StorageService $moduloStorage;
+    private Actividad_StorageService $actividadStorage;
 
 
     public function __construct()
@@ -26,6 +29,9 @@ class Modulos_Controller extends BaseController
 
         $this->moduloStorage =
             new Modulo_StorageService();
+
+        $this->actividadStorage =
+            new Actividad_StorageService();
     }
 
 
@@ -340,6 +346,24 @@ class Modulos_Controller extends BaseController
 
 
         /*==================================================
+        =              REGISTRAR ACTIVIDAD                 =
+        ==================================================*/
+
+        $this->registrarActividad(
+            'Agregó',
+            (int) $modulo['id_modulo'],
+            'Agregó el módulo "'
+                . $nombre
+                . '" al sistema "'
+                . (
+                    $sistema['nombre']
+                    ?? 'Sistema'
+                )
+                . '".'
+        );
+
+
+        /*==================================================
         =                  RESPUESTA                       =
         ==================================================*/
 
@@ -535,16 +559,10 @@ class Modulos_Controller extends BaseController
                     )
                 ),
 
-            /*
-             * Conservamos la imagen existente.
-             */
             'imagen' =>
                 $moduloExistente['imagen']
                 ?? '',
 
-            /*
-             * Conservamos el estado actual.
-             */
             'activo' =>
                 (bool) (
                     $moduloExistente['activo']
@@ -559,6 +577,24 @@ class Modulos_Controller extends BaseController
             ->guardarTodos(
                 $modulos
             );
+
+
+        /*==================================================
+        =              REGISTRAR ACTIVIDAD                 =
+        ==================================================*/
+
+        $this->registrarActividad(
+            'Editó',
+            $idModulo,
+            'Editó el módulo "'
+                . $nombre
+                . '" del sistema "'
+                . (
+                    $sistema['nombre']
+                    ?? 'Sistema'
+                )
+                . '".'
+        );
 
 
         /*==================================================
@@ -768,6 +804,22 @@ class Modulos_Controller extends BaseController
 
 
         /*==================================================
+        =              REGISTRAR ACTIVIDAD                 =
+        ==================================================*/
+
+        $this->registrarActividad(
+            'Editó',
+            $idModulo,
+            'Actualizó la imagen del módulo "'
+                . (
+                    $moduloActualizado['nombre']
+                    ?? 'Módulo'
+                )
+                . '".'
+        );
+
+
+        /*==================================================
         =                  RESPUESTA                       =
         ==================================================*/
 
@@ -817,11 +869,6 @@ class Modulos_Controller extends BaseController
             }
         }
 
-
-        /*==================================================
-        =              VALIDAR EXISTENCIA                  =
-        ==================================================*/
-
         if ($moduloEncontrado === null) {
 
             return $this->response
@@ -843,6 +890,12 @@ class Modulos_Controller extends BaseController
             (int) (
                 $moduloEncontrado['id_sistema']
                 ?? 0
+            );
+
+        $sistema =
+            $this->sistemaStorage
+            ->obtenerPorId(
+                $idSistema
             );
 
 
@@ -879,6 +932,27 @@ class Modulos_Controller extends BaseController
                     $idSistema
                 )
             );
+
+
+        /*==================================================
+        =              REGISTRAR ACTIVIDAD                 =
+        ==================================================*/
+
+        $this->registrarActividad(
+            'Eliminó',
+            $idModulo,
+            'Eliminó el módulo "'
+                . (
+                    $moduloEncontrado['nombre']
+                    ?? 'Módulo'
+                )
+                . '" del sistema "'
+                . (
+                    $sistema['nombre']
+                    ?? 'Sistema'
+                )
+                . '".'
+        );
 
 
         /*==================================================
@@ -926,11 +1000,6 @@ class Modulos_Controller extends BaseController
                         'Los datos enviados no son válidos.',
                 ]);
         }
-
-
-        /*==================================================
-        =              VALIDAR ESTADO                     =
-        ==================================================*/
 
         if (
             !array_key_exists(
@@ -999,11 +1068,6 @@ class Modulos_Controller extends BaseController
             }
         }
 
-
-        /*==================================================
-        =              VALIDAR EXISTENCIA                 =
-        ==================================================*/
-
         if ($indiceModulo === null) {
 
             return $this->response
@@ -1031,6 +1095,28 @@ class Modulos_Controller extends BaseController
 
 
         /*==================================================
+        =              REGISTRAR ACTIVIDAD                 =
+        ==================================================*/
+
+        $this->registrarActividad(
+            $activo
+                ? 'Activó'
+                : 'Desactivó',
+            $idModulo,
+            (
+                $activo
+                    ? 'Activó el módulo "'
+                    : 'Desactivó el módulo "'
+            )
+                . (
+                    $modulos[$indiceModulo]['nombre']
+                    ?? 'Módulo'
+                )
+                . '".'
+        );
+
+
+        /*==================================================
         =                  RESPUESTA                       =
         ==================================================*/
 
@@ -1052,5 +1138,51 @@ class Modulos_Controller extends BaseController
                 'modulo' =>
                     $modulos[$indiceModulo],
             ]);
+    }
+
+
+    /*==================================================
+    =              REGISTRAR ACTIVIDAD                 =
+    ==================================================*/
+
+    private function registrarActividad(
+        string $accion,
+        int $idModulo,
+        string $detalle
+    ): void {
+        try {
+
+            $this->actividadStorage
+                ->registrar([
+                    'bloque' =>
+                        'Módulos',
+
+                    'accion' =>
+                        $accion,
+
+                    'entidad_tipo' =>
+                        'Módulo',
+
+                    'entidad_id' =>
+                        $idModulo,
+
+                    'detalle' =>
+                        $detalle,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'No fue posible registrar actividad del módulo {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idModulo,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+        }
     }
 }

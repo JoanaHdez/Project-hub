@@ -42,5 +42,16 @@
         "entidad_id": 1,
         "detalle": "Editó el sistema \"Extorsión 1\".",
         "fecha_hora": "2026-08-20 19:17:20"
+    },
+    {
+        "id_actividad": 5,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Editó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 1,
+        "detalle": "Editó el módulo \"Formulario principal\" del sistema \"Extorsión 1\".",
+        "fecha_hora": "2026-08-20 19:19:49"
     }
 ]
