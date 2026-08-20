@@ -16,4 +16,11 @@
 
 </div>
 
+<script
+    type="module"
+    src="<?= base_url(
+        'assets/js/dashboard/actividad.js'
+    ) ?>"
+></script>
+
 <?= $this->endSection() ?>

@@ -175,3 +175,191 @@
     color: #667085;
     line-height: 1.6;
 }
+
+/*==================================================
+=              ACTIVIDAD RECIENTE                  =
+==================================================*/
+
+.dashboard-actividad__tabla-contenedor {
+    overflow-x: auto;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+
+    background: #ffffff;
+}
+
+.dashboard-actividad__tabla {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.dashboard-actividad__tabla thead {
+    background: #f8fafc;
+}
+
+.dashboard-actividad__tabla th {
+    padding: 13px 16px;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    color: #64748b;
+
+    font-size: 0.78rem;
+    font-weight: 700;
+
+    text-align: left;
+}
+
+.dashboard-actividad__tabla td {
+    padding: 14px 16px;
+
+    border-bottom: 1px solid #f1f5f9;
+
+    color: #334155;
+
+    font-size: 0.88rem;
+
+    vertical-align: middle;
+}
+
+.dashboard-actividad__tabla
+tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.dashboard-actividad__tabla
+tbody tr:hover {
+    background: #f8fafc;
+}
+
+
+/*==================================================
+=                  USUARIO                         =
+==================================================*/
+
+.actividad-usuario {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    font-weight: 600;
+
+    color: #0f172a;
+}
+
+.actividad-usuario__avatar {
+    width: 30px;
+    height: 30px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #f1f5f9;
+
+    font-size: 0.85rem;
+}
+
+
+/*==================================================
+=                   BLOQUE                         =
+==================================================*/
+
+.actividad-bloque {
+    display: inline-flex;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+
+/*==================================================
+=                   ACCIÓN                         =
+==================================================*/
+
+.actividad-accion {
+    font-weight: 600;
+
+    color: #334155;
+}
+
+.actividad-fecha {
+    color: #64748b;
+
+    white-space: nowrap;
+}
+
+
+/*==================================================
+=              DETALLE ACTIVIDAD                   =
+==================================================*/
+
+.actividad-detalle {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.actividad-detalle__fila {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    padding-bottom: 12px;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.actividad-detalle__fila span,
+.actividad-detalle__descripcion > span {
+    color: #64748b;
+
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.actividad-detalle__fila strong {
+    color: #0f172a;
+
+    text-align: right;
+}
+
+.actividad-detalle__descripcion p {
+    margin: 8px 0 0;
+
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    background: #f8fafc;
+
+    color: #334155;
+
+    line-height: 1.6;
+}
+
+
+/*==================================================
+=                  RESPONSIVE                      =
+==================================================*/
+
+@media (max-width: 700px) {
+
+    .dashboard-actividad__tabla {
+        min-width: 680px;
+    }
+}
