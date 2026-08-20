@@ -1,23 +1,10 @@
 <?= $this->extend('layouts/head') ?>
 
+<?= $this->section('content') ?>
+
 <?= $this->section('title') ?>
 Documentos | Project Hub
 <?= $this->endSection() ?>
-
-
-<?= $this->section('styles') ?>
-
-<link
-    rel="stylesheet"
-    href="<?= base_url(
-        'assets/css/documentos/documentos.css'
-    ) ?>"
->
-
-<?= $this->endSection() ?>
-
-
-<?= $this->section('content') ?>
 
 <section class="documentos-page">
 

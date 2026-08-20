@@ -20,8 +20,8 @@
             Módulos
         </a>
 
-        <a href="#" class="app-sidebar__link">
-            Documentación
+        <a href="<?= base_url('documentos') ?>" class="app-sidebar__link">
+            Documentos
         </a>
 
 

@@ -1,0 +1,498 @@
+/*==================================================
+=                   DOCUMENTOS                     =
+==================================================*/
+
+.documentos-page {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+
+/*==================================================
+=                   ENCABEZADO                     =
+==================================================*/
+
+.documentos-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    padding: 28px 32px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+
+    background: #ffffff;
+}
+
+.documentos-header__contenido {
+    max-width: 720px;
+}
+
+.documentos-header__eyebrow {
+    display: inline-block;
+
+    margin-bottom: 8px;
+
+    color: #2563eb;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+.documentos-header__titulo {
+    margin: 0 0 10px;
+
+    color: #0f172a;
+
+    font-size: 2rem;
+}
+
+.documentos-header__descripcion {
+    margin: 0;
+
+    color: #64748b;
+
+    line-height: 1.7;
+}
+
+.documentos-header__acciones {
+    flex: 0 0 auto;
+}
+
+
+/*==================================================
+=              SISTEMAS CON DOCUMENTOS             =
+==================================================*/
+
+.documentos-sistemas {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.documentos-sistemas__encabezado {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.documentos-sistemas__encabezado h2 {
+    margin: 0 0 8px;
+
+    color: #0f172a;
+}
+
+.documentos-sistemas__encabezado p {
+    margin: 0;
+
+    color: #64748b;
+}
+
+
+/*==================================================
+=                GRID DE SISTEMAS                  =
+==================================================*/
+
+.documentos-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+
+/*==================================================
+=             TARJETA DE SISTEMA                   =
+==================================================*/
+
+.documento-sistema-card {
+    position: relative;
+
+    min-width: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        auto minmax(0, 1fr) auto;
+
+    align-items: center;
+
+    gap: 16px;
+
+    padding: 20px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+
+    background: #ffffff;
+
+    color: inherit;
+
+    text-decoration: none;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.documento-sistema-card:hover {
+    transform: translateY(-3px);
+
+    border-color: #bfdbfe;
+
+    background: #f8fbff;
+
+    box-shadow:
+        0 14px 30px
+        rgba(15, 23, 42, 0.08);
+}
+
+
+/*==================================================
+=                 ICONO CARPETA                    =
+==================================================*/
+
+.documento-sistema-card__icono {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    border-radius: 12px;
+
+    background: #eff6ff;
+
+    font-size: 1.4rem;
+}
+
+
+/*==================================================
+=               CONTENIDO TARJETA                  =
+==================================================*/
+
+.documento-sistema-card__contenido {
+    min-width: 0;
+}
+
+.documento-sistema-card__proyecto {
+    display: block;
+
+    margin-bottom: 5px;
+
+    overflow: hidden;
+
+    color: #2563eb;
+
+    font-size: 0.78rem;
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.documento-sistema-card h3 {
+    margin: 0 0 9px;
+
+    overflow: hidden;
+
+    color: #0f172a;
+
+    font-size: 1rem;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.documento-sistema-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: #64748b;
+
+    font-size: 0.82rem;
+}
+
+.documento-sistema-card__meta span {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    background: #f1f5f9;
+
+    color: #475569;
+
+    font-weight: 600;
+}
+
+
+/*==================================================
+=                   FLECHA                         =
+==================================================*/
+
+.documento-sistema-card__flecha {
+    flex: 0 0 auto;
+
+    color: #94a3b8;
+
+    font-size: 1.2rem;
+    font-weight: 700;
+
+    transition:
+        transform 0.2s ease,
+        color 0.2s ease;
+}
+
+.documento-sistema-card:hover
+.documento-sistema-card__flecha {
+    transform: translateX(3px);
+
+    color: #2563eb;
+}
+
+
+/*==================================================
+=                 ESTADO VACÍO                     =
+==================================================*/
+
+.documentos-vacio {
+    min-height: 300px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    padding: 40px 24px;
+
+    border: 1px dashed #cbd5e1;
+    border-radius: 18px;
+
+    background: #ffffff;
+
+    text-align: center;
+}
+
+.documentos-vacio__icono {
+    width: 64px;
+    height: 64px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 4px;
+
+    border-radius: 16px;
+
+    background: #f1f5f9;
+
+    font-size: 2rem;
+}
+
+.documentos-vacio h3 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 1.15rem;
+}
+
+.documentos-vacio p {
+    max-width: 480px;
+
+    margin: 0 0 8px;
+
+    color: #64748b;
+
+    line-height: 1.6;
+}
+
+/*==================================================
+=              FORMULARIO DOCUMENTO                =
+==================================================*/
+
+.documento-formulario {
+    padding: 28px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+
+    background: #ffffff;
+}
+
+.documento-formulario .form-grupo select,
+.documento-formulario .form-grupo input,
+.documento-formulario .form-grupo textarea {
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    font: inherit;
+}
+
+.documento-formulario .form-grupo select:focus,
+.documento-formulario .form-grupo input:focus,
+.documento-formulario .form-grupo textarea:focus {
+    outline: none;
+
+    border-color: #98a2b3;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(152, 162, 179, 0.15);
+}
+
+.documento-formulario__acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    margin-top: 24px;
+}
+
+/*==================================================
+=              TABLA DE DOCUMENTOS                 =
+==================================================*/
+
+.tabla-contenedor {
+    overflow-x: auto;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+
+    background: #ffffff;
+}
+
+.tabla {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.tabla thead {
+    background: #f8fafc;
+}
+
+.tabla th {
+    padding: 14px 16px;
+
+    color: #475569;
+
+    font-size: 0.8rem;
+    font-weight: 700;
+
+    text-align: left;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.tabla td {
+    padding: 16px;
+
+    color: #334155;
+
+    font-size: 0.9rem;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.tabla tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.tabla tbody tr:hover {
+    background: #f8fafc;
+}
+
+
+/*==================================================
+=          ACCIONES DE DOCUMENTO                   =
+==================================================*/
+
+.documento-tabla__acciones {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.boton--pequeno {
+    min-height: 34px;
+
+    padding: 7px 10px;
+
+    font-size: 0.8rem;
+}
+
+.documentos-header__acciones {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/*==================================================
+=                  RESPONSIVE                      =
+==================================================*/
+
+@media (max-width: 1100px) {
+
+    .documentos-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .documentos-header {
+        align-items: stretch;
+        flex-direction: column;
+
+        padding: 24px;
+    }
+
+    .documentos-header__acciones {
+        width: 100%;
+    }
+
+    .documentos-header__acciones .boton {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+    .documentos-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .documento-sistema-card {
+        padding: 18px;
+    }
+}
