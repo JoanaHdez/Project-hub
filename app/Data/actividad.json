@@ -75,5 +75,38 @@
         "entidad_id": 24,
         "detalle": "Actualizó las observaciones técnicas de la API \"API prueba 16-\".",
         "fecha_hora": "2026-08-20 19:28:16"
+    },
+    {
+        "id_actividad": 8,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Documentos",
+        "accion": "Eliminó",
+        "entidad_tipo": "Documento",
+        "entidad_id": 4,
+        "detalle": "Eliminó el archivo \"MapaClausuras_01 agos 2026.docx\" del sistema \"Project Hub\".",
+        "fecha_hora": "2026-08-20 23:36:16"
+    },
+    {
+        "id_actividad": 9,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Documentos",
+        "accion": "Eliminó",
+        "entidad_tipo": "Documento",
+        "entidad_id": 3,
+        "detalle": "Eliminó el archivo \"MapaClausuras_01 agos 2026.pdf\" del sistema \"prueba 3\".",
+        "fecha_hora": "2026-08-20 23:36:20"
+    },
+    {
+        "id_actividad": 10,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Documentos",
+        "accion": "Eliminó",
+        "entidad_tipo": "Documento",
+        "entidad_id": 2,
+        "detalle": "Eliminó el archivo \"documento-2-1787247686.pdf\" del sistema \"8.º Congreso\".",
+        "fecha_hora": "2026-08-20 23:36:24"
     }
 ]
