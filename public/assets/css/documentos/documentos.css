@@ -99,7 +99,7 @@
 }
 
 .documentos-sistemas__encabezado p {
-    margin: 0;
+    margin-bottom: 16px;
 
     color: #64748b;
 }
