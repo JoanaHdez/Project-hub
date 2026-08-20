@@ -192,8 +192,12 @@ Módulos | Project Hub
 
 </div>
 
-        <div class="modulos-grid" data-contenedor-modulos>
-        </div>
+        <div class="explorador-modulos__contenido">
+
+    <div class="modulos-grid" data-contenedor-modulos>
+    </div>
+
+</div>
 
     </section>
 

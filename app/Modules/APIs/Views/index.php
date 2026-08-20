@@ -2,18 +2,23 @@
 
 <?= $this->section('content') ?>
 
-<?= view('App\Modules\APIs\Views\partials\encabezado') ?>
+<section class="apis">
 
-<div class="modulo-grid">
+    <?= view('App\Modules\APIs\Views\partials\encabezado') ?>
 
-    <?= view(
-        'App\Modules\APIs\Views\partials\catalogo',
-        ['apis' => $apis]
-    ) ?>
+    <div class="modulo-grid">
 
-    <?= view('App\Modules\APIs\Views\partials\documentacion') ?>
+        <?= view(
+            'App\Modules\APIs\Views\partials\catalogo',
+            ['apis' => $apis]
+        ) ?>
 
-</div>
+        <?= view('App\Modules\APIs\Views\partials\documentacion') ?>
+
+    </div>
+
+</section>
+
 
 <?= view('App\Modules\APIs\Views\modals\ficha_tecnica') ?>
 
@@ -44,6 +49,5 @@
         'proyectos' => $proyectos ?? [],
     ]
 ) ?>
-
 
 <?= $this->endSection() ?>
