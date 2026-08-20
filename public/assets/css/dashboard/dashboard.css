@@ -15,6 +15,10 @@
     background-color: #f5f7fa;
 }
 
+.dashboard-actividad .boton {
+    margin-top: 12px;
+}
+
 /*==================================================
 =                     FOOTER                       =
 ==================================================*/
@@ -112,6 +116,7 @@
 
     gap: 18px;
 }
+
 /*==================================================
 =               SECCIONES GENERALES                =
 ==================================================*/
@@ -446,9 +451,11 @@ tbody tr:hover {
 .actividad-page {
     display: flex;
     flex-direction: column;
-    gap: 24px;
-}
 
+    gap: 20px;
+
+    padding: 16px 20px 24px;
+}
 .actividad-header {
     display: flex;
     align-items: flex-start;

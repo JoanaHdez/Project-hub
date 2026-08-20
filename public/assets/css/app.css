@@ -23,14 +23,42 @@
 @import url("./responsive.css");
 
 
+body,
+.main-content {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+}
 
- /*==================================================
+/*==================================================
 =          LAYOUT FIJO PROJECT HUB                 =
 ==================================================*/
 
 :root {
     --app-header-altura: 68px;
     --app-sidebar-ancho: 220px;
+
+    --color-fondo: #f5f7fa;
+    --color-superficie: #ffffff;
+
+    --color-borde: #e2e8f0;
+    --color-borde-fuerte: #cbd5e1;
+
+    --color-texto: #0f172a;
+    --color-texto-secundario: #64748b;
+
+    --color-primario: #3047d8;
+    --color-primario-hover: #263bb9;
+    --color-primario-suave: #eef2ff;
+
+    --color-exito: #15803d;
+    --color-exito-suave: #f0fdf4;
+
+    --color-peligro: #dc2626;
+    --color-peligro-suave: #fef2f2;
+
+    --radio-sm: 8px;
+    --radio-md: 12px;
+    --radio-lg: 16px;
 }
 
 

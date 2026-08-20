@@ -53,3 +53,23 @@
     font-size: 0.9rem;
     color: #475467;
 }
+
+.app-header__logo {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #eef2ff;
+    color: var(--color-primario);
+
+    border: 1px solid #e0e7ff;
+    border-radius: 10px;
+
+    font-size: 0.9rem;
+    font-weight: 700;
+}
