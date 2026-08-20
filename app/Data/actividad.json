@@ -31,5 +31,16 @@
         "entidad_id": 1,
         "detalle": "Editó el proyecto \"Proyecto Extorsión\".",
         "fecha_hora": "2026-08-20 19:14:14"
+    },
+    {
+        "id_actividad": 4,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Editó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Editó el sistema \"Extorsión 1\".",
+        "fecha_hora": "2026-08-20 19:17:20"
     }
 ]
