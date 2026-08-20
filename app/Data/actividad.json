@@ -1,0 +1,13 @@
+[
+    {
+        "id_actividad": 1,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Documentos",
+        "accion": "Agregó",
+        "entidad_tipo": "Documento",
+        "entidad_id": 5,
+        "detalle": "Agregó el archivo \"MapaClausuras_01 agos 2026.pdf\" al sistema \"8.º Congreso\".",
+        "fecha_hora": "2026-08-20 19:03:21"
+    }
+]

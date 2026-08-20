@@ -8,12 +8,15 @@ use App\Modules\Sistemas\Services\Sistema_StorageService;
 use App\Modules\Proyectos\Services\Proyecto_StorageService;
 use App\Modules\Documentos\Services\Documento_StorageService;
 
+use App\Services\Actividad_StorageService;
+
 
 class Documentos_Controller extends BaseController
 {
     private Sistema_StorageService $sistemaStorage;
     private Proyecto_StorageService $proyectoStorage;
     private Documento_StorageService $documentoStorage;
+    private Actividad_StorageService $actividadStorage;
 
 
     public function __construct()
@@ -26,6 +29,9 @@ class Documentos_Controller extends BaseController
 
         $this->documentoStorage =
             new Documento_StorageService();
+
+        $this->actividadStorage =
+            new Actividad_StorageService();
     }
 
 
@@ -607,6 +613,57 @@ class Documentos_Controller extends BaseController
                 ]);
         }
 
+        /*==================================================
+        =              REGISTRAR ACTIVIDAD                 =
+        ==================================================*/
+
+        try {
+
+            $nombreSistema =
+                $sistema['nombre']
+                ?? 'Sistema';
+
+            $this->actividadStorage
+                ->registrar([
+                    'bloque' =>
+                    'Documentos',
+
+                    'accion' =>
+                    'Agregó',
+
+                    'entidad_tipo' =>
+                    'Documento',
+
+                    'entidad_id' =>
+                    $idDocumento,
+
+                    'detalle' =>
+                    'Agregó el archivo "'
+                        . $nombreOriginal
+                        . '" al sistema "'
+                        . $nombreSistema
+                        . '".',
+                ]);
+        } catch (\Throwable $error) {
+
+                /*
+        * La auditoría no debe impedir
+        * que una operación ya realizada
+        * sea considerada exitosa.
+        */
+
+            log_message(
+                'error',
+                'No fue posible registrar la actividad del documento {id}: {mensaje}',
+                [
+                    'id' =>
+                    $idDocumento,
+
+                    'mensaje' =>
+                    $error->getMessage(),
+                ]
+            );
+        }
 
         /*==================================================
         =                  RESPUESTA                       =

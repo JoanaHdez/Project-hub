@@ -1,47 +1,141 @@
 <section class="dashboard-seccion">
+
+    <!--==============================================
+    =                 ENCABEZADO                    =
+    ===============================================-->
+
     <div class="dashboard-seccion__encabezado">
-        <h3>Accesos rápidos</h3>
+
+        <h3>
+            Accesos rápidos
+        </h3>
 
         <p>
-            Accede directamente a las acciones principales de Project Hub.
+            Accede directamente a las acciones principales
+            de Project Hub.
         </p>
+
     </div>
+
+
+    <!--==============================================
+    =              ACCESOS RÁPIDOS                  =
+    ===============================================-->
 
     <div class="accesos-rapidos">
-        <a href="#" class="acceso-rapido">
-            <span class="acceso-rapido__icono">📁</span>
+
+
+        <!--==========================================
+        =                 PROYECTOS                  =
+        ===========================================-->
+
+        <a
+            href="<?= base_url('proyectos') ?>"
+            class="acceso-rapido"
+        >
+
+            <span class="acceso-rapido__icono">
+                📁
+            </span>
 
             <span class="acceso-rapido__contenido">
-                <strong>Registrar proyecto</strong>
-                <small>Agregar un nuevo proyecto al sistema.</small>
+
+                <strong>
+                    Proyectos
+                </strong>
+
+                <small>
+                    Consulta y administra los proyectos.
+                </small>
+
             </span>
+
         </a>
 
-        <a href="#" class="acceso-rapido">
-            <span class="acceso-rapido__icono">🖥️</span>
+
+        <!--==========================================
+        =                  SISTEMAS                  =
+        ===========================================-->
+
+        <a
+            href="<?= base_url('sistemas') ?>"
+            class="acceso-rapido"
+        >
+
+            <span class="acceso-rapido__icono">
+                🖥️
+            </span>
 
             <span class="acceso-rapido__contenido">
-                <strong>Registrar sistema</strong>
-                <small>Asociar un sistema a un proyecto.</small>
+
+                <strong>
+                    Sistemas
+                </strong>
+
+                <small>
+                    Consulta y administra los sistemas.
+                </small>
+
             </span>
+
         </a>
 
-        <a href="#" class="acceso-rapido">
-            <span class="acceso-rapido__icono">🧩</span>
+
+        <!--==========================================
+        =                  MÓDULOS                   =
+        ===========================================-->
+
+        <a
+            href="<?= base_url('modulos') ?>"
+            class="acceso-rapido"
+        >
+
+            <span class="acceso-rapido__icono">
+                🧩
+            </span>
 
             <span class="acceso-rapido__contenido">
-                <strong>Registrar módulo</strong>
-                <small>Agregar un módulo a un sistema.</small>
+
+                <strong>
+                    Módulos
+                </strong>
+
+                <small>
+                    Explora los módulos registrados.
+                </small>
+
             </span>
+
         </a>
 
-        <a href="#" class="acceso-rapido">
-            <span class="acceso-rapido__icono">🔌</span>
+
+        <!--==========================================
+        =                    APIs                    =
+        ===========================================-->
+
+        <a
+            href="<?= base_url('apis') ?>"
+            class="acceso-rapido"
+        >
+
+            <span class="acceso-rapido__icono">
+                🔌
+            </span>
 
             <span class="acceso-rapido__contenido">
-                <strong>Documentar API</strong>
-                <small>Registrar la ficha técnica de una API.</small>
+
+                <strong>
+                    APIs
+                </strong>
+
+                <small>
+                    Consulta y administra las APIs.
+                </small>
+
             </span>
+
         </a>
+
     </div>
+
 </section>
