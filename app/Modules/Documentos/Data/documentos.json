@@ -34,17 +34,5 @@
         "tamano": 8658954,
         "descripcion": "",
         "fecha_subida": "2026-08-20 18:18:47"
-    },
-    {
-        "id_documento": 5,
-        "id_sistema": 2,
-        "nombre_original": "MapaClausuras_01 agos 2026.pdf",
-        "nombre_archivo": "documento-5-1787252601.pdf",
-        "ruta": "uploads/documentos/2/documento-5-1787252601.pdf",
-        "tipo": "PDF",
-        "extension": "pdf",
-        "tamano": 1406621,
-        "descripcion": "",
-        "fecha_subida": "2026-08-20 19:03:21"
     }
 ]

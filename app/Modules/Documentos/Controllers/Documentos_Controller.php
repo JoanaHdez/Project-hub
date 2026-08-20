@@ -646,7 +646,7 @@ class Documentos_Controller extends BaseController
                 ]);
         } catch (\Throwable $error) {
 
-                /*
+            /*
         * La auditoría no debe impedir
         * que una operación ya realizada
         * sea considerada exitosa.
@@ -932,6 +932,61 @@ class Documentos_Controller extends BaseController
                 )
             );
 
+        /*==================================================
+        =              REGISTRAR ACTIVIDAD                 =
+        ==================================================*/
+
+        try {
+
+            $sistema =
+                $this->sistemaStorage
+                ->obtenerPorId(
+                    $idSistema
+                );
+
+            $nombreSistema =
+                $sistema['nombre']
+                ?? 'Sistema';
+
+            $nombreDocumento =
+                $documentoEncontrado['nombre_original']
+                ?? 'Documento';
+
+            $this->actividadStorage
+                ->registrar([
+                    'bloque' =>
+                    'Documentos',
+
+                    'accion' =>
+                    'Eliminó',
+
+                    'entidad_tipo' =>
+                    'Documento',
+
+                    'entidad_id' =>
+                    $idDocumento,
+
+                    'detalle' =>
+                    'Eliminó el archivo "'
+                        . $nombreDocumento
+                        . '" del sistema "'
+                        . $nombreSistema
+                        . '".',
+                ]);
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'No fue posible registrar la actividad de eliminación del documento {id}: {mensaje}',
+                [
+                    'id' =>
+                    $idDocumento,
+
+                    'mensaje' =>
+                    $error->getMessage(),
+                ]
+            );
+        }
 
         /*==================================================
         =                  RESPUESTA                       =
