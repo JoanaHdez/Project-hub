@@ -53,7 +53,9 @@
 }
 
 .sistemas-catalogo__encabezado {
-    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .sistemas-catalogo__encabezado h3 {
@@ -76,6 +78,8 @@
     max-height: 510px;
     overflow-y: auto;
     padding-right: 6px;
+
+    margin-top: 16px;
 }
 
 .sistemas-catalogo__lista {
