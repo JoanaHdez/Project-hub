@@ -1,50 +1,41 @@
 <?php
 
-$rutaActual =
-    trim(
-        service('uri')->getPath(),
-        '/'
+$uri =
+    service('uri');
+
+$segmento =
+    strtolower(
+        trim(
+            $uri->getSegment(1)
+        )
     );
 
-$seccionActiva =
-    match (true) {
 
-        $rutaActual === ''
-        || $rutaActual === 'dashboard'
-        || str_starts_with(
-            $rutaActual,
-            'actividad'
-        ) =>
+/*==================================================
+=              SECCIÓN ACTIVA                      =
+==================================================*/
+
+$seccionActiva =
+    match ($segmento) {
+
+        '',
+        'dashboard',
+        'actividad' =>
             'dashboard',
 
-        str_starts_with(
-            $rutaActual,
-            'proyectos'
-        ) =>
+        'proyectos' =>
             'proyectos',
 
-        str_starts_with(
-            $rutaActual,
-            'sistemas'
-        ) =>
+        'sistemas' =>
             'sistemas',
 
-        str_starts_with(
-            $rutaActual,
-            'apis'
-        ) =>
+        'apis' =>
             'apis',
 
-        str_starts_with(
-            $rutaActual,
-            'modulos'
-        ) =>
+        'modulos' =>
             'modulos',
 
-        str_starts_with(
-            $rutaActual,
-            'documentos'
-        ) =>
+        'documentos' =>
             'documentos',
 
         default =>
@@ -59,86 +50,134 @@ $seccionActiva =
     <nav class="app-sidebar__nav">
 
 
-        <a href="<?= site_url('/') ?>" class="
+        <!--==========================================
+        =                 DASHBOARD                  =
+        ===========================================-->
+
+        <a
+            href="<?= site_url('/') ?>"
+            class="
                 app-sidebar__link
                 <?= $seccionActiva === 'dashboard'
                     ? 'app-sidebar__link--activo'
                     : ''
                 ?>
-            " <?= $seccionActiva === 'dashboard'
+            "
+            <?= $seccionActiva === 'dashboard'
                 ? 'aria-current="page"'
                 : ''
-            ?>>
+            ?>
+        >
             Dashboard
         </a>
 
 
-        <a href="<?= site_url('proyectos') ?>" class="
+        <!--==========================================
+        =                 PROYECTOS                  =
+        ===========================================-->
+
+        <a
+            href="<?= site_url('proyectos') ?>"
+            class="
                 app-sidebar__link
                 <?= $seccionActiva === 'proyectos'
                     ? 'app-sidebar__link--activo'
                     : ''
                 ?>
-            " <?= $seccionActiva === 'proyectos'
+            "
+            <?= $seccionActiva === 'proyectos'
                 ? 'aria-current="page"'
                 : ''
-            ?>>
+            ?>
+        >
             Proyectos
         </a>
 
 
-        <a href="<?= site_url('sistemas') ?>" class="
+        <!--==========================================
+        =                  SISTEMAS                  =
+        ===========================================-->
+
+        <a
+            href="<?= site_url('sistemas') ?>"
+            class="
                 app-sidebar__link
                 <?= $seccionActiva === 'sistemas'
                     ? 'app-sidebar__link--activo'
                     : ''
                 ?>
-            " <?= $seccionActiva === 'sistemas'
+            "
+            <?= $seccionActiva === 'sistemas'
                 ? 'aria-current="page"'
                 : ''
-            ?>>
+            ?>
+        >
             Sistemas
         </a>
 
 
-        <a href="<?= site_url('apis') ?>" class="
+        <!--==========================================
+        =                    APIs                    =
+        ===========================================-->
+
+        <a
+            href="<?= site_url('apis') ?>"
+            class="
                 app-sidebar__link
                 <?= $seccionActiva === 'apis'
                     ? 'app-sidebar__link--activo'
                     : ''
                 ?>
-            " <?= $seccionActiva === 'apis'
+            "
+            <?= $seccionActiva === 'apis'
                 ? 'aria-current="page"'
                 : ''
-            ?>>
+            ?>
+        >
             APIs
         </a>
 
 
-        <a href="<?= base_url('modulos') ?>" class="
+        <!--==========================================
+        =                  MÓDULOS                   =
+        ===========================================-->
+
+        <a
+            href="<?= base_url('modulos') ?>"
+            class="
                 app-sidebar__link
                 <?= $seccionActiva === 'modulos'
                     ? 'app-sidebar__link--activo'
                     : ''
                 ?>
-            " <?= $seccionActiva === 'modulos'
+            "
+            <?= $seccionActiva === 'modulos'
                 ? 'aria-current="page"'
                 : ''
-            ?>>
+            ?>
+        >
             Módulos
         </a>
 
 
-        <a href="<?= base_url('documentos') ?>" class="
+        <!--==========================================
+        =                DOCUMENTOS                  =
+        ===========================================-->
+
+        <a
+            href="<?= base_url('documentos') ?>"
+            class="
                 app-sidebar__link
                 <?= $seccionActiva === 'documentos'
                     ? 'app-sidebar__link--activo'
                     : ''
                 ?>
-            " <?= $seccionActiva === 'documentos'
+            "
+            <?= $seccionActiva === 'documentos'
                 ? 'aria-current="page"'
                 : ''
-            ?>>
+            ?>
+        >
             Documentos
         </a>
 

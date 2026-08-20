@@ -26,21 +26,98 @@
     z-index: 900;
 }
 
+/*==================================================
+=                 NAVEGACIÓN SIDEBAR               =
+==================================================*/
+
 .app-sidebar__nav {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+
+    gap: 6px;
 }
+
+
+/*==================================================
+=                    ENLACES                       =
+==================================================*/
 
 .app-sidebar__link {
-    display: block;
-    padding: 12px 14px;
-    border-radius: 8px;
-    color: #344054;
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    min-height: 42px;
+
+    padding: 10px 14px;
+
+    border-radius: 9px;
+
+    color: #475569;
+
+    font-size: 0.92rem;
+    font-weight: 500;
+
     text-decoration: none;
-    transition: background-color 0.2s ease;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
 }
 
+
+/*==================================================
+=                     HOVER                        =
+==================================================*/
+
 .app-sidebar__link:hover {
-    background-color: #f2f4f7;
+    background: #f1f5f9;
+
+    color: #1e293b;
+}
+
+
+/*==================================================
+=                  OPCIÓN ACTIVA                   =
+==================================================*/
+
+.app-sidebar__link--activo {
+    background: #eef2ff;
+
+    color: #3047d8;
+
+    font-weight: 700;
+}
+
+
+/*==================================================
+=               INDICADOR LATERAL                  =
+==================================================*/
+
+.app-sidebar__link--activo::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+
+    width: 3px;
+
+    border-radius: 0 4px 4px 0;
+
+    background: #3047d8;
+}
+
+
+/*==================================================
+=              HOVER SOBRE ACTIVO                  =
+==================================================*/
+
+.app-sidebar__link--activo:hover {
+    background: #e8edff;
+
+    color: #263bb9;
 }
