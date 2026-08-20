@@ -930,7 +930,7 @@
         "observaciones_tecnicas": [
             {
                 "tipo": "informacion",
-                "mensaje": "API prueba 16"
+                "mensaje": "API prueba 16-"
             }
         ],
         "historial": [
@@ -942,7 +942,7 @@
         ],
         "id_proyecto": 10,
         "id_sistema": null,
-        "nombre": "API prueba 16",
+        "nombre": "API prueba 16-",
         "descripcion": "",
         "estado": "Mantenimiento",
         "metodo": "PUT",

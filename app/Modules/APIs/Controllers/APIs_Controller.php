@@ -5,11 +5,13 @@ namespace App\Modules\APIs\Controllers;
 use App\Controllers\BaseController;
 use App\Modules\APIs\Services\API_StorageService;
 use App\Modules\Proyectos\Services\Proyecto_StorageService;
+use App\Services\Actividad_StorageService;
 
 class APIs_Controller extends BaseController
 {
     private API_StorageService $storage;
     private Proyecto_StorageService $proyectoStorage;
+    private Actividad_StorageService $actividadStorage;
 
     public function __construct()
     {
@@ -18,6 +20,9 @@ class APIs_Controller extends BaseController
 
         $this->proyectoStorage =
             new Proyecto_StorageService();
+
+        $this->actividadStorage =
+            new Actividad_StorageService();
     }
 
 
@@ -181,6 +186,14 @@ class APIs_Controller extends BaseController
                 $apis
             );
 
+        $this->registrarActividad(
+            'Agregó',
+            (int) ($api['id_api'] ?? 0),
+            'Agregó la API "'
+                . ($api['nombre'] ?? 'API')
+                . '".'
+        );
+
         $apiVista =
             $this->construirApiVista(
                 $api
@@ -302,6 +315,14 @@ class APIs_Controller extends BaseController
                 $apis
             );
 
+        $this->registrarActividad(
+            'Editó',
+            $idApi,
+            'Editó la API "'
+                . ($apiActualizada['nombre'] ?? 'API')
+                . '".'
+        );
+
         $apiVista =
             $this->construirApiVista(
                 $apiActualizada
@@ -418,6 +439,14 @@ class APIs_Controller extends BaseController
             ->guardarTodos(
                 $apis
             );
+
+        $this->registrarActividad(
+            'Editó arquitectura',
+            $idApi,
+            'Actualizó la arquitectura de la API "'
+                . ($apis[$indiceApi]['nombre'] ?? 'API')
+                . '".'
+        );
 
         return $this->response
             ->setJSON([
@@ -577,6 +606,14 @@ class APIs_Controller extends BaseController
                 $apis
             );
 
+        $this->registrarActividad(
+            'Editó dependencias',
+            $idApi,
+            'Actualizó las dependencias de la API "'
+                . ($apis[$indiceApi]['nombre'] ?? 'API')
+                . '".'
+        );
+
         return $this->response
             ->setJSON([
                 'ok' => true,
@@ -722,6 +759,14 @@ class APIs_Controller extends BaseController
             ->guardarTodos(
                 $apis
             );
+
+        $this->registrarActividad(
+            'Editó historial',
+            $idApi,
+            'Actualizó el historial de la API "'
+                . ($apis[$indiceApi]['nombre'] ?? 'API')
+                . '".'
+        );
 
         return $this->response
             ->setJSON([
@@ -871,6 +916,14 @@ class APIs_Controller extends BaseController
                 $apis
             );
 
+        $this->registrarActividad(
+            'Editó observaciones',
+            $idApi,
+            'Actualizó las observaciones técnicas de la API "'
+                . ($apis[$indiceApi]['nombre'] ?? 'API')
+                . '".'
+        );
+
         return $this->response
             ->setJSON([
                 'ok' => true,
@@ -942,6 +995,14 @@ class APIs_Controller extends BaseController
             ->guardarTodos(
                 $apis
             );
+
+        $this->registrarActividad(
+            'Desactivó',
+            $idApi,
+            'Desactivó la API "'
+                . ($apiEncontrada['nombre'] ?? 'API')
+                . '".'
+        );
 
         $apiVista =
             $this->construirApiVista(
@@ -1027,6 +1088,14 @@ class APIs_Controller extends BaseController
             ->guardarTodos(
                 $apis
             );
+
+        $this->registrarActividad(
+            'Activó',
+            $idApi,
+            'Activó la API "'
+                . ($apiEncontrada['nombre'] ?? 'API')
+                . '".'
+        );
 
         $apiVista =
             $this->construirApiVista(
@@ -1115,6 +1184,14 @@ class APIs_Controller extends BaseController
             ->guardarTodos(
                 $apis
             );
+
+        $this->registrarActividad(
+            'Eliminó',
+            $idApi,
+            'Eliminó la API "'
+                . ($apiEncontrada['nombre'] ?? 'API')
+                . '".'
+        );
 
         return $this->response
             ->setJSON([
@@ -1690,6 +1767,14 @@ class APIs_Controller extends BaseController
                 $apis
             );
 
+        $this->registrarActividad(
+            'Eliminó arquitectura',
+            $idApi,
+            'Eliminó la arquitectura de la API "'
+                . ($apis[$indiceApi]['nombre'] ?? 'API')
+                . '".'
+        );
+
         return $this->response
             ->setJSON([
                 'ok' => true,
@@ -1753,6 +1838,14 @@ class APIs_Controller extends BaseController
                 $apis
             );
 
+        $this->registrarActividad(
+            'Eliminó dependencias',
+            $idApi,
+            'Eliminó las dependencias de la API "'
+                . ($apis[$indiceApi]['nombre'] ?? 'API')
+                . '".'
+        );
+
         return $this->response
             ->setJSON([
                 'ok' => true,
@@ -1811,6 +1904,14 @@ class APIs_Controller extends BaseController
             ->guardarTodos(
                 $apis
             );
+
+        $this->registrarActividad(
+            'Eliminó observaciones',
+            $idApi,
+            'Eliminó las observaciones técnicas de la API "'
+                . ($apis[$indiceApi]['nombre'] ?? 'API')
+                . '".'
+        );
 
         return $this->response
             ->setJSON([
@@ -1871,6 +1972,14 @@ class APIs_Controller extends BaseController
                 $apis
             );
 
+        $this->registrarActividad(
+            'Eliminó historial',
+            $idApi,
+            'Eliminó el historial de la API "'
+                . ($apis[$indiceApi]['nombre'] ?? 'API')
+                . '".'
+        );
+
         return $this->response
             ->setJSON([
                 'ok' => true,
@@ -1880,5 +1989,49 @@ class APIs_Controller extends BaseController
 
                 'historial' => [],
             ]);
+    }
+
+    /*==================================================
+    =              REGISTRAR ACTIVIDAD                 =
+    ==================================================*/
+
+    private function registrarActividad(
+        string $accion,
+        int $idApi,
+        string $detalle
+    ): void {
+        try {
+
+            $this->actividadStorage
+                ->registrar([
+                    'bloque' =>
+                    'APIs',
+
+                    'accion' =>
+                    $accion,
+
+                    'entidad_tipo' =>
+                    'API',
+
+                    'entidad_id' =>
+                    $idApi,
+
+                    'detalle' =>
+                    $detalle,
+                ]);
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'No fue posible registrar actividad de la API {id}: {mensaje}',
+                [
+                    'id' =>
+                    $idApi,
+
+                    'mensaje' =>
+                    $error->getMessage(),
+                ]
+            );
+        }
     }
 }
