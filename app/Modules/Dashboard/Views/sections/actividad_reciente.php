@@ -2,14 +2,20 @@
 
     <div class="dashboard-seccion__encabezado">
 
-        <h3>
-            Actividad reciente
-        </h3>
+        <div>
+            <h3>
+                Actividad reciente
+            </h3>
 
-        <p>
-            Consulta los últimos movimientos realizados
-            dentro de Project Hub.
-        </p>
+            <p>
+                Consulta los últimos movimientos realizados
+                dentro de Project Hub.
+            </p>
+        </div>
+
+        <a href="<?= base_url('actividad') ?>" class="boton boton--secundario">
+            Ver historial completo
+        </a>
 
     </div>
 

@@ -77,22 +77,71 @@ class DashboardController extends BaseController
             'App\Modules\Dashboard\Views\index',
             [
                 'title' =>
-                    'Dashboard | Project Hub',
+                'Dashboard | Project Hub',
 
                 'totalProyectos' =>
-                    count($proyectos),
+                count($proyectos),
 
                 'totalSistemas' =>
-                    count($sistemas),
+                count($sistemas),
 
                 'totalModulos' =>
-                    count($modulos),
+                count($modulos),
 
                 'totalApis' =>
-                    count($apis),
+                count($apis),
 
                 'actividades' =>
-                    $actividades,
+                $actividades,
+            ]
+        );
+    }
+
+    /*==================================================
+    =              HISTORIAL DE ACTIVIDAD              =
+    ==================================================*/
+
+    public function actividad()
+    {
+        $actividades =
+            $this->actividadStorage
+            ->obtenerTodos();
+
+        /*
+     * Mostramos primero
+     * las actividades más recientes.
+     */
+        usort(
+            $actividades,
+            static function (
+                array $a,
+                array $b
+            ): int {
+
+                $fechaA =
+                    strtotime(
+                        $a['fecha_hora']
+                            ?? ''
+                    );
+
+                $fechaB =
+                    strtotime(
+                        $b['fecha_hora']
+                            ?? ''
+                    );
+
+                return $fechaB <=> $fechaA;
+            }
+        );
+
+        return view(
+            'App\Modules\Dashboard\Views\actividad',
+            [
+                'title' =>
+                'Historial de actividad | Project Hub',
+
+                'actividades' =>
+                $actividades,
             ]
         );
     }
