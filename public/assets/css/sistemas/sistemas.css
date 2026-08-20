@@ -1,7 +1,12 @@
 .sistemas {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+
+    gap: 16px;
+
+    padding: 16px 20px 24px;
+
+    box-sizing: border-box;
 }
 
 .sistemas-integrador {
