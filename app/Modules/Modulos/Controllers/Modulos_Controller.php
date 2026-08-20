@@ -8,6 +8,7 @@ use App\Modules\Sistemas\Services\Sistema_StorageService;
 use App\Modules\Proyectos\Services\Proyecto_StorageService;
 use App\Modules\Modulos\Services\Modulo_StorageService;
 
+
 class Modulos_Controller extends BaseController
 {
     private Sistema_StorageService $sistemaStorage;
@@ -54,6 +55,7 @@ class Modulos_Controller extends BaseController
         $nombresProyectos = [];
 
         foreach ($proyectos as $proyecto) {
+
             $idProyecto =
                 (int) (
                     $proyecto['id_proyecto']
@@ -77,6 +79,7 @@ class Modulos_Controller extends BaseController
         $totalesModulos = [];
 
         foreach ($modulos as $modulo) {
+
             $idSistema =
                 (int) (
                     $modulo['id_sistema']
@@ -111,6 +114,7 @@ class Modulos_Controller extends BaseController
                     $nombresProyectos,
                     $totalesModulos
                 ): array {
+
                     $idProyecto =
                         (int) (
                             $sistema['id_proyecto']
@@ -127,11 +131,11 @@ class Modulos_Controller extends BaseController
                         $sistema,
                         [
                             'proyecto_nombre' =>
-                            $nombresProyectos[$idProyecto]
+                                $nombresProyectos[$idProyecto]
                                 ?? 'Sin proyecto',
 
                             'total_modulos' =>
-                            $totalesModulos[$idSistema]
+                                $totalesModulos[$idSistema]
                                 ?? 0,
                         ]
                     );
@@ -148,10 +152,10 @@ class Modulos_Controller extends BaseController
             'App\Modules\Modulos\Views\index',
             [
                 'sistemas' =>
-                $sistemasVista,
+                    $sistemasVista,
 
                 'modulos' =>
-                $modulos,
+                    $modulos,
             ]
         );
     }
@@ -168,14 +172,21 @@ class Modulos_Controller extends BaseController
             ->getJSON(true);
 
         if (!is_array($datos)) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' => false,
+
                     'mensaje' =>
-                    'Los datos enviados no son válidos.',
+                        'Los datos enviados no son válidos.',
                 ]);
         }
+
+
+        /*==================================================
+        =              SISTEMA ASOCIADO                    =
+        ==================================================*/
 
         $idSistema =
             (int) (
@@ -184,12 +195,14 @@ class Modulos_Controller extends BaseController
             );
 
         if ($idSistema <= 0) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' => false,
+
                     'mensaje' =>
-                    'No se encontró el sistema asociado.',
+                        'No se encontró el sistema asociado.',
                 ]);
         }
 
@@ -200,14 +213,21 @@ class Modulos_Controller extends BaseController
             );
 
         if ($sistema === null) {
+
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' => false,
+
                     'mensaje' =>
-                    'El sistema seleccionado no existe.',
+                        'El sistema seleccionado no existe.',
                 ]);
         }
+
+
+        /*==================================================
+        =              VALIDAR NOMBRE                      =
+        ==================================================*/
 
         $nombre =
             trim(
@@ -218,14 +238,21 @@ class Modulos_Controller extends BaseController
             );
 
         if ($nombre === '') {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' => false,
+
                     'mensaje' =>
-                    'El nombre del módulo es obligatorio.',
+                        'El nombre del módulo es obligatorio.',
                 ]);
         }
+
+
+        /*==================================================
+        =              DATOS DEL MÓDULO                    =
+        ==================================================*/
 
         $tipo =
             trim(
@@ -251,34 +278,43 @@ class Modulos_Controller extends BaseController
                 )
             );
 
+
+        /*==================================================
+        =              CREAR REGISTRO                     =
+        ==================================================*/
+
         $modulos =
             $this->moduloStorage
             ->obtenerTodos();
 
         $modulo = [
+
             'id_modulo' =>
-            $this->moduloStorage
+                $this->moduloStorage
                 ->generarNuevoId(
                     $modulos
                 ),
 
             'id_sistema' =>
-            $idSistema,
+                $idSistema,
 
             'nombre' =>
-            $nombre,
+                $nombre,
 
             'tipo' =>
-            $tipo,
+                $tipo,
 
             'descripcion' =>
-            $descripcion,
+                $descripcion,
 
             'url' =>
-            $url,
+                $url,
+
+            'imagen' =>
+                '',
 
             'activo' =>
-            true,
+                true,
         ];
 
         $modulos[] =
@@ -289,13 +325,23 @@ class Modulos_Controller extends BaseController
                 $modulos
             );
 
+
+        /*==================================================
+        =              TOTAL ACTUALIZADO                   =
+        ==================================================*/
+
         $totalModulos =
             count(
                 $this->moduloStorage
-                    ->obtenerPorSistema(
-                        $idSistema
-                    )
+                ->obtenerPorSistema(
+                    $idSistema
+                )
             );
+
+
+        /*==================================================
+        =                  RESPUESTA                       =
+        ==================================================*/
 
         return $this->response
             ->setStatusCode(201)
@@ -303,15 +349,16 @@ class Modulos_Controller extends BaseController
                 'ok' => true,
 
                 'mensaje' =>
-                'Módulo registrado correctamente.',
+                    'Módulo registrado correctamente.',
 
                 'modulo' =>
-                $modulo,
+                    $modulo,
 
                 'total_modulos' =>
-                $totalModulos,
+                    $totalModulos,
             ]);
     }
+
 
     /*==================================================
     =                  ACTUALIZAR MÓDULO               =
@@ -325,13 +372,14 @@ class Modulos_Controller extends BaseController
             ->getJSON(true);
 
         if (!is_array($datos)) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' => false,
 
                     'mensaje' =>
-                    'Los datos enviados no son válidos.',
+                        'Los datos enviados no son válidos.',
                 ]);
         }
 
@@ -346,6 +394,7 @@ class Modulos_Controller extends BaseController
             $modulos as
             $indice => $modulo
         ) {
+
             if (
                 (int) (
                     $modulo['id_modulo']
@@ -366,15 +415,21 @@ class Modulos_Controller extends BaseController
             $indiceModulo === null ||
             $moduloExistente === null
         ) {
+
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' => false,
 
                     'mensaje' =>
-                    'No se encontró el módulo solicitado.',
+                        'No se encontró el módulo solicitado.',
                 ]);
         }
+
+
+        /*==================================================
+        =              SISTEMA ASOCIADO                    =
+        ==================================================*/
 
         $idSistema =
             (int) (
@@ -386,13 +441,14 @@ class Modulos_Controller extends BaseController
             );
 
         if ($idSistema <= 0) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' => false,
 
                     'mensaje' =>
-                    'No se encontró el sistema asociado.',
+                        'No se encontró el sistema asociado.',
                 ]);
         }
 
@@ -403,15 +459,21 @@ class Modulos_Controller extends BaseController
             );
 
         if ($sistema === null) {
+
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' => false,
 
                     'mensaje' =>
-                    'El sistema asociado no existe.',
+                        'El sistema asociado no existe.',
                 ]);
         }
+
+
+        /*==================================================
+        =              VALIDAR NOMBRE                      =
+        ==================================================*/
 
         $nombre =
             trim(
@@ -422,58 +484,72 @@ class Modulos_Controller extends BaseController
             );
 
         if ($nombre === '') {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' => false,
 
                     'mensaje' =>
-                    'El nombre del módulo es obligatorio.',
+                        'El nombre del módulo es obligatorio.',
                 ]);
         }
 
+
+        /*==================================================
+        =              ACTUALIZAR REGISTRO                 =
+        ==================================================*/
+
         $moduloActualizado = [
+
             'id_modulo' =>
-            $idModulo,
+                $idModulo,
 
             'id_sistema' =>
-            $idSistema,
+                $idSistema,
 
             'nombre' =>
-            $nombre,
+                $nombre,
 
             'tipo' =>
-            trim(
-                (string) (
-                    $datos['tipo']
-                    ?? ''
-                )
-            ),
+                trim(
+                    (string) (
+                        $datos['tipo']
+                        ?? ''
+                    )
+                ),
 
             'descripcion' =>
-            trim(
-                (string) (
-                    $datos['descripcion']
-                    ?? ''
-                )
-            ),
+                trim(
+                    (string) (
+                        $datos['descripcion']
+                        ?? ''
+                    )
+                ),
 
             'url' =>
-            trim(
-                (string) (
-                    $datos['url']
-                    ?? ''
-                )
-            ),
+                trim(
+                    (string) (
+                        $datos['url']
+                        ?? ''
+                    )
+                ),
 
             /*
-         * Conservamos el estado actual.
-         */
+             * Conservamos la imagen existente.
+             */
+            'imagen' =>
+                $moduloExistente['imagen']
+                ?? '',
+
+            /*
+             * Conservamos el estado actual.
+             */
             'activo' =>
-            (bool) (
-                $moduloExistente['activo']
-                ?? true
-            ),
+                (bool) (
+                    $moduloExistente['activo']
+                    ?? true
+                ),
         ];
 
         $modulos[$indiceModulo] =
@@ -484,17 +560,232 @@ class Modulos_Controller extends BaseController
                 $modulos
             );
 
+
+        /*==================================================
+        =                  RESPUESTA                       =
+        ==================================================*/
+
         return $this->response
             ->setJSON([
                 'ok' => true,
 
                 'mensaje' =>
-                'Módulo actualizado correctamente.',
+                    'Módulo actualizado correctamente.',
 
                 'modulo' =>
-                $moduloActualizado,
+                    $moduloActualizado,
             ]);
     }
+
+
+    /*==================================================
+    =              ACTUALIZAR IMAGEN                   =
+    ==================================================*/
+
+    public function actualizarImagen(
+        int $idModulo
+    ) {
+        $modulo =
+            $this->moduloStorage
+            ->obtenerPorId(
+                $idModulo
+            );
+
+        if ($modulo === null) {
+
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                        'No se encontró el módulo solicitado.',
+                ]);
+        }
+
+
+        /*==================================================
+        =              OBTENER ARCHIVO                    =
+        ==================================================*/
+
+        $archivo =
+            $this->request
+            ->getFile(
+                'imagen'
+            );
+
+        if (
+            !$archivo ||
+            !$archivo->isValid() ||
+            $archivo->hasMoved()
+        ) {
+
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                        'No se recibió una imagen válida.',
+                ]);
+        }
+
+
+        /*==================================================
+        =              VALIDAR FORMATO                    =
+        ==================================================*/
+
+        $tiposPermitidos = [
+            'image/jpeg',
+            'image/png',
+            'image/webp',
+        ];
+
+        $mime =
+            $archivo->getMimeType();
+
+        if (
+            !in_array(
+                $mime,
+                $tiposPermitidos,
+                true
+            )
+        ) {
+
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                        'La imagen debe ser JPG, PNG o WebP.',
+                ]);
+        }
+
+
+        /*==================================================
+        =              VALIDAR TAMAÑO                     =
+        ==================================================*/
+
+        $tamanoMaximo =
+            5 * 1024 * 1024;
+
+        if (
+            $archivo->getSize() >
+            $tamanoMaximo
+        ) {
+
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                        'La imagen no puede superar los 5 MB.',
+                ]);
+        }
+
+
+        /*==================================================
+        =              DIRECTORIO DESTINO                 =
+        ==================================================*/
+
+        $directorio =
+            FCPATH
+            . 'uploads/modulos';
+
+        if (!is_dir($directorio)) {
+
+            mkdir(
+                $directorio,
+                0775,
+                true
+            );
+        }
+
+
+        /*==================================================
+        =              NOMBRE DEL ARCHIVO                 =
+        ==================================================*/
+
+        $extension =
+            strtolower(
+                $archivo->getExtension()
+            );
+
+        $nombreArchivo =
+            'modulo-'
+            . $idModulo
+            . '-'
+            . time()
+            . '.'
+            . $extension;
+
+
+        /*==================================================
+        =              GUARDAR ARCHIVO                    =
+        ==================================================*/
+
+        $archivo->move(
+            $directorio,
+            $nombreArchivo
+        );
+
+
+        /*==================================================
+        =              RUTA PÚBLICA                       =
+        ==================================================*/
+
+        $rutaImagen =
+            base_url(
+                'uploads/modulos/'
+                . $nombreArchivo
+            );
+
+
+        /*==================================================
+        =              ACTUALIZAR MÓDULO                  =
+        ==================================================*/
+
+        $moduloActualizado =
+            $this->moduloStorage
+            ->actualizarImagen(
+                $idModulo,
+                $rutaImagen
+            );
+
+        if ($moduloActualizado === null) {
+
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+
+                    'mensaje' =>
+                        'No fue posible actualizar la imagen del módulo.',
+                ]);
+        }
+
+
+        /*==================================================
+        =                  RESPUESTA                       =
+        ==================================================*/
+
+        return $this->response
+            ->setJSON([
+                'ok' => true,
+
+                'mensaje' =>
+                    'Imagen actualizada correctamente.',
+
+                'imagen' =>
+                    $rutaImagen,
+
+                'modulo' =>
+                    $moduloActualizado,
+            ]);
+    }
+
 
     /*==================================================
     =                  ELIMINAR MÓDULO                 =
@@ -507,15 +798,18 @@ class Modulos_Controller extends BaseController
             $this->moduloStorage
             ->obtenerTodos();
 
-        $moduloEncontrado = null;
+        $moduloEncontrado =
+            null;
 
         foreach ($modulos as $modulo) {
+
             if (
                 (int) (
                     $modulo['id_modulo']
                     ?? 0
                 ) === $idModulo
             ) {
+
                 $moduloEncontrado =
                     $modulo;
 
@@ -529,13 +823,14 @@ class Modulos_Controller extends BaseController
         ==================================================*/
 
         if ($moduloEncontrado === null) {
+
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' => false,
 
                     'mensaje' =>
-                    'No se encontró el módulo solicitado.',
+                        'No se encontró el módulo solicitado.',
                 ]);
         }
 
@@ -560,10 +855,10 @@ class Modulos_Controller extends BaseController
                 array_filter(
                     $modulos,
                     static fn(array $modulo): bool =>
-                    (int) (
-                        $modulo['id_modulo']
-                        ?? 0
-                    ) !== $idModulo
+                        (int) (
+                            $modulo['id_modulo']
+                            ?? 0
+                        ) !== $idModulo
                 )
             );
 
@@ -580,9 +875,9 @@ class Modulos_Controller extends BaseController
         $totalModulos =
             count(
                 $this->moduloStorage
-                    ->obtenerPorSistema(
-                        $idSistema
-                    )
+                ->obtenerPorSistema(
+                    $idSistema
+                )
             );
 
 
@@ -595,18 +890,19 @@ class Modulos_Controller extends BaseController
                 'ok' => true,
 
                 'mensaje' =>
-                'Módulo eliminado correctamente.',
+                    'Módulo eliminado correctamente.',
 
                 'id_modulo' =>
-                $idModulo,
+                    $idModulo,
 
                 'id_sistema' =>
-                $idSistema,
+                    $idSistema,
 
                 'total_modulos' =>
-                $totalModulos,
+                    $totalModulos,
             ]);
     }
+
 
     /*==================================================
     =              CAMBIAR ESTADO MÓDULO               =
@@ -620,13 +916,14 @@ class Modulos_Controller extends BaseController
             ->getJSON(true);
 
         if (!is_array($datos)) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' => false,
 
                     'mensaje' =>
-                    'Los datos enviados no son válidos.',
+                        'Los datos enviados no son válidos.',
                 ]);
         }
 
@@ -641,13 +938,14 @@ class Modulos_Controller extends BaseController
                 $datos
             )
         ) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' => false,
 
                     'mensaje' =>
-                    'No se recibió el estado del módulo.',
+                        'No se recibió el estado del módulo.',
                 ]);
         }
 
@@ -659,13 +957,14 @@ class Modulos_Controller extends BaseController
             );
 
         if ($activo === null) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' => false,
 
                     'mensaje' =>
-                    'El estado enviado no es válido.',
+                        'El estado enviado no es válido.',
                 ]);
         }
 
@@ -678,18 +977,21 @@ class Modulos_Controller extends BaseController
             $this->moduloStorage
             ->obtenerTodos();
 
-        $indiceModulo = null;
+        $indiceModulo =
+            null;
 
         foreach (
             $modulos as
             $indice => $modulo
         ) {
+
             if (
                 (int) (
                     $modulo['id_modulo']
                     ?? 0
                 ) === $idModulo
             ) {
+
                 $indiceModulo =
                     $indice;
 
@@ -703,13 +1005,14 @@ class Modulos_Controller extends BaseController
         ==================================================*/
 
         if ($indiceModulo === null) {
+
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' => false,
 
                     'mensaje' =>
-                    'No se encontró el módulo solicitado.',
+                        'No se encontró el módulo solicitado.',
                 ]);
         }
 
@@ -736,18 +1039,18 @@ class Modulos_Controller extends BaseController
                 'ok' => true,
 
                 'mensaje' =>
-                $activo
-                    ? 'Módulo activado correctamente.'
-                    : 'Módulo desactivado correctamente.',
+                    $activo
+                        ? 'Módulo activado correctamente.'
+                        : 'Módulo desactivado correctamente.',
 
                 'id_modulo' =>
-                $idModulo,
+                    $idModulo,
 
                 'activo' =>
-                $activo,
+                    $activo,
 
                 'modulo' =>
-                $modulos[$indiceModulo],
+                    $modulos[$indiceModulo],
             ]);
     }
 }

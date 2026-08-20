@@ -75,13 +75,8 @@ export function inicializarEditarModulo() {
 
             if (!idModulo) {
 
-                console.error(
-                    "No se encontró el módulo seleccionado.",
-                );
-
                 mostrarNotificacion({
-                    tipo:
-                        "error",
+                    tipo: "error",
 
                     titulo:
                         "No se pudo actualizar",
@@ -106,8 +101,7 @@ export function inicializarEditarModulo() {
             if (!datosModulo) {
 
                 mostrarNotificacion({
-                    tipo:
-                        "error",
+                    tipo: "error",
 
                     titulo:
                         "No se pudo actualizar",
@@ -121,16 +115,54 @@ export function inicializarEditarModulo() {
 
 
             /*==================================================*
+            *=              IMAGEN SELECCIONADA                 =*
+            *==================================================*/
+
+            const inputImagen =
+                formulario.querySelector(
+                    "[data-modulo-imagen-input]",
+                );
+
+            const archivoImagen =
+                inputImagen?.files?.[0] ??
+                null;
+
+
+            /*==================================================*
             *=                  ACTUALIZAR                      =*
             *==================================================*/
 
             try {
 
+                /*
+                 * Primero actualizamos los datos
+                 * generales del módulo.
+                 */
                 const resultado =
                     await actualizarModulo(
                         idModulo,
                         datosModulo,
                     );
+
+                let moduloActualizado =
+                    resultado.modulo;
+
+
+                /*==================================================*
+                *=              SUBIR IMAGEN                       =*
+                *==================================================*/
+
+                if (archivoImagen) {
+
+                    const resultadoImagen =
+                        await actualizarImagenModulo(
+                            idModulo,
+                            archivoImagen,
+                        );
+
+                    moduloActualizado =
+                        resultadoImagen.modulo;
+                }
 
 
                 /*==================================================*
@@ -166,7 +198,7 @@ export function inicializarEditarModulo() {
                                     modulo.id_modulo ?? "",
                                 ) ===
                                 String(idModulo)
-                                    ? resultado.modulo
+                                    ? moduloActualizado
                                     : modulo,
                         );
 
@@ -198,6 +230,16 @@ export function inicializarEditarModulo() {
                     contenedor:
                         contenedorModulos,
                 });
+
+
+                /*==================================================*
+                *=              LIMPIAR IMAGEN                     =*
+                *==================================================*/
+
+                if (inputImagen) {
+                    inputImagen.value =
+                        "";
+                }
 
 
                 /*==================================================*
@@ -244,8 +286,12 @@ export function inicializarEditarModulo() {
                         "Módulo actualizado",
 
                     mensaje:
-                        resultado.mensaje ||
-                        "Los cambios fueron guardados correctamente.",
+                        archivoImagen
+                            ? "Los cambios y la imagen fueron guardados correctamente."
+                            : (
+                                resultado.mensaje ||
+                                "Los cambios fueron guardados correctamente."
+                            ),
                 });
 
             } catch (error) {
@@ -254,11 +300,6 @@ export function inicializarEditarModulo() {
                     "Error al editar módulo:",
                     error,
                 );
-
-
-                /*==================================================*
-                *=          NOTIFICACIÓN DE ERROR                 =*
-                *==================================================*/
 
                 mostrarNotificacion({
                     tipo:
@@ -317,6 +358,57 @@ async function actualizarModulo(
         throw new Error(
             resultado.mensaje ||
             "No fue posible actualizar el módulo.",
+        );
+    }
+
+    return resultado;
+}
+
+
+/*==================================================*
+*=              SUBIR IMAGEN                       =*
+*==================================================*/
+
+async function actualizarImagenModulo(
+    idModulo,
+    archivo,
+) {
+
+    const datosImagen =
+        new FormData();
+
+    datosImagen.append(
+        "imagen",
+        archivo,
+    );
+
+    const respuesta =
+        await fetch(
+            `/modulos/${idModulo}/imagen`,
+            {
+                method:
+                    "POST",
+
+                headers: {
+                    "X-Requested-With":
+                        "XMLHttpRequest",
+                },
+
+                body:
+                    datosImagen,
+            },
+        );
+
+    const resultado =
+        await respuesta.json();
+
+    if (
+        !respuesta.ok ||
+        !resultado.ok
+    ) {
+        throw new Error(
+            resultado.mensaje ||
+            "No fue posible actualizar la imagen del módulo.",
         );
     }
 

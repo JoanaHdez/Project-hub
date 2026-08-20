@@ -68,7 +68,14 @@ function crearTarjetaModulo(
         );
 
     const url =
-        modulo.url || "";
+        String(
+            modulo.url ?? "",
+        ).trim();
+
+    const imagen =
+        String(
+            modulo.imagen ?? "",
+        ).trim();
 
     const activo =
         Boolean(
@@ -97,11 +104,17 @@ function crearTarjetaModulo(
             )}"
 
             data-modulo-url="${escaparHtml(
-                modulo.url ?? "",
+                url,
+            )}"
+
+            data-modulo-imagen="${escaparHtml(
+                imagen,
             )}"
 
             data-modulo-activo="${
-                activo ? "1" : "0"
+                activo
+                    ? "1"
+                    : "0"
             }"
         >
 
@@ -111,7 +124,25 @@ function crearTarjetaModulo(
             ===========================================-->
 
             <div class="modulo-card__imagen">
-                Vista previa
+
+                ${
+                    imagen
+                        ? `
+                            <img
+                                src="${escaparHtml(
+                                    imagen,
+                                )}"
+                                alt="Vista previa de ${nombre}"
+                                class="modulo-card__imagen-archivo"
+                            >
+                        `
+                        : `
+                            <span class="modulo-card__imagen-vacia">
+                                Vista previa
+                            </span>
+                        `
+                }
+
             </div>
 
 
@@ -148,11 +179,15 @@ function crearTarjetaModulo(
                         data-modulo-estado
 
                         data-activo="${
-                            activo ? "1" : "0"
+                            activo
+                                ? "1"
+                                : "0"
                         }"
 
                         aria-pressed="${
-                            activo ? "true" : "false"
+                            activo
+                                ? "true"
+                                : "false"
                         }"
 
                         aria-label="${
@@ -206,49 +241,36 @@ function crearTarjetaModulo(
                     </button>
 
 
-                    ${
-                        url
-                            ? `
-                                <a
-    href="${url ? escaparHtml(url) : "#"}"
+                    <a
+                        href="${
+                            url
+                                ? escaparHtml(url)
+                                : "#"
+                        }"
 
-    class="
-        modulo-card__abrir
-        ${
-            url
-                ? ""
-                : "modulo-card__abrir--deshabilitado"
-        }
-    "
+                        class="
+                            modulo-card__abrir
+                            ${
+                                url
+                                    ? ""
+                                    : "modulo-card__abrir--deshabilitado"
+                            }
+                        "
 
-    ${
-        url
-            ? 'target="_blank" rel="noopener noreferrer"'
-            : 'aria-disabled="true" tabindex="-1"'
-    }
+                        ${
+                            url
+                                ? 'target="_blank" rel="noopener noreferrer"'
+                                : 'aria-disabled="true" tabindex="-1"'
+                        }
 
-    title="${
-        url
-            ? "Abrir módulo"
-            : "URL no disponible"
-    }"
->
-    Abrir
-</a>
-                            `
-                            : `
-                                <span
-                                    class="
-                                        modulo-card__abrir
-                                        modulo-card__abrir--deshabilitado
-                                    "
-                                    aria-disabled="true"
-                                    title="URL no disponible"
-                                >
-                                    Abrir
-                                </span>
-                            `
-                    }
+                        title="${
+                            url
+                                ? "Abrir módulo"
+                                : "URL no disponible"
+                        }"
+                    >
+                        Abrir
+                    </a>
 
                 </div>
 

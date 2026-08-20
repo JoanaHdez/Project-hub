@@ -70,10 +70,10 @@ class Modulo_StorageService
             array_filter(
                 $this->obtenerTodos(),
                 static fn(array $modulo): bool =>
-                    (int) (
-                        $modulo['id_sistema']
-                        ?? 0
-                    ) === $idSistema
+                (int) (
+                    $modulo['id_sistema']
+                    ?? 0
+                ) === $idSistema
             )
         );
     }
@@ -99,8 +99,8 @@ class Modulo_StorageService
             json_encode(
                 $modulos,
                 JSON_PRETTY_PRINT
-                | JSON_UNESCAPED_UNICODE
-                | JSON_UNESCAPED_SLASHES
+                    | JSON_UNESCAPED_UNICODE
+                    | JSON_UNESCAPED_SLASHES
             ),
             LOCK_EX
         );
@@ -112,15 +112,52 @@ class Modulo_StorageService
         $ids =
             array_map(
                 static fn(array $modulo): int =>
-                    (int) (
-                        $modulo['id_modulo']
-                        ?? 0
-                    ),
+                (int) (
+                    $modulo['id_modulo']
+                    ?? 0
+                ),
                 $modulos
             );
 
         return empty($ids)
             ? 1
             : max($ids) + 1;
+    }
+
+    /*==================================================
+    =              ACTUALIZAR IMAGEN                   =
+    ==================================================*/
+
+    public function actualizarImagen(
+        int $idModulo,
+        string $rutaImagen
+    ): ?array {
+        $modulos =
+            $this->obtenerTodos();
+
+        foreach (
+            $modulos as
+            $indice => $modulo
+        ) {
+            if (
+                (int) (
+                    $modulo['id_modulo']
+                    ?? 0
+                ) !== $idModulo
+            ) {
+                continue;
+            }
+
+            $modulos[$indice]['imagen'] =
+                $rutaImagen;
+
+            $this->guardarTodos(
+                $modulos
+            );
+
+            return $modulos[$indice];
+        }
+
+        return null;
     }
 }

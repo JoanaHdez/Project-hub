@@ -26,6 +26,10 @@ import {
     inicializarEstadoModulo,
 } from "./modulos/estado.js";
 
+import {
+    inicializarImagenModulo,
+} from "./modulos/imagen.js";
+
 /*==================================================*
 *=                  MÓDULOS                        =*
 *==================================================*/
@@ -46,5 +50,7 @@ document.addEventListener(
         inicializarEliminarModulo();
 
         inicializarEstadoModulo();
+
+        inicializarImagenModulo();
     },
 );

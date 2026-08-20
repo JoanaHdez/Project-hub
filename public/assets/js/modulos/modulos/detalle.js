@@ -51,6 +51,36 @@ export function inicializarDetalleModulo() {
             "modulo-url",
         );
 
+
+    /*==================================================*
+    *=              IMAGEN DEL MÓDULO                 =*
+    *==================================================*/
+
+    const editorImagen =
+        modal.querySelector(
+            "[data-modulo-imagen-editor]",
+        );
+
+    const previewImagen =
+        modal.querySelector(
+            "[data-modulo-imagen-preview]",
+        );
+
+    const imagenVacia =
+        modal.querySelector(
+            "[data-modulo-imagen-vacia]",
+        );
+
+    const botonSeleccionarImagen =
+        modal.querySelector(
+            "[data-modulo-imagen-seleccionar]",
+        );
+
+
+    /*==================================================*
+    *=                  BOTONES                        =*
+    *==================================================*/
+
     const botonEliminar =
         modal.querySelector(
             "[data-modulo-eliminar]",
@@ -118,6 +148,9 @@ export function inicializarDetalleModulo() {
             const url =
                 tarjeta.dataset.moduloUrl ?? "";
 
+            const imagen =
+                tarjeta.dataset.moduloImagen ?? "";
+
 
             /*==================================================*
             *=             PREPARAR FORMULARIO                 =*
@@ -132,6 +165,7 @@ export function inicializarDetalleModulo() {
 
             formulario.dataset.sistemaId =
                 idSistema;
+
 
             if (campoId) {
                 campoId.value =
@@ -167,6 +201,58 @@ export function inicializarDetalleModulo() {
                     url;
 
                 campoUrl.disabled =
+                    true;
+            }
+
+
+            /*==================================================*
+            *=              MOSTRAR IMAGEN                      =*
+            *==================================================*/
+
+            if (editorImagen) {
+                editorImagen.hidden =
+                    false;
+            }
+
+            if (imagen) {
+
+                if (previewImagen) {
+                    previewImagen.src =
+                        imagen;
+
+                    previewImagen.hidden =
+                        false;
+                }
+
+                if (imagenVacia) {
+                    imagenVacia.hidden =
+                        true;
+                }
+
+            } else {
+
+                if (previewImagen) {
+                    previewImagen.removeAttribute(
+                        "src",
+                    );
+
+                    previewImagen.hidden =
+                        true;
+                }
+
+                if (imagenVacia) {
+                    imagenVacia.hidden =
+                        false;
+                }
+            }
+
+
+            /*==================================================*
+            *=          OCULTAR LÁPIZ EN DETALLE               =*
+            *==================================================*/
+
+            if (botonSeleccionarImagen) {
+                botonSeleccionarImagen.hidden =
                     true;
             }
 
@@ -229,9 +315,10 @@ export function inicializarDetalleModulo() {
         },
     );
 
+
     /*==================================================*
-*=                  EDITAR MÓDULO                   =*
-*==================================================*/
+    *=                  EDITAR MÓDULO                   =*
+    *==================================================*/
 
     botonEditar?.addEventListener(
         "click",
@@ -274,6 +361,16 @@ export function inicializarDetalleModulo() {
 
             if (campoUrl) {
                 campoUrl.disabled =
+                    false;
+            }
+
+
+            /*==================================================*
+            *=              MOSTRAR LÁPIZ                      =*
+            *==================================================*/
+
+            if (botonSeleccionarImagen) {
+                botonSeleccionarImagen.hidden =
                     false;
             }
 

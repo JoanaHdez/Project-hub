@@ -6,6 +6,7 @@
         "tipo": "Registro",
         "descripcion": "Captura y validación de participantes.",
         "url": "",
+        "imagen": "http://localhost:8080/uploads/modulos/modulo-1-1787185840.png",
         "activo": true
     },
     {
@@ -51,6 +52,16 @@
         "tipo": "prueba extorsion",
         "descripcion": "prueba extorsion",
         "url": "",
+        "activo": true
+    },
+    {
+        "id_modulo": 12,
+        "id_sistema": 10,
+        "nombre": "prueba de proyecto 1c",
+        "tipo": "prueba de proyecto 1c",
+        "descripcion": "prueba de proyecto 1cprueba de proyecto 1c",
+        "url": "",
+        "imagen": "http://localhost:8080/uploads/modulos/modulo-12-1787185968.png",
         "activo": true
     }
 ]

@@ -14,6 +14,76 @@ $contenido = '
             value=""
         >
 
+
+        <!--==========================================
+        =              IMAGEN DEL MÓDULO            =
+        ===========================================-->
+
+        <div
+            class="modulo-imagen-editor"
+            data-modulo-imagen-editor
+            hidden
+        >
+
+            <div
+                class="modulo-imagen-editor__vista"
+                data-modulo-imagen-vista
+            >
+
+                <img
+                    src=""
+                    alt="Vista previa del módulo"
+                    class="modulo-imagen-editor__archivo"
+                    data-modulo-imagen-preview
+                    hidden
+                >
+
+                <span
+                    class="modulo-imagen-editor__vacia"
+                    data-modulo-imagen-vacia
+                >
+                    Vista previa
+                </span>
+
+
+                <!--==================================
+                =          BOTÓN EDITAR IMAGEN       =
+                ===================================-->
+
+                <button
+                    type="button"
+                    class="modulo-imagen-editor__boton"
+                    data-modulo-imagen-seleccionar
+                    aria-label="Cambiar imagen del módulo"
+                    title="Cambiar imagen"
+                    hidden
+                >
+                    ✎
+                </button>
+
+            </div>
+
+
+            <!--======================================
+            =          SELECTOR DE ARCHIVO           =
+            =======================================-->
+
+            <input
+                type="file"
+                id="modulo-imagen"
+                name="imagen"
+                accept="image/jpeg,image/png,image/webp"
+                data-modulo-imagen-input
+                hidden
+            >
+
+        </div>
+
+
+        <!--==========================================
+        =              DATOS DEL MÓDULO             =
+        ===========================================-->
+
         <div class="form-grid">
 
             <div class="form-grupo">
@@ -81,6 +151,7 @@ $contenido = '
 
     </form>
 ';
+
 
 $acciones = '
     <button

@@ -17,4 +17,6 @@ $routes->group('modulos', [
     $routes->delete('(:num)', 'Modulos_Controller::eliminar/$1');
 
     $routes->patch('(:num)/estado', 'Modulos_Controller::cambiarEstado/$1');
+
+    $routes->post('(:num)/imagen', 'Modulos_Controller::actualizarImagen/$1');
 });
