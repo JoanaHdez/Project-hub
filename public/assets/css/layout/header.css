@@ -1,4 +1,4 @@
-.app-header {
+/* .app-header {
     min-height: 72px;
     padding: 12px 24px;
     display: flex;
@@ -6,6 +6,20 @@
     justify-content: space-between;
     background-color: #ffffff;
     border-bottom: 1px solid #d9dee5;
+} */
+
+.app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 72px;
+
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+
+    z-index: 1000;
 }
 
 .app-header__brand {

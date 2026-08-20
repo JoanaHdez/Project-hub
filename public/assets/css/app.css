@@ -24,4 +24,172 @@
 
 
 
- 
+ /*==================================================
+=          LAYOUT FIJO PROJECT HUB                 =
+==================================================*/
+
+:root {
+    --app-header-altura: 68px;
+    --app-sidebar-ancho: 220px;
+}
+
+
+/*==================================================
+=                   DOCUMENTO                      =
+==================================================*/
+
+html {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    padding-top: var(--app-header-altura);
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    box-sizing: border-box;
+
+    background: #f5f7fa;
+}
+
+
+/*==================================================
+=                     HEADER                       =
+==================================================*/
+
+.app-header {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: var(--app-header-altura);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 24px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    z-index: 1000;
+}
+
+
+/*==================================================
+=                    SIDEBAR                       =
+==================================================*/
+
+.app-sidebar {
+    position: fixed;
+
+    top: var(--app-header-altura);
+    left: 0;
+    bottom: 0;
+
+    width: var(--app-sidebar-ancho);
+
+    padding: 18px 14px;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+
+    background: #ffffff;
+
+    border-right: 1px solid #e2e8f0;
+
+    z-index: 900;
+}
+
+
+/*==================================================
+=                 CONTENEDOR APP                   =
+==================================================*/
+
+.app-container {
+    display: block;
+
+    width: 100%;
+
+    min-height: auto;
+
+    margin: 0;
+    padding: 0;
+
+    overflow: visible;
+}
+
+
+/*==================================================
+=               CONTENIDO PRINCIPAL                =
+==================================================*/
+
+.main-content {
+    position: static;
+
+    margin: 0;
+    margin-left: var(--app-sidebar-ancho);
+
+    padding: 0;
+
+    width: auto;
+    min-height: auto;
+
+    overflow: visible;
+
+    box-sizing: border-box;
+
+    background: #f5f7fa;
+}
+
+
+/*==================================================
+=                     FOOTER                       =
+==================================================*/
+
+.app-footer {
+    position: static;
+
+    margin: 0;
+    margin-left: var(--app-sidebar-ancho);
+
+    width: calc(
+        100% - var(--app-sidebar-ancho)
+    );
+
+    min-height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 20px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border-top: 1px solid #e2e8f0;
+
+    color: #64748b;
+
+    font-size: 0.78rem;
+
+    text-align: center;
+}
+
+.app-footer p {
+    margin: 0;
+}

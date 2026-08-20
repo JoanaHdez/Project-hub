@@ -1,10 +1,29 @@
-.app-sidebar {
+/* .app-sidebar {
     width: 240px;
     flex-shrink: 0;
     min-height: calc(100vh - 72px);
     padding: 20px 16px;
     background-color: #ffffff;
     border-right: 1px solid #d9dee5;
+} */
+
+.app-sidebar {
+    position: fixed;
+
+    top: 72px;
+    left: 0;
+    bottom: 0;
+
+    width: 240px;
+
+    padding: 20px 16px;
+
+    background: #ffffff;
+    border-right: 1px solid #e2e8f0;
+
+    overflow-y: auto;
+
+    z-index: 900;
 }
 
 .app-sidebar__nav {
