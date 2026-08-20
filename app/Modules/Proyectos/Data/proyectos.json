@@ -4,7 +4,7 @@
         "nombre": "Proyecto Extorsión",
         "estado": "Producción",
         "estado_tipo": "produccion",
-        "origen": "Trabajo",
+        "origen": "Personal",
         "descripcion": "Sistema para el registro y seguimiento de actividades relacionadas con extorsión.",
         "repositorio_url": "https:\/\/github.com\/JoanaHdez\/Extorsi-n",
         "ruta_local": "",
@@ -12,7 +12,7 @@
         "id_especificacion": "1",
         "responsable": "Joana Herrera",
         "observaciones": "",
-        "total_sistemas": 1,
+        "total_sistemas": 2,
         "fecha_creacion": "13\/07\/2026"
     },
     {
