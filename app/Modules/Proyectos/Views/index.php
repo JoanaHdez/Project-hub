@@ -31,6 +31,7 @@
 <?= $this->include('App\Modules\Proyectos\Views\modals\confirmar_accion_proyecto') ?>
 <?= $this->include('App\Modules\Proyectos\Views\modals\sistemas_asociados') ?>
 <?= $this->include('App\Modules\Sistemas\Views\modals\nuevo_sistema') ?>
+<?= $this->include('App\Modules\Proyectos\Views\modals\confirmar_eliminar_especificacion') ?>
 
 <?= view('App\Modules\Sistemas\Views\modals\nuevo_sistema') ?>
 <?= view('App\Modules\Sistemas\Views\modals\detalle_sistema') ?>

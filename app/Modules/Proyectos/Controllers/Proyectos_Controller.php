@@ -1429,4 +1429,175 @@ class Proyectos_Controller extends BaseController
                 $especificacionActualizada,
             ]);
     }
+
+    /*==================================================
+    =            ELIMINAR ESPECIFICACIÓN               =
+    ==================================================*/
+
+    public function eliminarEspecificacion(
+        int $idEspecificacion
+    ) {
+
+        /*==================================================
+        =          COMPROBAR QUE LA FICHA EXISTE          =
+        ==================================================*/
+
+        $especificacion =
+            $this->especificacionStorage
+            ->obtenerPorId(
+                $idEspecificacion
+            );
+
+
+        if ($especificacion === null) {
+
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' =>
+                    false,
+
+                    'mensaje' =>
+                    'No se encontró la ficha técnica solicitada.',
+                ]);
+        }
+
+
+        /*==================================================
+        =             COMPROBAR ASOCIACIONES              =
+        ==================================================*/
+
+        $proyectos =
+            $this->storage
+            ->obtenerTodos();
+
+
+        $proyectosAsociados =
+            array_values(
+                array_filter(
+                    $proyectos,
+                    static function (
+                        array $proyecto
+                    ) use (
+                        $idEspecificacion
+                    ): bool {
+
+                        return (
+                            (int) (
+                                $proyecto['id_especificacion']
+                                ?? 0
+                            )
+                        ) === $idEspecificacion;
+                    }
+                )
+            );
+
+
+        /*==================================================
+        =              BLOQUEAR ELIMINACIÓN               =
+        ==================================================*/
+
+        if (
+            !empty($proyectosAsociados)
+        ) {
+
+            $nombresProyectos =
+                array_values(
+                    array_map(
+                        static fn(
+                            array $proyecto
+                        ): string =>
+                        (string) (
+                            $proyecto['nombre']
+                            ?? 'Proyecto'
+                        ),
+                        $proyectosAsociados
+                    )
+                );
+
+
+            return $this->response
+                ->setStatusCode(409)
+                ->setJSON([
+                    'ok' =>
+                    false,
+
+                    'mensaje' =>
+                    'No se puede eliminar esta ficha técnica porque está asociada a uno o más proyectos.',
+
+                    'proyectos_asociados' =>
+                    $nombresProyectos,
+                ]);
+        }
+
+
+        /*==================================================
+        =                   ELIMINAR                       =
+        ==================================================*/
+
+        $especificaciones =
+            $this->especificacionStorage
+            ->obtenerTodos();
+
+
+        $especificacionesFiltradas =
+            array_values(
+                array_filter(
+                    $especificaciones,
+                    static fn(
+                        array $especificacionActual
+                    ): bool =>
+                    (int) (
+                        $especificacionActual['id_especificacion']
+                        ?? 0
+                    ) !== $idEspecificacion
+                )
+            );
+
+
+        if (
+            count($especificacionesFiltradas)
+            ===
+            count($especificaciones)
+        ) {
+
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' =>
+                    false,
+
+                    'mensaje' =>
+                    'No fue posible encontrar la ficha técnica.',
+                ]);
+        }
+
+
+        $this->especificacionStorage
+            ->guardarTodos(
+                $especificacionesFiltradas
+            );
+
+
+        /*==================================================
+        =                  RESPUESTA                       =
+        ==================================================*/
+
+        return $this->response
+            ->setJSON([
+                'ok' =>
+                true,
+
+                'mensaje' =>
+                'La ficha técnica fue eliminada correctamente.',
+
+                'id_especificacion' =>
+                $idEspecificacion,
+
+                'total_especificaciones' =>
+                count(
+                    $especificacionesFiltradas
+                ),
+            ]);
+    }
 }

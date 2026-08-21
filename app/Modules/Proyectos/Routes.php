@@ -67,6 +67,13 @@ $routes->put(
     ]
 );
 
+$routes->delete(
+    'proyectos/especificaciones/(:num)',
+    '\App\Modules\Proyectos\Controllers\Proyectos_Controller::eliminarEspecificacion/$1',
+    [
+        'filter' => 'admin',
+    ]
+);
 /*==================================================
 =                OBTENER PROYECTO                  =
 ==================================================*/

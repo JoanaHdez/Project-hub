@@ -3,6 +3,7 @@ import { inicializarTablaProyectos } from "./tabla.js";
 import { inicializarSistemasAsociados } from "./sistemas_asociados.js";
 import { inicializarNuevaFichaTecnica, } from "./ficha_tecnica/nueva.js";
 import { inicializarVerFichaTecnica, } from "./ficha_tecnica/ver.js";
+import { inicializarEliminarFichaTecnica,} from "./ficha_tecnica/eliminar.js";
 
 function inicializarModuloProyectos() {
   inicializarFormularioProyecto();
@@ -10,6 +11,7 @@ function inicializarModuloProyectos() {
   inicializarSistemasAsociados();
   inicializarNuevaFichaTecnica();
   inicializarVerFichaTecnica();
+  inicializarEliminarFichaTecnica();
 }
 
 document.addEventListener("DOMContentLoaded", inicializarModuloProyectos);

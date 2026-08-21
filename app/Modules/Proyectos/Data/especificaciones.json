@@ -8,15 +8,5 @@
         "base_datos": "MySQL",
         "repositorio": "GitHub",
         "entorno_local": "Laragon"
-    },
-    {
-        "id_especificacion": 2,
-        "codigo": "ET-01",
-        "framework": "ET-01",
-        "version_framework": "ET-01",
-        "php": "ET-01",
-        "base_datos": "ET-01",
-        "repositorio": "",
-        "entorno_local": ""
     }
 ]
