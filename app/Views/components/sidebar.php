@@ -10,6 +10,10 @@ $segmento =
         )
     );
 
+$rolUsuario =
+    (string) session()
+        ->get('usuario_rol');
+
 
 /*==================================================
 =              SECCIÓN ACTIVA                      =
@@ -38,6 +42,9 @@ $seccionActiva =
         'documentos' =>
             'documentos',
 
+        'mis-sistemas' =>
+            'mis-sistemas',
+
         default =>
             '',
     };
@@ -50,136 +57,167 @@ $seccionActiva =
     <nav class="app-sidebar__nav">
 
 
-        <!--==========================================
-        =                 DASHBOARD                  =
-        ===========================================-->
+        <?php if ($rolUsuario === 'administrador'): ?>
 
-        <a
-            href="<?= site_url('/') ?>"
-            class="
-                app-sidebar__link
+
+            <!--==========================================
+            =                 DASHBOARD                  =
+            ===========================================-->
+
+            <a
+                href="<?= site_url('/') ?>"
+                class="
+                    app-sidebar__link
+                    <?= $seccionActiva === 'dashboard'
+                        ? 'app-sidebar__link--activo'
+                        : ''
+                    ?>
+                "
                 <?= $seccionActiva === 'dashboard'
-                    ? 'app-sidebar__link--activo'
+                    ? 'aria-current="page"'
                     : ''
                 ?>
-            "
-            <?= $seccionActiva === 'dashboard'
-                ? 'aria-current="page"'
-                : ''
-            ?>
-        >
-            Dashboard
-        </a>
+            >
+                Dashboard
+            </a>
 
 
-        <!--==========================================
-        =                 PROYECTOS                  =
-        ===========================================-->
+            <!--==========================================
+            =                 PROYECTOS                  =
+            ===========================================-->
 
-        <a
-            href="<?= site_url('proyectos') ?>"
-            class="
-                app-sidebar__link
+            <a
+                href="<?= site_url('proyectos') ?>"
+                class="
+                    app-sidebar__link
+                    <?= $seccionActiva === 'proyectos'
+                        ? 'app-sidebar__link--activo'
+                        : ''
+                    ?>
+                "
                 <?= $seccionActiva === 'proyectos'
-                    ? 'app-sidebar__link--activo'
+                    ? 'aria-current="page"'
                     : ''
                 ?>
-            "
-            <?= $seccionActiva === 'proyectos'
-                ? 'aria-current="page"'
-                : ''
-            ?>
-        >
-            Proyectos
-        </a>
+            >
+                Proyectos
+            </a>
 
 
-        <!--==========================================
-        =                  SISTEMAS                  =
-        ===========================================-->
+            <!--==========================================
+            =                  SISTEMAS                  =
+            ===========================================-->
 
-        <a
-            href="<?= site_url('sistemas') ?>"
-            class="
-                app-sidebar__link
+            <a
+                href="<?= site_url('sistemas') ?>"
+                class="
+                    app-sidebar__link
+                    <?= $seccionActiva === 'sistemas'
+                        ? 'app-sidebar__link--activo'
+                        : ''
+                    ?>
+                "
                 <?= $seccionActiva === 'sistemas'
-                    ? 'app-sidebar__link--activo'
+                    ? 'aria-current="page"'
                     : ''
                 ?>
-            "
-            <?= $seccionActiva === 'sistemas'
-                ? 'aria-current="page"'
-                : ''
-            ?>
-        >
-            Sistemas
-        </a>
+            >
+                Sistemas
+            </a>
 
 
-        <!--==========================================
-        =                    APIs                    =
-        ===========================================-->
+            <!--==========================================
+            =                    APIs                    =
+            ===========================================-->
 
-        <a
-            href="<?= site_url('apis') ?>"
-            class="
-                app-sidebar__link
+            <a
+                href="<?= site_url('apis') ?>"
+                class="
+                    app-sidebar__link
+                    <?= $seccionActiva === 'apis'
+                        ? 'app-sidebar__link--activo'
+                        : ''
+                    ?>
+                "
                 <?= $seccionActiva === 'apis'
-                    ? 'app-sidebar__link--activo'
+                    ? 'aria-current="page"'
                     : ''
                 ?>
-            "
-            <?= $seccionActiva === 'apis'
-                ? 'aria-current="page"'
-                : ''
-            ?>
-        >
-            APIs
-        </a>
+            >
+                APIs
+            </a>
 
 
-        <!--==========================================
-        =                  MÓDULOS                   =
-        ===========================================-->
+            <!--==========================================
+            =                  MÓDULOS                   =
+            ===========================================-->
 
-        <a
-            href="<?= base_url('modulos') ?>"
-            class="
-                app-sidebar__link
+            <a
+                href="<?= base_url('modulos') ?>"
+                class="
+                    app-sidebar__link
+                    <?= $seccionActiva === 'modulos'
+                        ? 'app-sidebar__link--activo'
+                        : ''
+                    ?>
+                "
                 <?= $seccionActiva === 'modulos'
-                    ? 'app-sidebar__link--activo'
+                    ? 'aria-current="page"'
                     : ''
                 ?>
-            "
-            <?= $seccionActiva === 'modulos'
-                ? 'aria-current="page"'
-                : ''
-            ?>
-        >
-            Módulos
-        </a>
+            >
+                Módulos
+            </a>
 
 
-        <!--==========================================
-        =                DOCUMENTOS                  =
-        ===========================================-->
+            <!--==========================================
+            =                DOCUMENTOS                  =
+            ===========================================-->
 
-        <a
-            href="<?= base_url('documentos') ?>"
-            class="
-                app-sidebar__link
+            <a
+                href="<?= base_url('documentos') ?>"
+                class="
+                    app-sidebar__link
+                    <?= $seccionActiva === 'documentos'
+                        ? 'app-sidebar__link--activo'
+                        : ''
+                    ?>
+                "
                 <?= $seccionActiva === 'documentos'
-                    ? 'app-sidebar__link--activo'
+                    ? 'aria-current="page"'
                     : ''
                 ?>
-            "
-            <?= $seccionActiva === 'documentos'
-                ? 'aria-current="page"'
-                : ''
-            ?>
-        >
-            Documentos
-        </a>
+            >
+                Documentos
+            </a>
+
+
+        <?php elseif ($rolUsuario === 'usuario'): ?>
+
+
+            <!--==========================================
+            =                MIS SISTEMAS                =
+            ===========================================-->
+
+            <a
+                href="<?= base_url('mis-sistemas') ?>"
+                class="
+                    app-sidebar__link
+                    <?= $seccionActiva === 'mis-sistemas'
+                        ? 'app-sidebar__link--activo'
+                        : ''
+                    ?>
+                "
+                <?= $seccionActiva === 'mis-sistemas'
+                    ? 'aria-current="page"'
+                    : ''
+                ?>
+            >
+                Mis sistemas
+            </a>
+
+
+        <?php endif; ?>
 
 
     </nav>

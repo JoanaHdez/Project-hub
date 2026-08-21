@@ -1,0 +1,323 @@
+/*==================================================
+=                 MIS SISTEMAS                     =
+==================================================*/
+
+.mis-sistemas-page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    padding: 16px 20px 24px;
+
+    box-sizing: border-box;
+}
+
+
+/*==================================================
+=                  ENCABEZADO                      =
+==================================================*/
+
+.mis-sistemas-header {
+    padding: 32px;
+
+    background: #ffffff;
+
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-md);
+}
+
+.mis-sistemas-header__eyebrow {
+    display: inline-block;
+
+    margin-bottom: 8px;
+
+    color: var(--color-primario);
+
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+.mis-sistemas-header__titulo {
+    margin: 0 0 10px;
+
+    color: #0f172a;
+
+    font-size: 2rem;
+}
+
+.mis-sistemas-header__descripcion {
+    margin: 0;
+
+    color: #64748b;
+
+    line-height: 1.7;
+}
+
+
+/*==================================================
+=                   CONTENIDO                      =
+==================================================*/
+
+.mis-sistemas-contenido {
+    display: flex;
+    flex-direction: column;
+
+    gap: 16px;
+
+    padding: 20px;
+
+    background: #ffffff;
+
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-md);
+
+    box-sizing: border-box;
+}
+
+.mis-sistemas-contenido__encabezado h2 {
+    margin: 0 0 8px;
+
+    color: #0f172a;
+}
+
+.mis-sistemas-contenido__encabezado p {
+    margin: 0;
+
+    color: #64748b;
+}
+
+
+/*==================================================
+=                     GRID                         =
+==================================================*/
+
+.mis-sistemas-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 16px;
+}
+
+
+/*==================================================
+=                    TARJETA                       =
+==================================================*/
+
+.mis-sistema-card {
+    position: relative;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+
+    color: inherit;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.mis-sistema-card:hover {
+    transform: translateY(-3px);
+
+    border-color: #bfdbfe;
+
+    box-shadow:
+        0 14px 28px rgba(15, 23, 42, 0.08);
+}
+
+
+/*==================================================
+=                  BANNER                         =
+==================================================*/
+
+.mis-sistema-card__banner {
+    position: relative;
+
+    min-height: 120px;
+
+    display: flex;
+    align-items: flex-end;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #1e3a8a
+        );
+}
+
+.mis-sistema-card__tipo {
+    color: #ffffff;
+
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+
+/*==================================================
+=                  INDICADOR                      =
+==================================================*/
+
+.mis-sistema-card__estado {
+    position: absolute;
+
+    top: 16px;
+    right: 16px;
+
+    width: 12px;
+    height: 12px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+    box-shadow:
+        0 0 0 4px rgba(255, 255, 255, 0.85);
+}
+
+
+/*==================================================
+=                   CUERPO                         =
+==================================================*/
+
+.mis-sistema-card__contenido {
+    padding: 18px;
+}
+
+.mis-sistema-card__proyecto {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--color-primario);
+
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.mis-sistema-card__titulo {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 1.1rem;
+}
+
+
+/*==================================================
+=                   ACCIÓN                         =
+==================================================*/
+
+.mis-sistema-card__accion {
+    display: inline-flex;
+
+    margin-top: 16px;
+
+    padding: 7px 11px;
+
+    border-radius: 999px;
+
+    background: var(--color-primario-suave);
+
+    color: var(--color-primario);
+
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+
+/*==================================================
+=                  DESHABILITADO                   =
+==================================================*/
+
+.mis-sistema-card[aria-disabled="true"] {
+    cursor: default;
+}
+
+.mis-sistema-card[aria-disabled="true"]
+.mis-sistema-card__accion {
+    background: #f1f5f9;
+    color: #94a3b8;
+
+    cursor: not-allowed;
+}
+
+/*==================================================
+=                    VACÍO                         =
+==================================================*/
+
+.mis-sistemas-vacio {
+    min-height: 260px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    padding: 32px;
+
+    border: 1px dashed #cbd5e1;
+    border-radius: 14px;
+
+    background: #f8fafc;
+
+    text-align: center;
+}
+
+.mis-sistemas-vacio span {
+    font-size: 2rem;
+}
+
+.mis-sistemas-vacio strong {
+    color: #0f172a;
+}
+
+.mis-sistemas-vacio p {
+    margin: 0;
+
+    color: #64748b;
+}
+
+
+/*==================================================
+=                 RESPONSIVE                       =
+==================================================*/
+
+@media (max-width: 1100px) {
+
+    .mis-sistemas-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+
+    .mis-sistemas-header {
+        padding: 24px;
+    }
+
+    .mis-sistemas-grid {
+        grid-template-columns: 1fr;
+    }
+}
