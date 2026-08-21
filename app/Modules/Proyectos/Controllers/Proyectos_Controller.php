@@ -7,13 +7,15 @@ use App\Modules\Proyectos\Services\Proyecto_StorageService;
 use App\Modules\Sistemas\Services\Sistema_StorageService;
 use App\Services\Actividad_StorageService;
 
+use App\Modules\Proyectos\Services\Especificacion_StorageService;
+
 
 class Proyectos_Controller extends BaseController
 {
     private Proyecto_StorageService $storage;
     private Sistema_StorageService $sistemaStorage;
     private Actividad_StorageService $actividadStorage;
-
+    private Especificacion_StorageService $especificacionStorage;
 
     public function __construct()
     {
@@ -25,6 +27,9 @@ class Proyectos_Controller extends BaseController
 
         $this->actividadStorage =
             new Actividad_StorageService();
+
+        $this->especificacionStorage =
+            new Especificacion_StorageService();
     }
 
 
@@ -101,10 +106,10 @@ class Proyectos_Controller extends BaseController
             'App\Modules\Proyectos\Views\index',
             [
                 'title' =>
-                    'Proyectos | Project Hub',
+                'Proyectos | Project Hub',
 
                 'proyectos' =>
-                    $proyectos,
+                $proyectos,
             ]
         );
     }
@@ -128,7 +133,7 @@ class Proyectos_Controller extends BaseController
                     'ok' => false,
 
                     'mensaje' =>
-                        'No se recibieron datos válidos del proyecto.',
+                    'No se recibieron datos válidos del proyecto.',
                 ]);
         }
 
@@ -157,98 +162,98 @@ class Proyectos_Controller extends BaseController
         $proyecto = [
 
             'id_proyecto' =>
-                $this->storage
+            $this->storage
                 ->generarNuevoId(
                     $proyectos
                 ),
 
             'nombre' =>
-                trim(
-                    (string) (
-                        $datos['nombre']
-                        ?? ''
-                    )
-                ),
+            trim(
+                (string) (
+                    $datos['nombre']
+                    ?? ''
+                )
+            ),
 
             'estado' =>
-                $estado,
+            $estado,
 
             'estado_tipo' =>
-                $this->obtenerTipoEstado(
-                    $estado
-                ),
+            $this->obtenerTipoEstado(
+                $estado
+            ),
 
             'origen' =>
-                trim(
-                    (string) (
-                        $datos['origen']
-                        ?? ''
-                    )
-                ),
+            trim(
+                (string) (
+                    $datos['origen']
+                    ?? ''
+                )
+            ),
 
             'descripcion' =>
-                trim(
-                    (string) (
-                        $datos['descripcion']
-                        ?? ''
-                    )
-                ),
+            trim(
+                (string) (
+                    $datos['descripcion']
+                    ?? ''
+                )
+            ),
 
             'repositorio_url' =>
-                trim(
-                    (string) (
-                        $datos['repositorio_url']
-                        ?? ''
-                    )
-                ),
+            trim(
+                (string) (
+                    $datos['repositorio_url']
+                    ?? ''
+                )
+            ),
 
             'ruta_local' =>
-                trim(
-                    (string) (
-                        $datos['ruta_local']
-                        ?? ''
-                    )
-                ),
+            trim(
+                (string) (
+                    $datos['ruta_local']
+                    ?? ''
+                )
+            ),
 
             'url_servidor' =>
-                trim(
-                    (string) (
-                        $datos['url_servidor']
-                        ?? ''
-                    )
-                ),
+            trim(
+                (string) (
+                    $datos['url_servidor']
+                    ?? ''
+                )
+            ),
 
             'id_especificacion' =>
-                (string) (
-                    $datos['id_especificacion']
-                    ?? ''
-                ),
+            (string) (
+                $datos['id_especificacion']
+                ?? ''
+            ),
 
             'responsable' =>
-                trim(
-                    (string) (
-                        $datos['responsable']
-                        ?? ''
-                    )
-                ),
+            trim(
+                (string) (
+                    $datos['responsable']
+                    ?? ''
+                )
+            ),
 
             'observaciones' =>
-                trim(
-                    (string) (
-                        $datos['observaciones']
-                        ?? ''
-                    )
-                ),
+            trim(
+                (string) (
+                    $datos['observaciones']
+                    ?? ''
+                )
+            ),
 
             /*
              * Al crear un proyecto todavía
              * no tiene sistemas asociados.
              */
             'total_sistemas' =>
-                0,
+            0,
 
             'fecha_creacion' =>
-                date('d/m/Y'),
+            date('d/m/Y'),
         ];
 
 
@@ -290,23 +295,23 @@ class Proyectos_Controller extends BaseController
                 'ok' => true,
 
                 'mensaje' =>
-                    'Proyecto registrado correctamente.',
+                'Proyecto registrado correctamente.',
 
                 'proyecto' =>
-                    $proyecto,
+                $proyecto,
 
                 'fila_html' =>
-                    view(
-                        'components/ui/fila_proyecto',
-                        [
-                            'proyecto' =>
-                                $proyecto,
-                        ],
-                        [
-                            'saveData' =>
-                                false,
-                        ]
-                    ),
+                view(
+                    'components/ui/fila_proyecto',
+                    [
+                        'proyecto' =>
+                        $proyecto,
+                    ],
+                    [
+                        'saveData' =>
+                        false,
+                    ]
+                ),
             ]);
     }
 
@@ -346,10 +351,10 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'No se encontró el proyecto solicitado.',
+                    'No se encontró el proyecto solicitado.',
                 ]);
         }
 
@@ -361,9 +366,9 @@ class Proyectos_Controller extends BaseController
         $proyectoEncontrado['total_sistemas'] =
             count(
                 $this->sistemaStorage
-                ->obtenerPorProyecto(
-                    $idProyecto
-                )
+                    ->obtenerPorProyecto(
+                        $idProyecto
+                    )
             );
 
 
@@ -374,10 +379,10 @@ class Proyectos_Controller extends BaseController
         return $this->response
             ->setJSON([
                 'ok' =>
-                    true,
+                true,
 
                 'proyecto' =>
-                    $proyectoEncontrado,
+                $proyectoEncontrado,
             ]);
     }
 
@@ -399,10 +404,10 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'Los datos enviados no son válidos.',
+                    'Los datos enviados no son válidos.',
                 ]);
         }
 
@@ -451,10 +456,10 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'El proyecto solicitado no existe.',
+                    'El proyecto solicitado no existe.',
                 ]);
         }
 
@@ -474,9 +479,9 @@ class Proyectos_Controller extends BaseController
         $totalSistemas =
             count(
                 $this->sistemaStorage
-                ->obtenerPorProyecto(
-                    $idProyecto
-                )
+                    ->obtenerPorProyecto(
+                        $idProyecto
+                    )
             );
 
 
@@ -489,88 +494,88 @@ class Proyectos_Controller extends BaseController
                 $proyectoExistente,
                 [
                     'id_proyecto' =>
-                        $idProyecto,
+                    $idProyecto,
 
                     'nombre' =>
-                        trim(
-                            (string) (
-                                $datos['nombre']
-                                ?? ''
-                            )
-                        ),
+                    trim(
+                        (string) (
+                            $datos['nombre']
+                            ?? ''
+                        )
+                    ),
 
                     'estado' =>
-                        $estado,
+                    $estado,
 
                     'estado_tipo' =>
-                        $this->obtenerTipoEstado(
-                            $estado
-                        ),
+                    $this->obtenerTipoEstado(
+                        $estado
+                    ),
 
                     'origen' =>
-                        trim(
-                            (string) (
-                                $datos['origen']
-                                ?? ''
-                            )
-                        ),
+                    trim(
+                        (string) (
+                            $datos['origen']
+                            ?? ''
+                        )
+                    ),
 
                     'descripcion' =>
-                        trim(
-                            (string) (
-                                $datos['descripcion']
-                                ?? ''
-                            )
-                        ),
+                    trim(
+                        (string) (
+                            $datos['descripcion']
+                            ?? ''
+                        )
+                    ),
 
                     'repositorio_url' =>
-                        trim(
-                            (string) (
-                                $datos['repositorio_url']
-                                ?? ''
-                            )
-                        ),
+                    trim(
+                        (string) (
+                            $datos['repositorio_url']
+                            ?? ''
+                        )
+                    ),
 
                     'ruta_local' =>
-                        trim(
-                            (string) (
-                                $datos['ruta_local']
-                                ?? ''
-                            )
-                        ),
+                    trim(
+                        (string) (
+                            $datos['ruta_local']
+                            ?? ''
+                        )
+                    ),
 
                     'url_servidor' =>
-                        trim(
-                            (string) (
-                                $datos['url_servidor']
-                                ?? ''
-                            )
-                        ),
+                    trim(
+                        (string) (
+                            $datos['url_servidor']
+                            ?? ''
+                        )
+                    ),
 
                     'id_especificacion' =>
-                        (string) (
-                            $datos['id_especificacion']
-                            ?? ''
-                        ),
+                    (string) (
+                        $datos['id_especificacion']
+                        ?? ''
+                    ),
 
                     'responsable' =>
-                        trim(
-                            (string) (
-                                $datos['responsable']
-                                ?? ''
-                            )
-                        ),
+                    trim(
+                        (string) (
+                            $datos['responsable']
+                            ?? ''
+                        )
+                    ),
 
                     'observaciones' =>
-                        trim(
-                            (string) (
-                                $datos['observaciones']
-                                ?? ''
-                            )
-                        ),
+                    trim(
+                        (string) (
+                            $datos['observaciones']
+                            ?? ''
+                        )
+                    ),
 
                     'total_sistemas' =>
-                        $totalSistemas,
+                    $totalSistemas,
                 ]
             );
 
@@ -611,26 +616,26 @@ class Proyectos_Controller extends BaseController
         return $this->response
             ->setJSON([
                 'ok' =>
-                    true,
+                true,
 
                 'mensaje' =>
-                    'Proyecto actualizado correctamente.',
+                'Proyecto actualizado correctamente.',
 
                 'proyecto' =>
-                    $proyectoActualizado,
+                $proyectoActualizado,
 
                 'fila_html' =>
-                    view(
-                        'components/ui/fila_proyecto',
-                        [
-                            'proyecto' =>
-                                $proyectoActualizado,
-                        ],
-                        [
-                            'saveData' =>
-                                false,
-                        ]
-                    ),
+                view(
+                    'components/ui/fila_proyecto',
+                    [
+                        'proyecto' =>
+                        $proyectoActualizado,
+                    ],
+                    [
+                        'saveData' =>
+                        false,
+                    ]
+                ),
             ]);
     }
 
@@ -654,10 +659,10 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'No se encontró el proyecto solicitado.',
+                    'No se encontró el proyecto solicitado.',
                 ]);
         }
 
@@ -685,13 +690,13 @@ class Proyectos_Controller extends BaseController
         return $this->response
             ->setJSON([
                 'ok' =>
-                    true,
+                true,
 
                 'mensaje' =>
-                    'Proyecto desactivado correctamente.',
+                'Proyecto desactivado correctamente.',
 
                 'proyecto' =>
-                    $proyecto,
+                $proyecto,
             ]);
     }
 
@@ -715,10 +720,10 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'No se encontró el proyecto solicitado.',
+                    'No se encontró el proyecto solicitado.',
                 ]);
         }
 
@@ -746,13 +751,13 @@ class Proyectos_Controller extends BaseController
         return $this->response
             ->setJSON([
                 'ok' =>
-                    true,
+                true,
 
                 'mensaje' =>
-                    'Proyecto activado correctamente.',
+                'Proyecto activado correctamente.',
 
                 'proyecto' =>
-                    $proyecto,
+                $proyecto,
             ]);
     }
 
@@ -807,10 +812,10 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'No se encontró el proyecto solicitado.',
+                    'No se encontró el proyecto solicitado.',
                 ]);
         }
 
@@ -839,10 +844,238 @@ class Proyectos_Controller extends BaseController
         return $this->response
             ->setJSON([
                 'ok' =>
+                true,
+
+                'mensaje' =>
+                'Proyecto eliminado correctamente.',
+            ]);
+    }
+
+
+
+    /*==================================================
+    =            GUARDAR ESPECIFICACIÓN                =
+    ==================================================*/
+
+    public function guardarEspecificacion()
+    {
+        $datos =
+            $this->request
+            ->getJSON(true);
+
+        if (!is_array($datos)) {
+
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No se recibieron datos válidos de la ficha técnica.',
+                ]);
+        }
+
+
+        /*==================================================
+        =                  VALIDAR CÓDIGO                  =
+        ==================================================*/
+
+        $codigo =
+            trim(
+                (string) (
+                    $datos['codigo']
+                    ?? ''
+                )
+            );
+
+        if ($codigo === '') {
+
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'El código de la ficha técnica es obligatorio.',
+                ]);
+        }
+
+
+        /*==================================================
+        =             OBTENER ESPECIFICACIONES             =
+        ==================================================*/
+
+        $especificaciones =
+            $this->especificacionStorage
+            ->obtenerTodos();
+
+
+        /*==================================================
+        =              VALIDAR CÓDIGO ÚNICO               =
+        ==================================================*/
+
+        foreach ($especificaciones as $especificacion) {
+
+            $codigoExistente =
+                strtolower(
+                    trim(
+                        (string) (
+                            $especificacion['codigo']
+                            ?? ''
+                        )
+                    )
+                );
+
+            if (
+                $codigoExistente ===
+                strtolower($codigo)
+            ) {
+
+                return $this->response
+                    ->setStatusCode(409)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'Ya existe una ficha técnica con ese código.',
+                    ]);
+            }
+        }
+
+
+        /*==================================================
+        =               CONSTRUIR REGISTRO                 =
+        ==================================================*/
+
+        $especificacion = [
+
+            'id_especificacion' =>
+                $this->especificacionStorage
+                ->generarNuevoId(
+                    $especificaciones
+                ),
+
+            'codigo' =>
+                $codigo,
+
+            'framework' =>
+                trim(
+                    (string) (
+                        $datos['framework']
+                        ?? ''
+                    )
+                ),
+
+            'version_framework' =>
+                trim(
+                    (string) (
+                        $datos['version_framework']
+                        ?? ''
+                    )
+                ),
+
+            'php' =>
+                trim(
+                    (string) (
+                        $datos['php']
+                        ?? ''
+                    )
+                ),
+
+            'base_datos' =>
+                trim(
+                    (string) (
+                        $datos['base_datos']
+                        ?? ''
+                    )
+                ),
+
+            'repositorio' =>
+                trim(
+                    (string) (
+                        $datos['repositorio']
+                        ?? ''
+                    )
+                ),
+
+            'entorno_local' =>
+                trim(
+                    (string) (
+                        $datos['entorno_local']
+                        ?? ''
+                    )
+                ),
+        ];
+
+
+        /*==================================================
+        =                    GUARDAR                       =
+        ==================================================*/
+
+        $especificaciones[] =
+            $especificacion;
+
+        $this->especificacionStorage
+            ->guardarTodos(
+                $especificaciones
+            );
+
+
+        /*==================================================
+        =                   RESPUESTA                      =
+        ==================================================*/
+
+        return $this->response
+            ->setJSON([
+                'ok' =>
                     true,
 
                 'mensaje' =>
-                    'Proyecto eliminado correctamente.',
+                    'Ficha técnica registrada correctamente.',
+
+                'especificacion' =>
+                    $especificacion,
+            ]);
+    }
+
+
+    /*==================================================
+    =            OBTENER ESPECIFICACIÓN                =
+    ==================================================*/
+
+    public function obtenerEspecificacion(
+        int $idEspecificacion
+    ) {
+        $especificacion =
+            $this->especificacionStorage
+            ->obtenerPorId(
+                $idEspecificacion
+            );
+
+        if ($especificacion === null) {
+
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No se encontró la ficha técnica solicitada.',
+                ]);
+        }
+
+
+        return $this->response
+            ->setJSON([
+                'ok' =>
+                    true,
+
+                'especificacion' =>
+                    $especificacion,
             ]);
     }
 
@@ -861,21 +1094,20 @@ class Proyectos_Controller extends BaseController
             $this->actividadStorage
                 ->registrar([
                     'bloque' =>
-                        'Proyectos',
+                    'Proyectos',
 
                     'accion' =>
-                        $accion,
+                    $accion,
 
                     'entidad_tipo' =>
-                        'Proyecto',
+                    'Proyecto',
 
                     'entidad_id' =>
-                        $idProyecto,
+                    $idProyecto,
 
                     'detalle' =>
-                        $detalle,
+                    $detalle,
                 ]);
-
         } catch (\Throwable $error) {
 
             log_message(
@@ -883,10 +1115,10 @@ class Proyectos_Controller extends BaseController
                 'No fue posible registrar actividad del proyecto {id}: {mensaje}',
                 [
                     'id' =>
-                        $idProyecto,
+                    $idProyecto,
 
                     'mensaje' =>
-                        $error->getMessage(),
+                    $error->getMessage(),
                 ]
             );
         }
@@ -903,19 +1135,19 @@ class Proyectos_Controller extends BaseController
         return match ($estado) {
 
             'Producción' =>
-                'produccion',
+            'produccion',
 
             'Desarrollo' =>
-                'desarrollo',
+            'desarrollo',
 
             'Detenido' =>
-                'detenido',
+            'detenido',
 
             'Mantenimiento' =>
-                'mantenimiento',
+            'mantenimiento',
 
             default =>
-                'inactivo',
+            'inactivo',
         };
     }
 }

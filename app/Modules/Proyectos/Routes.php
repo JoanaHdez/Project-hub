@@ -6,6 +6,10 @@ use App\Modules\Proyectos\Controllers\Proyectos_Controller;
 /** @var RouteCollection $routes */
 
 
+/*==================================================
+=                   PROYECTOS                      =
+==================================================*/
+
 $routes->get(
     'proyectos',
     [
@@ -30,29 +34,60 @@ $routes->post(
 );
 
 
-$routes->get(
-    'proyectos/(:num)',
+/*==================================================
+=            ESPECIFICACIONES TÉCNICAS             =
+==================================================*/
+
+$routes->post(
+    'proyectos/especificaciones',
     [
         Proyectos_Controller::class,
-        'obtener',
+        'guardarEspecificacion',
     ],
     [
         'filter' => 'admin',
     ]
 );
 
+
+$routes->get(
+    'proyectos/especificaciones/(:num)',
+    '\App\Modules\Proyectos\Controllers\Proyectos_Controller::obtenerEspecificacion/$1',
+    [
+        'filter' => 'admin',
+    ]
+);
+
+
+/*==================================================
+=                OBTENER PROYECTO                  =
+==================================================*/
+
+$routes->get(
+    'proyectos/(:num)',
+    '\App\Modules\Proyectos\Controllers\Proyectos_Controller::obtener/$1',
+    [
+        'filter' => 'admin',
+    ]
+);
+
+
+/*==================================================
+=              ACTUALIZAR PROYECTO                 =
+==================================================*/
 
 $routes->put(
     'proyectos/(:num)',
-    [
-        Proyectos_Controller::class,
-        'actualizar',
-    ],
+    '\App\Modules\Proyectos\Controllers\Proyectos_Controller::actualizar/$1',
     [
         'filter' => 'admin',
     ]
 );
 
+
+/*==================================================
+=              DESACTIVAR PROYECTO                 =
+==================================================*/
 
 $routes->patch(
     'proyectos/(:num)/desactivar',
@@ -63,6 +98,10 @@ $routes->patch(
 );
 
 
+/*==================================================
+=                ELIMINAR PROYECTO                 =
+==================================================*/
+
 $routes->delete(
     'proyectos/(:num)',
     '\App\Modules\Proyectos\Controllers\Proyectos_Controller::eliminar/$1',
@@ -71,6 +110,10 @@ $routes->delete(
     ]
 );
 
+
+/*==================================================
+=                 ACTIVAR PROYECTO                 =
+==================================================*/
 
 $routes->patch(
     'proyectos/(:num)/activar',
