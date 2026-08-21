@@ -942,7 +942,7 @@
         ],
         "id_proyecto": 10,
         "id_sistema": null,
-        "nombre": "API prueba 16-",
+        "nombre": "API prueba 16",
         "descripcion": "",
         "estado": "Mantenimiento",
         "metodo": "PUT",
@@ -957,6 +957,6 @@
         "ejemplo": [],
         "respuestas": [],
         "responsable": "",
-        "observaciones": "[{\"tipo\":\"informacion\",\"mensaje\":\"API prueba 16\"}]"
+        "observaciones": "[{\"tipo\":\"informacion\",\"mensaje\":\"API prueba 16-\"}]"
     }
 ]

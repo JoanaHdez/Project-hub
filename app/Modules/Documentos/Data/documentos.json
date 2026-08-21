@@ -1,1 +1,14 @@
-[]
+[
+    {
+        "id_documento": 1,
+        "id_sistema": 3,
+        "nombre_original": "documento-2-1787247686.pdf",
+        "nombre_archivo": "documento-1-1787292384.pdf",
+        "ruta": "uploads/documentos/3/documento-1-1787292384.pdf",
+        "tipo": "PDF",
+        "extension": "pdf",
+        "tamano": 18535089,
+        "descripcion": "",
+        "fecha_subida": "2026-08-21 06:06:24"
+    }
+]
