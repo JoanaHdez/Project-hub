@@ -1,5 +1,8 @@
 <?php
-
+$especificaciones =
+    $especificaciones
+    ?? [];
+    
 $modo = $modo ?? 'crear';
 
 $proyecto = $proyecto ?? [

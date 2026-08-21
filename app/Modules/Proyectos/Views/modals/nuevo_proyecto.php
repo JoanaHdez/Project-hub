@@ -2,8 +2,13 @@
 
 $contenido = view(
     'App\Modules\Proyectos\Views\forms\proyecto',
-    [],
-    ['saveData' => false]
+    [
+        'especificaciones' =>
+            $especificaciones ?? [],
+    ],
+    [
+        'saveData' => false,
+    ]
 );
 
 $acciones = '

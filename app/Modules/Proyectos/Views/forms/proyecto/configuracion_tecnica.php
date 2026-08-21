@@ -28,13 +28,45 @@ $esCreacion = $modo === 'crear';
             <div class="configuracion-tecnica">
 
                 <select id="especificacion-tecnica" name="id_especificacion" <?= $esDetalle ? 'disabled' : '' ?>>
-                    <option value="1" <?= ($proyecto['id_especificacion'] ?? '') === '1' ? 'selected' : '' ?>>
-                        ET-01
-                    </option>
+                    <option value="">
+    Selecciona una ficha técnica
+</option>
 
-                    <option value="2" <?= ($proyecto['id_especificacion'] ?? '') === '2' ? 'selected' : '' ?>>
-                        ET-02
-                    </option>
+<?php foreach ($especificaciones as $especificacion): ?>
+
+    <?php
+
+    $idEspecificacion =
+        (string) (
+            $especificacion['id_especificacion']
+            ?? ''
+        );
+
+    $seleccionada =
+        (string) (
+            $proyecto['id_especificacion']
+            ?? ''
+        ) === $idEspecificacion;
+
+    ?>
+
+    <option
+        value="<?= esc(
+            $idEspecificacion,
+            'attr'
+        ) ?>"
+        <?= $seleccionada
+            ? 'selected'
+            : ''
+        ?>
+    >
+        <?= esc(
+            $especificacion['codigo']
+            ?? 'Ficha técnica'
+        ) ?>
+    </option>
+
+<?php endforeach; ?>
 
                 </select>
 

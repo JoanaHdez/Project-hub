@@ -47,6 +47,9 @@ class Proyectos_Controller extends BaseController
             $this->sistemaStorage
             ->obtenerTodos();
 
+        $especificaciones =
+            $this->especificacionStorage
+            ->obtenerTodos();
 
         /*==================================================
         =           TOTAL DE SISTEMAS POR PROYECTO          =
@@ -110,6 +113,9 @@ class Proyectos_Controller extends BaseController
 
                 'proyectos' =>
                 $proyectos,
+
+                'especificaciones' =>
+                $especificaciones,
             ]
         );
     }
@@ -869,10 +875,10 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'No se recibieron datos válidos de la ficha técnica.',
+                    'No se recibieron datos válidos de la ficha técnica.',
                 ]);
         }
 
@@ -895,10 +901,10 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'El código de la ficha técnica es obligatorio.',
+                    'El código de la ficha técnica es obligatorio.',
                 ]);
         }
 
@@ -937,10 +943,10 @@ class Proyectos_Controller extends BaseController
                     ->setStatusCode(409)
                     ->setJSON([
                         'ok' =>
-                            false,
+                        false,
 
                         'mensaje' =>
-                            'Ya existe una ficha técnica con ese código.',
+                        'Ya existe una ficha técnica con ese código.',
                     ]);
             }
         }
@@ -953,61 +959,61 @@ class Proyectos_Controller extends BaseController
         $especificacion = [
 
             'id_especificacion' =>
-                $this->especificacionStorage
+            $this->especificacionStorage
                 ->generarNuevoId(
                     $especificaciones
                 ),
 
             'codigo' =>
-                $codigo,
+            $codigo,
 
             'framework' =>
-                trim(
-                    (string) (
-                        $datos['framework']
-                        ?? ''
-                    )
-                ),
+            trim(
+                (string) (
+                    $datos['framework']
+                    ?? ''
+                )
+            ),
 
             'version_framework' =>
-                trim(
-                    (string) (
-                        $datos['version_framework']
-                        ?? ''
-                    )
-                ),
+            trim(
+                (string) (
+                    $datos['version_framework']
+                    ?? ''
+                )
+            ),
 
             'php' =>
-                trim(
-                    (string) (
-                        $datos['php']
-                        ?? ''
-                    )
-                ),
+            trim(
+                (string) (
+                    $datos['php']
+                    ?? ''
+                )
+            ),
 
             'base_datos' =>
-                trim(
-                    (string) (
-                        $datos['base_datos']
-                        ?? ''
-                    )
-                ),
+            trim(
+                (string) (
+                    $datos['base_datos']
+                    ?? ''
+                )
+            ),
 
             'repositorio' =>
-                trim(
-                    (string) (
-                        $datos['repositorio']
-                        ?? ''
-                    )
-                ),
+            trim(
+                (string) (
+                    $datos['repositorio']
+                    ?? ''
+                )
+            ),
 
             'entorno_local' =>
-                trim(
-                    (string) (
-                        $datos['entorno_local']
-                        ?? ''
-                    )
-                ),
+            trim(
+                (string) (
+                    $datos['entorno_local']
+                    ?? ''
+                )
+            ),
         ];
 
 
@@ -1031,13 +1037,13 @@ class Proyectos_Controller extends BaseController
         return $this->response
             ->setJSON([
                 'ok' =>
-                    true,
+                true,
 
                 'mensaje' =>
-                    'Ficha técnica registrada correctamente.',
+                'Ficha técnica registrada correctamente.',
 
                 'especificacion' =>
-                    $especificacion,
+                $especificacion,
             ]);
     }
 
@@ -1061,10 +1067,10 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'No se encontró la ficha técnica solicitada.',
+                    'No se encontró la ficha técnica solicitada.',
                 ]);
         }
 
@@ -1072,10 +1078,10 @@ class Proyectos_Controller extends BaseController
         return $this->response
             ->setJSON([
                 'ok' =>
-                    true,
+                true,
 
                 'especificacion' =>
-                    $especificacion,
+                $especificacion,
             ]);
     }
 

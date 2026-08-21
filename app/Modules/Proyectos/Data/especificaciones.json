@@ -1,1 +1,12 @@
-[]
+[
+    {
+        "id_especificacion": 1,
+        "codigo": "ET-03",
+        "framework": "CodeIgniter",
+        "version_framework": "4.7.4",
+        "php": "8.3.16",
+        "base_datos": "MySQL",
+        "repositorio": "GitHub",
+        "entorno_local": "Laragon"
+    }
+]
