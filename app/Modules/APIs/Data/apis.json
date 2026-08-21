@@ -958,5 +958,119 @@
         "respuestas": [],
         "responsable": "",
         "observaciones": "[{\"tipo\":\"informacion\",\"mensaje\":\"API prueba 16-\"}]"
+    },
+    {
+        "id_api": 25,
+        "activo": true,
+        "id_proyecto": 4,
+        "id_sistema": 10,
+        "nombre": "API de Validación de Accesos",
+        "descripcion": "Valida si un usuario tiene permisos para acceder a un módulo específico de Project Hub.",
+        "estado": "Desarrollo",
+        "metodo": "POST",
+        "endpoint": "/api/accesos/validar",
+        "url": "http://localhost:8080/api/accesos/validar",
+        "autenticacion": "Bearer Token",
+        "repositorio_url": "https://github.com/ejemplo/project-hub",
+        "ruta_local": "C:\\laragon\\www\\ProjectHub\\app\\Modules\\Accesos",
+        "url_servidor": "https://projecthub.ejemplo.gob.mx",
+        "headers": [
+            {
+                "nombre": "Authorization",
+                "valor": "Bearer",
+                "obligatorio": true,
+                "descripcion": "Token de autenticación del usuario."
+            }
+        ],
+        "parametros": [
+            {
+                "nombre": "id_usuario",
+                "tipo": "integer",
+                "obligatorio": true,
+                "descripcion": "Identificador del usuario que solicita el acceso."
+            },
+            {
+                "nombre": "id_modulo",
+                "tipo": "integer",
+                "obligatorio": true,
+                "descripcion": "Identificador del módulo al que se desea acceder."
+            }
+        ],
+        "ejemplo": {
+            "metodo": "POST",
+            "endpoint": "/api/accesos/validar",
+            "url": "http://localhost:8080/api/accesos/validar",
+            "body": {
+                "id_usuario": 2,
+                "id_modulo": 5
+            }
+        },
+        "respuestas": [
+            {
+                "codigo": 200,
+                "descripcion": "Acceso validado correctamente.",
+                "body": {
+                    "ok": true,
+                    "permitido": true,
+                    "mensaje": "El usuario tiene acceso al módulo solicitado."
+                }
+            },
+            {
+                "codigo": 403,
+                "descripcion": "El usuario no tiene permisos para acceder al módulo.",
+                "body": {
+                    "ok": false,
+                    "permitido": false,
+                    "mensaje": "Acceso no autorizado."
+                }
+            }
+        ],
+        "responsable": "Equipo de Desarrollo",
+        "observaciones": "API de prueba creada únicamente para verificar la información mostrada en la ficha técnica.",
+        "arquitectura": {
+            "modulo": "Validacion de Accesos",
+            "componentes": [
+                {
+                    "tipo": "Controllers",
+                    "archivo": "Validacion de Accesos"
+                }
+            ]
+        },
+        "dependencias": [
+            {
+                "tipo": "Framework",
+                "nombre": "Validacion de Accesos",
+                "descripcion": "Validacion de Accesos",
+                "estado": "Activa"
+            },
+            {
+                "tipo": "Base de datos",
+                "nombre": "MySQL",
+                "descripcion": "Validacion de Accesos",
+                "estado": "Activa"
+            }
+        ],
+        "observaciones_tecnicas": [
+            {
+                "tipo": "recomendacion",
+                "mensaje": "Validacion de Accesos"
+            },
+            {
+                "tipo": "informacion",
+                "mensaje": "Validacion de Accesos 2"
+            }
+        ],
+        "historial": [
+            {
+                "version": "1.0",
+                "descripcion": "Validacion",
+                "fecha": "21/08/2026"
+            },
+            {
+                "version": "2.0",
+                "descripcion": "Validacion 2",
+                "fecha": "21/08/2026"
+            }
+        ]
     }
 ]

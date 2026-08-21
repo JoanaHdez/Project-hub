@@ -40,7 +40,7 @@
                 class="ficha-badge"
                 id="ficha-encabezado-version"
             >
-                Pendiente
+                Sin versión
             </span>
 
             <span

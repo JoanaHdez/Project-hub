@@ -185,5 +185,93 @@
         "entidad_id": 24,
         "detalle": "Editó la API \"API prueba 16\".",
         "fecha_hora": "2026-08-21 06:16:52"
+    },
+    {
+        "id_actividad": 18,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Agregó",
+        "entidad_tipo": "API",
+        "entidad_id": 25,
+        "detalle": "Agregó la API \"API de Validación de Accesos\".",
+        "fecha_hora": "2026-08-21 17:33:47"
+    },
+    {
+        "id_actividad": 19,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Editó historial",
+        "entidad_tipo": "API",
+        "entidad_id": 25,
+        "detalle": "Actualizó el historial de la API \"API de Validación de Accesos\".",
+        "fecha_hora": "2026-08-21 17:35:29"
+    },
+    {
+        "id_actividad": 20,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Editó arquitectura",
+        "entidad_tipo": "API",
+        "entidad_id": 25,
+        "detalle": "Actualizó la arquitectura de la API \"API de Validación de Accesos\".",
+        "fecha_hora": "2026-08-21 17:36:03"
+    },
+    {
+        "id_actividad": 21,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Editó dependencias",
+        "entidad_tipo": "API",
+        "entidad_id": 25,
+        "detalle": "Actualizó las dependencias de la API \"API de Validación de Accesos\".",
+        "fecha_hora": "2026-08-21 17:36:14"
+    },
+    {
+        "id_actividad": 22,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Editó observaciones",
+        "entidad_tipo": "API",
+        "entidad_id": 25,
+        "detalle": "Actualizó las observaciones técnicas de la API \"API de Validación de Accesos\".",
+        "fecha_hora": "2026-08-21 17:36:23"
+    },
+    {
+        "id_actividad": 23,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Editó dependencias",
+        "entidad_tipo": "API",
+        "entidad_id": 25,
+        "detalle": "Actualizó las dependencias de la API \"API de Validación de Accesos\".",
+        "fecha_hora": "2026-08-21 17:37:02"
+    },
+    {
+        "id_actividad": 24,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Editó historial",
+        "entidad_tipo": "API",
+        "entidad_id": 25,
+        "detalle": "Actualizó el historial de la API \"API de Validación de Accesos\".",
+        "fecha_hora": "2026-08-21 11:46:51"
+    },
+    {
+        "id_actividad": 25,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Editó observaciones",
+        "entidad_tipo": "API",
+        "entidad_id": 25,
+        "detalle": "Actualizó las observaciones técnicas de la API \"API de Validación de Accesos\".",
+        "fecha_hora": "2026-08-21 11:48:06"
     }
 ]

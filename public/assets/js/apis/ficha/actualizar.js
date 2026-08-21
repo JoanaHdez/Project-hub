@@ -39,6 +39,16 @@ export function actualizarFichaTecnica({
 
 
   /*==================================================*
+  *=              VERSIÓN ACTUAL                    =*
+  *==================================================*/
+
+  const versionActual =
+    obtenerVersionActual(
+      historial,
+    );
+
+
+  /*==================================================*
   *=                 ENCABEZADO                      =*
   *==================================================*/
 
@@ -58,6 +68,11 @@ export function actualizarFichaTecnica({
   );
 
   actualizarTexto(
+    "ficha-encabezado-version",
+    versionActual,
+  );
+
+  actualizarTexto(
     "ficha-encabezado-estado-texto",
     estado || "—",
   );
@@ -74,9 +89,7 @@ export function actualizarFichaTecnica({
 
   actualizarTexto(
     "ficha-resumen-version",
-    obtenerVersionActual(
-      historial,
-    ),
+    versionActual,
   );
 
   actualizarTexto(
@@ -184,21 +197,31 @@ export function actualizarFichaTecnica({
 function obtenerVersionActual(
   historial,
 ) {
+
   if (
     !Array.isArray(historial) ||
     historial.length === 0
   ) {
-    return "—";
+    return "Sin versión";
   }
+
 
   const ultimoRegistro =
     historial[
       historial.length - 1
     ];
 
+
+  const version =
+    String(
+      ultimoRegistro?.version
+      ?? "",
+    ).trim();
+
+
   return (
-    ultimoRegistro?.version ||
-    "—"
+    version ||
+    "Sin versión"
   );
 }
 
@@ -211,6 +234,7 @@ function actualizarTexto(
   id,
   valor,
 ) {
+
   const elemento =
     document.getElementById(
       id,
