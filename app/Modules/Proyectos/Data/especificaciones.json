@@ -1,7 +1,7 @@
 [
     {
         "id_especificacion": 1,
-        "codigo": "ET-03",
+        "codigo": "ET-02",
         "framework": "CodeIgniter",
         "version_framework": "4.7.4",
         "php": "8.3.16",

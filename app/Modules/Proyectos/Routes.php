@@ -59,6 +59,14 @@ $routes->get(
 );
 
 
+$routes->put(
+    'proyectos/especificaciones/(:num)',
+    '\App\Modules\Proyectos\Controllers\Proyectos_Controller::actualizarEspecificacion/$1',
+    [
+        'filter' => 'admin',
+    ]
+);
+
 /*==================================================
 =                OBTENER PROYECTO                  =
 ==================================================*/

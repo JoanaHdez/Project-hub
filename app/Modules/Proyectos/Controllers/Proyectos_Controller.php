@@ -1073,10 +1073,10 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'No se encontró la ficha técnica solicitada.',
+                    'No se encontró la ficha técnica solicitada.',
                 ]);
         }
 
@@ -1106,9 +1106,7 @@ class Proyectos_Controller extends BaseController
 
                         return (
                             (int) (
-                                $proyecto[
-                                    'id_especificacion'
-                                ]
+                                $proyecto['id_especificacion']
                                 ?? 0
                             )
                         ) === $idEspecificacion;
@@ -1124,13 +1122,13 @@ class Proyectos_Controller extends BaseController
         return $this->response
             ->setJSON([
                 'ok' =>
-                    true,
+                true,
 
                 'especificacion' =>
-                    $especificacion,
+                $especificacion,
 
                 'proyectos_asociados' =>
-                    $proyectosAsociados,
+                $proyectosAsociados,
             ]);
     }
 
@@ -1204,5 +1202,231 @@ class Proyectos_Controller extends BaseController
             default =>
             'inactivo',
         };
+    }
+
+    /*==================================================
+    =           ACTUALIZAR ESPECIFICACIÓN             =
+    ==================================================*/
+
+    public function actualizarEspecificacion(
+        int $idEspecificacion
+    ) {
+        $datos =
+            $this->request
+            ->getJSON(true);
+
+        if (!is_array($datos)) {
+
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                    'Los datos enviados no son válidos.',
+                ]);
+        }
+
+
+        $especificaciones =
+            $this->especificacionStorage
+            ->obtenerTodos();
+
+        $indiceEncontrado =
+            null;
+
+        $especificacionExistente =
+            null;
+
+
+        foreach (
+            $especificaciones
+            as $indice => $especificacion
+        ) {
+
+            if (
+                (int) (
+                    $especificacion['id_especificacion']
+                    ?? 0
+                ) === $idEspecificacion
+            ) {
+
+                $indiceEncontrado =
+                    $indice;
+
+                $especificacionExistente =
+                    $especificacion;
+
+                break;
+            }
+        }
+
+
+        if (
+            $indiceEncontrado === null ||
+            $especificacionExistente === null
+        ) {
+
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                    'No se encontró la ficha técnica solicitada.',
+                ]);
+        }
+
+
+        $codigo =
+            trim(
+                (string) (
+                    $datos['codigo']
+                    ?? ''
+                )
+            );
+
+
+        if ($codigo === '') {
+
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                    'El código de la ficha técnica es obligatorio.',
+                ]);
+        }
+
+
+        /*==================================================
+        =              VALIDAR CÓDIGO ÚNICO               =
+        ==================================================*/
+
+        foreach (
+            $especificaciones
+            as $especificacion
+        ) {
+
+            $idActual =
+                (int) (
+                    $especificacion['id_especificacion']
+                    ?? 0
+                );
+
+            if (
+                $idActual ===
+                $idEspecificacion
+            ) {
+                continue;
+            }
+
+
+            $codigoExistente =
+                strtolower(
+                    trim(
+                        (string) (
+                            $especificacion['codigo']
+                            ?? ''
+                        )
+                    )
+                );
+
+
+            if (
+                $codigoExistente ===
+                strtolower(
+                    $codigo
+                )
+            ) {
+
+                return $this->response
+                    ->setStatusCode(409)
+                    ->setJSON([
+                        'ok' => false,
+                        'mensaje' =>
+                        'Ya existe una ficha técnica con ese código.',
+                    ]);
+            }
+        }
+
+
+        $especificacionActualizada =
+            array_merge(
+                $especificacionExistente,
+                [
+                    'codigo' =>
+                    $codigo,
+
+                    'framework' =>
+                    trim(
+                        (string) (
+                            $datos['framework']
+                            ?? ''
+                        )
+                    ),
+
+                    'version_framework' =>
+                    trim(
+                        (string) (
+                            $datos['version_framework']
+                            ?? ''
+                        )
+                    ),
+
+                    'php' =>
+                    trim(
+                        (string) (
+                            $datos['php']
+                            ?? ''
+                        )
+                    ),
+
+                    'base_datos' =>
+                    trim(
+                        (string) (
+                            $datos['base_datos']
+                            ?? ''
+                        )
+                    ),
+
+                    'repositorio' =>
+                    trim(
+                        (string) (
+                            $datos['repositorio']
+                            ?? ''
+                        )
+                    ),
+
+                    'entorno_local' =>
+                    trim(
+                        (string) (
+                            $datos['entorno_local']
+                            ?? ''
+                        )
+                    ),
+                ]
+            );
+
+
+        $especificaciones[$indiceEncontrado] =
+            $especificacionActualizada;
+
+
+        $this->especificacionStorage
+            ->guardarTodos(
+                $especificaciones
+            );
+
+
+        return $this->response
+            ->setJSON([
+                'ok' =>
+                true,
+
+                'mensaje' =>
+                'Ficha técnica actualizada correctamente.',
+
+                'especificacion' =>
+                $especificacionActualizada,
+            ]);
     }
 }
