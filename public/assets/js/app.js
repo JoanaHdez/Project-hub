@@ -98,6 +98,105 @@ if (document.getElementById("form-nueva-api")) {
 }
 
 
+/*==================================================
+=                  MENÚ USUARIO                    =
+==================================================*/
+
+const botonMenuUsuario =
+    document.getElementById(
+        'btn-menu-usuario'
+    );
+
+const menuUsuario =
+    document.getElementById(
+        'menu-usuario'
+    );
+
+
+if (
+    botonMenuUsuario &&
+    menuUsuario
+) {
+
+    botonMenuUsuario.addEventListener(
+        'click',
+        (event) => {
+
+            event.stopPropagation();
+
+            const abierto =
+                botonMenuUsuario
+                .getAttribute(
+                    'aria-expanded'
+                ) === 'true';
+
+            botonMenuUsuario
+                .setAttribute(
+                    'aria-expanded',
+                    String(!abierto)
+                );
+
+            menuUsuario.hidden =
+                abierto;
+        }
+    );
+
+
+    document.addEventListener(
+        'click',
+        (event) => {
+
+            if (
+                menuUsuario.hidden
+            ) {
+                return;
+            }
+
+            if (
+                menuUsuario.contains(
+                    event.target
+                ) ||
+                botonMenuUsuario.contains(
+                    event.target
+                )
+            ) {
+                return;
+            }
+
+            menuUsuario.hidden =
+                true;
+
+            botonMenuUsuario
+                .setAttribute(
+                    'aria-expanded',
+                    'false'
+                );
+        }
+    );
+
+
+    document.addEventListener(
+        'keydown',
+        (event) => {
+
+            if (
+                event.key !== 'Escape'
+            ) {
+                return;
+            }
+
+            menuUsuario.hidden =
+                true;
+
+            botonMenuUsuario
+                .setAttribute(
+                    'aria-expanded',
+                    'false'
+                );
+        }
+    );
+}
+
 
 
 
