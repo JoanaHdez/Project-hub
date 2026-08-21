@@ -13,6 +13,8 @@ $contenido = view(
             'Repositorio' => '—',
             'Entorno local' => '—',
         ],
+
+        'proyectosAsociados' => [],
     ],
     [
         'saveData' => false,

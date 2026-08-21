@@ -1,15 +1,35 @@
 <?php
 
-$codigo = $codigo ?? 'Sin código';
-$datos = $datos ?? [];
+$codigo =
+    $codigo
+    ?? 'Sin código';
+
+$datos =
+    $datos
+    ?? [];
+
+$proyectosAsociados =
+    $proyectosAsociados
+    ?? [];
 
 $mapaCampos = [
-    'Framework' => 'framework',
-    'Versión del framework' => 'version-framework',
-    'PHP' => 'php',
-    'Base de datos' => 'base-datos',
-    'Repositorio' => 'repositorio',
-    'Entorno local' => 'entorno-local',
+    'Framework' =>
+        'framework',
+
+    'Versión del framework' =>
+        'version-framework',
+
+    'PHP' =>
+        'php',
+
+    'Base de datos' =>
+        'base-datos',
+
+    'Repositorio' =>
+        'repositorio',
+
+    'Entorno local' =>
+        'entorno-local',
 ];
 
 ?>
@@ -31,9 +51,13 @@ $mapaCampos = [
 
     </header>
 
+
     <dl class="ficha-tecnica__datos">
 
-        <?php foreach ($datos as $etiqueta => $valor): ?>
+        <?php foreach (
+            $datos
+            as $etiqueta => $valor
+        ): ?>
 
             <?php
 
@@ -51,7 +75,10 @@ $mapaCampos = [
 
                 <dd
                     <?= $campo
-                        ? 'data-ficha-' . esc($campo, 'attr')
+                        ? 'data-ficha-' . esc(
+                            $campo,
+                            'attr'
+                        )
                         : ''
                     ?>
                 >
@@ -66,5 +93,56 @@ $mapaCampos = [
         <?php endforeach; ?>
 
     </dl>
+
+
+    <!--==============================================
+    =            PROYECTOS ASOCIADOS                =
+    ===============================================-->
+
+    <div class="ficha-tecnica__proyectos">
+
+        <h4>
+            Proyectos asociados
+        </h4>
+
+        <div
+            data-ficha-proyectos
+        >
+
+            <?php if (
+                empty(
+                    $proyectosAsociados
+                )
+            ): ?>
+
+                <p>
+                    Sin proyectos asociados.
+                </p>
+
+            <?php else: ?>
+
+                <ul>
+
+                    <?php foreach (
+                        $proyectosAsociados
+                        as $proyecto
+                    ): ?>
+
+                        <li>
+                            <?= esc(
+                                $proyecto['nombre']
+                                ?? 'Proyecto'
+                            ) ?>
+                        </li>
+
+                    <?php endforeach; ?>
+
+                </ul>
+
+            <?php endif; ?>
+
+        </div>
+
+    </div>
 
 </section>

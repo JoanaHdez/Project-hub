@@ -1055,11 +1055,17 @@ class Proyectos_Controller extends BaseController
     public function obtenerEspecificacion(
         int $idEspecificacion
     ) {
+
+        /*==================================================
+        =              OBTENER FICHA                     =
+        ==================================================*/
+
         $especificacion =
             $this->especificacionStorage
             ->obtenerPorId(
                 $idEspecificacion
             );
+
 
         if ($especificacion === null) {
 
@@ -1067,21 +1073,64 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                    false,
+                        false,
 
                     'mensaje' =>
-                    'No se encontró la ficha técnica solicitada.',
+                        'No se encontró la ficha técnica solicitada.',
                 ]);
         }
 
 
+        /*==================================================
+        =              OBTENER PROYECTOS                  =
+        ==================================================*/
+
+        $proyectos =
+            $this->storage
+            ->obtenerTodos();
+
+
+        /*==================================================
+        =          PROYECTOS ASOCIADOS A LA FICHA         =
+        ==================================================*/
+
+        $proyectosAsociados =
+            array_values(
+                array_filter(
+                    $proyectos,
+                    static function (
+                        array $proyecto
+                    ) use (
+                        $idEspecificacion
+                    ): bool {
+
+                        return (
+                            (int) (
+                                $proyecto[
+                                    'id_especificacion'
+                                ]
+                                ?? 0
+                            )
+                        ) === $idEspecificacion;
+                    }
+                )
+            );
+
+
+        /*==================================================
+        =                  RESPUESTA                       =
+        ==================================================*/
+
         return $this->response
             ->setJSON([
                 'ok' =>
-                true,
+                    true,
 
                 'especificacion' =>
-                $especificacion,
+                    $especificacion,
+
+                'proyectos_asociados' =>
+                    $proyectosAsociados,
             ]);
     }
 

@@ -15,7 +15,7 @@ export function inicializarVerFichaTecnica() {
 
       const boton =
         event.target.closest(
-          '[data-modal-abrir="modal-ficha-tecnica"]',
+          '[data-modal-abrir="modal-ficha-tecnica"], [data-ver-especificacion]',
         );
 
       if (!boton) {
@@ -23,30 +23,55 @@ export function inicializarVerFichaTecnica() {
       }
 
 
-      const formulario =
-        boton.closest("form");
+      /*==================================================*
+      *=           OBTENER ID DE ESPECIFICACIÓN          =*
+      *==================================================*/
 
-      const selector =
-        formulario
-          ? formulario.querySelector(
+      const idDesdeBoton =
+        String(
+          boton.dataset.especificacionId
+          ?? "",
+        ).trim();
+
+      let idEspecificacion =
+        idDesdeBoton;
+
+
+      /*==================================================*
+      *=       SI NO VIENE DEL BOTÓN, TOMAR SELECT       =*
+      *==================================================*/
+
+      if (!idEspecificacion) {
+
+        const formulario =
+          boton.closest("form");
+
+        const selector =
+          formulario
+            ? formulario.querySelector(
               '[name="id_especificacion"]',
             )
-          : document.getElementById(
+            : document.getElementById(
               "especificacion-tecnica",
             );
 
 
-      if (!selector) {
-        return;
+        if (!selector) {
+          return;
+        }
+
+
+        idEspecificacion =
+          String(
+            selector.value
+            ?? "",
+          ).trim();
       }
 
 
-      const idEspecificacion =
-        String(
-          selector.value
-          ?? "",
-        ).trim();
-
+      /*==================================================*
+      *=                  VALIDACIÓN                     =*
+      *==================================================*/
 
       if (!idEspecificacion) {
 
@@ -67,6 +92,10 @@ export function inicializarVerFichaTecnica() {
       }
 
 
+      /*==================================================*
+      *=                  CONSULTAR                      =*
+      *==================================================*/
+
       try {
 
         const respuesta =
@@ -85,6 +114,7 @@ export function inicializarVerFichaTecnica() {
           await respuesta.text();
 
         let resultado;
+
 
         try {
 
@@ -113,8 +143,22 @@ export function inicializarVerFichaTecnica() {
         }
 
 
+        /*==================================================*
+        *=              ACTUALIZAR FICHA                   =*
+        *==================================================*/
+
         actualizarFicha(
           resultado.especificacion,
+        );
+
+
+        /*==================================================*
+        *=           PROYECTOS ASOCIADOS                   =*
+        *==================================================*/
+
+        actualizarProyectosAsociados(
+          resultado.proyectos_asociados
+          ?? [],
         );
 
 
@@ -192,6 +236,88 @@ function actualizarFicha(
     "[data-ficha-entorno-local]",
     especificacion.entorno_local ||
     "No disponible",
+  );
+}
+
+
+/*==================================================*
+*=          PROYECTOS ASOCIADOS                    =*
+*==================================================*/
+
+function actualizarProyectosAsociados(
+  proyectos = [],
+) {
+
+  const contenedor =
+    document.querySelector(
+      "[data-ficha-proyectos]",
+    );
+
+  if (!contenedor) {
+    return;
+  }
+
+
+  contenedor.innerHTML =
+    "";
+
+
+  /*==================================================*
+  *=             SIN PROYECTOS ASOCIADOS             =*
+  *==================================================*/
+
+  if (
+    !Array.isArray(proyectos) ||
+    proyectos.length === 0
+  ) {
+
+    const mensaje =
+      document.createElement(
+        "p",
+      );
+
+    mensaje.textContent =
+      "Sin proyectos asociados.";
+
+    contenedor.appendChild(
+      mensaje,
+    );
+
+    return;
+  }
+
+
+  /*==================================================*
+  *=                CREAR LISTA                      =*
+  *==================================================*/
+
+  const lista =
+    document.createElement(
+      "ul",
+    );
+
+
+  proyectos.forEach(
+    (proyecto) => {
+
+      const elemento =
+        document.createElement(
+          "li",
+        );
+
+      elemento.textContent =
+        proyecto.nombre ||
+        "Proyecto";
+
+      lista.appendChild(
+        elemento,
+      );
+    },
+  );
+
+
+  contenedor.appendChild(
+    lista,
   );
 }
 

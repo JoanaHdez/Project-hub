@@ -10,6 +10,17 @@
 
     <?= $this->include('App\Modules\Proyectos\Views\sections\listado') ?>
 
+    <?= view(
+        'App\Modules\Proyectos\Views\sections\especificaciones',
+        [
+            'especificaciones' =>
+            $especificaciones ?? [],
+
+            'proyectos' =>
+            $proyectos ?? [],
+        ]
+    ) ?>
+
 </div>
 
 <?= $this->include('App\Modules\Proyectos\Views\modals\nuevo_proyecto') ?>

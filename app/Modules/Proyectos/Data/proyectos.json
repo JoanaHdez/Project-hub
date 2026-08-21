@@ -161,5 +161,37 @@
         "observaciones": "",
         "total_sistemas": 0,
         "fecha_creacion": "13\/08\/2026"
+    },
+    {
+        "id_proyecto": 12,
+        "nombre": "Prueba de ficha",
+        "estado": "Desarrollo",
+        "estado_tipo": "desarrollo",
+        "origen": "Personal",
+        "descripcion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "id_especificacion": "1",
+        "responsable": "joana",
+        "observaciones": "",
+        "total_sistemas": 0,
+        "fecha_creacion": "21\/08\/2026"
+    },
+    {
+        "id_proyecto": 13,
+        "nombre": "prueba de ver detalles de la tabla de ficha",
+        "estado": "Desarrollo",
+        "estado_tipo": "desarrollo",
+        "origen": "Trabajo",
+        "descripcion": "",
+        "repositorio_url": "",
+        "ruta_local": "",
+        "url_servidor": "",
+        "id_especificacion": "1",
+        "responsable": "joana",
+        "observaciones": "",
+        "total_sistemas": 0,
+        "fecha_creacion": "21\/08\/2026"
     }
 ]
