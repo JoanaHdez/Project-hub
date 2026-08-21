@@ -3,15 +3,15 @@
 $contenido = view(
     'components/ui/ficha_tecnica',
     [
-        'codigo' => 'ET-01',
+        'codigo' => '—',
 
         'datos' => [
-            'Framework' => 'CodeIgniter',
-            'Versión del framework' => '4.7.4',
-            'PHP' => '8.2.31',
-            'Base de datos' => 'MySQL',
-            'Repositorio' => 'GitHub',
-            'Entorno local' => 'Laragon',
+            'Framework' => '—',
+            'Versión del framework' => '—',
+            'PHP' => '—',
+            'Base de datos' => '—',
+            'Repositorio' => '—',
+            'Entorno local' => '—',
         ],
     ],
     [
