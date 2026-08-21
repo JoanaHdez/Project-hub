@@ -63,5 +63,15 @@
         "url": "",
         "imagen": "http://localhost:8080/uploads/modulos/modulo-12-1787185968.png",
         "activo": true
+    },
+    {
+        "id_modulo": 13,
+        "id_sistema": 1,
+        "nombre": "Dashboard",
+        "tipo": "Reportes",
+        "descripcion": "",
+        "url": "https://cepyc.seguridadneza.gob.mx/ExtorsionF/public/index.php/reporte",
+        "imagen": "http://localhost:8080/uploads/modulos/modulo-13-1787288750.png",
+        "activo": true
     }
 ]

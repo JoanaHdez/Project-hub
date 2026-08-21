@@ -131,15 +131,54 @@ Mis sistemas | Project Hub
                         =              BANNER               =
                         ===================================-->
 
-                        <div class="mis-sistema-card__banner">
+                        <?php
 
-                            <span class="mis-sistema-card__tipo">
-                                <?= esc(
-                                    $tipoSistema
-                                ) ?>
-                            </span>
+$imagenModulo =
+    trim(
+        (string) (
+            $sistema['imagen']
+            ?? ''
+        )
+    );
 
-                        </div>
+?>
+
+<div
+    class="
+        mis-sistema-card__banner
+        <?= $imagenModulo !== ''
+            ? 'mis-sistema-card__banner--con-imagen'
+            : ''
+        ?>
+    "
+>
+
+    <?php if ($imagenModulo !== ''): ?>
+
+        <img
+            src="<?= esc(
+                $imagenModulo,
+                'attr'
+            ) ?>"
+            alt="<?= esc(
+                'Vista previa de ' . $nombreSistema,
+                'attr'
+            ) ?>"
+            class="mis-sistema-card__imagen"
+        >
+
+        <div class="mis-sistema-card__overlay"></div>
+
+    <?php endif; ?>
+
+
+    <span class="mis-sistema-card__tipo">
+        <?= esc(
+            $tipoSistema
+        ) ?>
+    </span>
+
+</div>
 
 
                         <!--==================================

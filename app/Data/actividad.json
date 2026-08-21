@@ -108,5 +108,60 @@
         "entidad_id": 2,
         "detalle": "Eliminó el archivo \"documento-2-1787247686.pdf\" del sistema \"8.º Congreso\".",
         "fecha_hora": "2026-08-20 23:36:24"
+    },
+    {
+        "id_actividad": 11,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Desactivó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 1,
+        "detalle": "Desactivó el módulo \"Formulario principal\".",
+        "fecha_hora": "2026-08-21 04:30:23"
+    },
+    {
+        "id_actividad": 12,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Desactivó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Desactivó el sistema \"Extorsión 1\".",
+        "fecha_hora": "2026-08-21 04:50:23"
+    },
+    {
+        "id_actividad": 13,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Agregó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 13,
+        "detalle": "Agregó el módulo \"Dashboard\" al sistema \"Extorsión 1\".",
+        "fecha_hora": "2026-08-21 05:01:30"
+    },
+    {
+        "id_actividad": 14,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Editó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 13,
+        "detalle": "Editó el módulo \"Dashboard\" del sistema \"Extorsión 1\".",
+        "fecha_hora": "2026-08-21 05:05:50"
+    },
+    {
+        "id_actividad": 15,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Editó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 13,
+        "detalle": "Actualizó la imagen del módulo \"Dashboard\".",
+        "fecha_hora": "2026-08-21 05:05:50"
     }
 ]
