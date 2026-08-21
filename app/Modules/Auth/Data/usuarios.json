@@ -1,0 +1,18 @@
+[
+    {
+        "id_usuario": 1,
+        "nombre": "Administrador",
+        "correo": "admin@projecthub.local",
+        "password_hash": "$2y$10$886D62kRNCTZCATubIx..OyB87v.qAMnJT8xA/c4XguFD2uSHVreC",
+        "rol": "administrador",
+        "activo": true
+    },
+    {
+        "id_usuario": 2,
+        "nombre": "Usuario",
+        "correo": "usuario@projecthub.local",
+        "password_hash": "$2y$10$afstkPxp53KWDOlrc8Ntd.XgS/e8oKmi1NDsJ545nmdYLJw3klFM6",
+        "rol": "usuario",
+        "activo": true
+    }
+]
