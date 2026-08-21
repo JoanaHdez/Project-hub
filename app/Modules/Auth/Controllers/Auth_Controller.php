@@ -206,11 +206,11 @@ class Auth_Controller extends BaseController
          */
         if ($rol === 'usuario') {
 
-            return redirect()
-                ->to(
-                    base_url('/')
-                );
-        }
+    return redirect()
+        ->to(
+            base_url('mis-sistemas')
+        );
+}
 
         return redirect()
             ->to(
