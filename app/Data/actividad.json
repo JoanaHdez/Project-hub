@@ -548,5 +548,181 @@
         "entidad_id": 1,
         "detalle": "Editó el sistema \"Sistema de prueba\".",
         "fecha_hora": "2026-08-24 12:04:48"
+    },
+    {
+        "id_actividad": 51,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Desactivó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Desactivó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 12:05:32"
+    },
+    {
+        "id_actividad": 52,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Activó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Activó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 12:05:35"
+    },
+    {
+        "id_actividad": 53,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Eliminó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Eliminó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 12:05:37"
+    },
+    {
+        "id_actividad": 54,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Agregó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 2,
+        "detalle": "Agregó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 12:06:17"
+    },
+    {
+        "id_actividad": 55,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Agregó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 1,
+        "detalle": "Agregó el módulo \"Modulo de prueba\" al sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 12:20:30"
+    },
+    {
+        "id_actividad": 56,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Editó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 1,
+        "detalle": "Editó el módulo \"Modulo de prueba 1\" del sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 12:22:48"
+    },
+    {
+        "id_actividad": 57,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Editó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 1,
+        "detalle": "Editó el módulo \"Modulo de prueba 1\" del sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 12:23:14"
+    },
+    {
+        "id_actividad": 58,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Editó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 1,
+        "detalle": "Actualizó la imagen del módulo \"Modulo de prueba 1\".",
+        "fecha_hora": "2026-08-24 12:23:15"
+    },
+    {
+        "id_actividad": 59,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Editó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 1,
+        "detalle": "Editó el módulo \"Modulo de prueba 1\" del sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 12:24:35"
+    },
+    {
+        "id_actividad": 60,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Editó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 1,
+        "detalle": "Actualizó la imagen del módulo \"Modulo de prueba 1\".",
+        "fecha_hora": "2026-08-24 12:24:35"
+    },
+    {
+        "id_actividad": 61,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Desactivó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 1,
+        "detalle": "Desactivó el módulo \"Modulo de prueba 1\".",
+        "fecha_hora": "2026-08-24 12:31:27"
+    },
+    {
+        "id_actividad": 62,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Activó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 1,
+        "detalle": "Activó el módulo \"Modulo de prueba 1\".",
+        "fecha_hora": "2026-08-24 12:31:38"
+    },
+    {
+        "id_actividad": 63,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Eliminó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 1,
+        "detalle": "Eliminó el módulo \"Modulo de prueba 1\" del sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 12:31:58"
+    },
+    {
+        "id_actividad": 64,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Agregó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 2,
+        "detalle": "Agregó el módulo \"Modulo de prueba\" al sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 12:32:27"
+    },
+    {
+        "id_actividad": 65,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Editó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 2,
+        "detalle": "Editó el módulo \"Modulo de prueba\" del sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 12:32:41"
+    },
+    {
+        "id_actividad": 66,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Módulos",
+        "accion": "Editó",
+        "entidad_tipo": "Módulo",
+        "entidad_id": 2,
+        "detalle": "Actualizó la imagen del módulo \"Modulo de prueba\".",
+        "fecha_hora": "2026-08-24 12:32:41"
     }
 ]

@@ -14,8 +14,11 @@ use App\Services\Actividad_StorageService;
 class Modulos_Controller extends BaseController
 {
     private Sistema_StorageService $sistemaStorage;
+
     private Proyecto_StorageService $proyectoStorage;
+
     private Modulo_StorageService $moduloStorage;
+
     private Actividad_StorageService $actividadStorage;
 
 
@@ -45,37 +48,9 @@ class Modulos_Controller extends BaseController
             $this->sistemaStorage
             ->obtenerTodos();
 
-        $proyectos =
-            $this->proyectoStorage
-            ->obtenerTodos();
-
         $modulos =
             $this->moduloStorage
             ->obtenerTodos();
-
-
-        /*==================================================
-        =              NOMBRES DE PROYECTOS                =
-        ==================================================*/
-
-        $nombresProyectos = [];
-
-        foreach ($proyectos as $proyecto) {
-
-            $idProyecto =
-                (int) (
-                    $proyecto['id_proyecto']
-                    ?? 0
-                );
-
-            if ($idProyecto <= 0) {
-                continue;
-            }
-
-            $nombresProyectos[$idProyecto] =
-                $proyecto['nombre']
-                ?? 'Sin proyecto';
-        }
 
 
         /*==================================================
@@ -84,7 +59,10 @@ class Modulos_Controller extends BaseController
 
         $totalesModulos = [];
 
-        foreach ($modulos as $modulo) {
+        foreach (
+            $modulos
+            as $modulo
+        ) {
 
             $idSistema =
                 (int) (
@@ -92,19 +70,29 @@ class Modulos_Controller extends BaseController
                     ?? 0
                 );
 
+
             if ($idSistema <= 0) {
                 continue;
             }
 
+
             if (
                 !isset(
-                    $totalesModulos[$idSistema]
+                    $totalesModulos[
+                        $idSistema
+                    ]
                 )
             ) {
-                $totalesModulos[$idSistema] = 0;
+
+                $totalesModulos[
+                    $idSistema
+                ] = 0;
             }
 
-            $totalesModulos[$idSistema]++;
+
+            $totalesModulos[
+                $idSistema
+            ]++;
         }
 
 
@@ -117,31 +105,35 @@ class Modulos_Controller extends BaseController
                 static function (
                     array $sistema
                 ) use (
-                    $nombresProyectos,
                     $totalesModulos
                 ): array {
 
-                    $idProyecto =
+                    $idSistema =
                         (int) (
-                            $sistema['id_proyecto']
+                            $sistema[
+                                'id_sistema'
+                            ]
                             ?? 0
                         );
 
-                    $idSistema =
-                        (int) (
-                            $sistema['id_sistema']
-                            ?? 0
-                        );
 
                     return array_merge(
                         $sistema,
                         [
+                            /*
+                             * Sistema_Model ya obtiene
+                             * proyecto_nombre mediante JOIN.
+                             */
                             'proyecto_nombre' =>
-                                $nombresProyectos[$idProyecto]
+                                $sistema[
+                                    'proyecto_nombre'
+                                ]
                                 ?? 'Sin proyecto',
 
                             'total_modulos' =>
-                                $totalesModulos[$idSistema]
+                                $totalesModulos[
+                                    $idSistema
+                                ]
                                 ?? 0,
                         ]
                     );
@@ -177,12 +169,14 @@ class Modulos_Controller extends BaseController
             $this->request
             ->getJSON(true);
 
+
         if (!is_array($datos)) {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'Los datos enviados no son válidos.',
@@ -200,17 +194,20 @@ class Modulos_Controller extends BaseController
                 ?? 0
             );
 
+
         if ($idSistema <= 0) {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'No se encontró el sistema asociado.',
                 ]);
         }
+
 
         $sistema =
             $this->sistemaStorage
@@ -218,12 +215,14 @@ class Modulos_Controller extends BaseController
                 $idSistema
             );
 
+
         if ($sistema === null) {
 
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'El sistema seleccionado no existe.',
@@ -243,12 +242,14 @@ class Modulos_Controller extends BaseController
                 )
             );
 
+
         if ($nombre === '') {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'El nombre del módulo es obligatorio.',
@@ -256,131 +257,119 @@ class Modulos_Controller extends BaseController
         }
 
 
-        /*==================================================
-        =              DATOS DEL MÓDULO                    =
-        ==================================================*/
+        try {
 
-        $tipo =
-            trim(
-                (string) (
-                    $datos['tipo']
-                    ?? ''
-                )
-            );
+            /*==================================================
+            =                  CREAR                           =
+            ==================================================*/
 
-        $descripcion =
-            trim(
-                (string) (
-                    $datos['descripcion']
-                    ?? ''
-                )
-            );
-
-        $url =
-            trim(
-                (string) (
-                    $datos['url']
-                    ?? ''
-                )
-            );
-
-
-        /*==================================================
-        =              CREAR REGISTRO                     =
-        ==================================================*/
-
-        $modulos =
-            $this->moduloStorage
-            ->obtenerTodos();
-
-        $modulo = [
-
-            'id_modulo' =>
+            $modulo =
                 $this->moduloStorage
-                ->generarNuevoId(
-                    $modulos
+                ->crear(
+                    $datos
+                );
+
+
+            if ($modulo === null) {
+
+                return $this->response
+                    ->setStatusCode(500)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No fue posible registrar el módulo.',
+                    ]);
+            }
+
+
+            /*==================================================
+            =              TOTAL ACTUALIZADO                   =
+            ==================================================*/
+
+            $totalModulos =
+                count(
+                    $this->moduloStorage
+                    ->obtenerPorSistema(
+                        $idSistema
+                    )
+                );
+
+
+            /*==================================================
+            =              REGISTRAR ACTIVIDAD                 =
+            ==================================================*/
+
+            $this->registrarActividad(
+                'Agregó',
+                (int) (
+                    $modulo[
+                        'id_modulo'
+                    ]
+                    ?? 0
                 ),
-
-            'id_sistema' =>
-                $idSistema,
-
-            'nombre' =>
-                $nombre,
-
-            'tipo' =>
-                $tipo,
-
-            'descripcion' =>
-                $descripcion,
-
-            'url' =>
-                $url,
-
-            'imagen' =>
-                '',
-
-            'activo' =>
-                true,
-        ];
-
-        $modulos[] =
-            $modulo;
-
-        $this->moduloStorage
-            ->guardarTodos(
-                $modulos
+                'Agregó el módulo "'
+                    . (
+                        $modulo[
+                            'nombre'
+                        ]
+                        ?? 'Módulo'
+                    )
+                    . '" al sistema "'
+                    . (
+                        $sistema[
+                            'nombre'
+                        ]
+                        ?? 'Sistema'
+                    )
+                    . '".'
             );
 
 
-        /*==================================================
-        =              TOTAL ACTUALIZADO                   =
-        ==================================================*/
+            /*==================================================
+            =                  RESPUESTA                       =
+            ==================================================*/
 
-        $totalModulos =
-            count(
-                $this->moduloStorage
-                ->obtenerPorSistema(
-                    $idSistema
-                )
+            return $this->response
+                ->setStatusCode(201)
+                ->setJSON([
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        'Módulo registrado correctamente.',
+
+                    'modulo' =>
+                        $modulo,
+
+                    'total_modulos' =>
+                        $totalModulos,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al registrar módulo: {mensaje}',
+                [
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
             );
 
 
-        /*==================================================
-        =              REGISTRAR ACTIVIDAD                 =
-        ==================================================*/
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
 
-        $this->registrarActividad(
-            'Agregó',
-            (int) $modulo['id_modulo'],
-            'Agregó el módulo "'
-                . $nombre
-                . '" al sistema "'
-                . (
-                    $sistema['nombre']
-                    ?? 'Sistema'
-                )
-                . '".'
-        );
-
-
-        /*==================================================
-        =                  RESPUESTA                       =
-        ==================================================*/
-
-        return $this->response
-            ->setStatusCode(201)
-            ->setJSON([
-                'ok' => true,
-
-                'mensaje' =>
-                    'Módulo registrado correctamente.',
-
-                'modulo' =>
-                    $modulo,
-
-                'total_modulos' =>
-                    $totalModulos,
-            ]);
+                    'mensaje' =>
+                        $error->getMessage()
+                        ?: 'Ocurrió un error al registrar el módulo.',
+                ]);
+        }
     }
 
 
@@ -391,59 +380,44 @@ class Modulos_Controller extends BaseController
     public function actualizar(
         int $idModulo
     ) {
+
         $datos =
             $this->request
             ->getJSON(true);
+
 
         if (!is_array($datos)) {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'Los datos enviados no son válidos.',
                 ]);
         }
 
-        $modulos =
+
+        /*==================================================
+        =               MÓDULO EXISTENTE                    =
+        ==================================================*/
+
+        $moduloExistente =
             $this->moduloStorage
-            ->obtenerTodos();
+            ->obtenerPorId(
+                $idModulo
+            );
 
-        $indiceModulo = null;
-        $moduloExistente = null;
 
-        foreach (
-            $modulos as
-            $indice => $modulo
-        ) {
-
-            if (
-                (int) (
-                    $modulo['id_modulo']
-                    ?? 0
-                ) === $idModulo
-            ) {
-                $indiceModulo =
-                    $indice;
-
-                $moduloExistente =
-                    $modulo;
-
-                break;
-            }
-        }
-
-        if (
-            $indiceModulo === null ||
-            $moduloExistente === null
-        ) {
+        if ($moduloExistente === null) {
 
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'No se encontró el módulo solicitado.',
@@ -459,22 +433,27 @@ class Modulos_Controller extends BaseController
             (int) (
                 $datos['id_sistema']
                 ?? (
-                    $moduloExistente['id_sistema']
+                    $moduloExistente[
+                        'id_sistema'
+                    ]
                     ?? 0
                 )
             );
+
 
         if ($idSistema <= 0) {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'No se encontró el sistema asociado.',
                 ]);
         }
+
 
         $sistema =
             $this->sistemaStorage
@@ -482,17 +461,23 @@ class Modulos_Controller extends BaseController
                 $idSistema
             );
 
+
         if ($sistema === null) {
 
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'El sistema asociado no existe.',
                 ]);
         }
+
+
+        $datos['id_sistema'] =
+            $idSistema;
 
 
         /*==================================================
@@ -507,12 +492,14 @@ class Modulos_Controller extends BaseController
                 )
             );
 
+
         if ($nombre === '') {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'El nombre del módulo es obligatorio.',
@@ -520,97 +507,101 @@ class Modulos_Controller extends BaseController
         }
 
 
-        /*==================================================
-        =              ACTUALIZAR REGISTRO                 =
-        ==================================================*/
+        try {
 
-        $moduloActualizado = [
+            /*==================================================
+            =                  ACTUALIZAR                      =
+            ==================================================*/
 
-            'id_modulo' =>
+            $moduloActualizado =
+                $this->moduloStorage
+                ->actualizar(
+                    $idModulo,
+                    $datos
+                );
+
+
+            if ($moduloActualizado === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró el módulo solicitado.',
+                    ]);
+            }
+
+
+            /*==================================================
+            =              REGISTRAR ACTIVIDAD                 =
+            ==================================================*/
+
+            $this->registrarActividad(
+                'Editó',
                 $idModulo,
-
-            'id_sistema' =>
-                $idSistema,
-
-            'nombre' =>
-                $nombre,
-
-            'tipo' =>
-                trim(
-                    (string) (
-                        $datos['tipo']
-                        ?? ''
+                'Editó el módulo "'
+                    . (
+                        $moduloActualizado[
+                            'nombre'
+                        ]
+                        ?? 'Módulo'
                     )
-                ),
-
-            'descripcion' =>
-                trim(
-                    (string) (
-                        $datos['descripcion']
-                        ?? ''
+                    . '" del sistema "'
+                    . (
+                        $sistema[
+                            'nombre'
+                        ]
+                        ?? 'Sistema'
                     )
-                ),
-
-            'url' =>
-                trim(
-                    (string) (
-                        $datos['url']
-                        ?? ''
-                    )
-                ),
-
-            'imagen' =>
-                $moduloExistente['imagen']
-                ?? '',
-
-            'activo' =>
-                (bool) (
-                    $moduloExistente['activo']
-                    ?? true
-                ),
-        ];
-
-        $modulos[$indiceModulo] =
-            $moduloActualizado;
-
-        $this->moduloStorage
-            ->guardarTodos(
-                $modulos
+                    . '".'
             );
 
 
-        /*==================================================
-        =              REGISTRAR ACTIVIDAD                 =
-        ==================================================*/
+            /*==================================================
+            =                  RESPUESTA                       =
+            ==================================================*/
 
-        $this->registrarActividad(
-            'Editó',
-            $idModulo,
-            'Editó el módulo "'
-                . $nombre
-                . '" del sistema "'
-                . (
-                    $sistema['nombre']
-                    ?? 'Sistema'
-                )
-                . '".'
-        );
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        'Módulo actualizado correctamente.',
+
+                    'modulo' =>
+                        $moduloActualizado,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al actualizar módulo {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idModulo,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
 
 
-        /*==================================================
-        =                  RESPUESTA                       =
-        ==================================================*/
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
 
-        return $this->response
-            ->setJSON([
-                'ok' => true,
-
-                'mensaje' =>
-                    'Módulo actualizado correctamente.',
-
-                'modulo' =>
-                    $moduloActualizado,
-            ]);
+                    'mensaje' =>
+                        $error->getMessage()
+                        ?: 'Ocurrió un error al actualizar el módulo.',
+                ]);
+        }
     }
 
 
@@ -621,18 +612,21 @@ class Modulos_Controller extends BaseController
     public function actualizarImagen(
         int $idModulo
     ) {
+
         $modulo =
             $this->moduloStorage
             ->obtenerPorId(
                 $idModulo
             );
 
+
         if ($modulo === null) {
 
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'No se encontró el módulo solicitado.',
@@ -650,16 +644,20 @@ class Modulos_Controller extends BaseController
                 'imagen'
             );
 
+
         if (
-            !$archivo ||
-            !$archivo->isValid() ||
+            !$archivo
+            ||
+            !$archivo->isValid()
+            ||
             $archivo->hasMoved()
         ) {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'No se recibió una imagen válida.',
@@ -677,8 +675,10 @@ class Modulos_Controller extends BaseController
             'image/webp',
         ];
 
+
         $mime =
             $archivo->getMimeType();
+
 
         if (
             !in_array(
@@ -691,7 +691,8 @@ class Modulos_Controller extends BaseController
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'La imagen debe ser JPG, PNG o WebP.',
@@ -706,15 +707,18 @@ class Modulos_Controller extends BaseController
         $tamanoMaximo =
             5 * 1024 * 1024;
 
+
         if (
-            $archivo->getSize() >
+            $archivo->getSize()
+            >
             $tamanoMaximo
         ) {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'La imagen no puede superar los 5 MB.',
@@ -729,6 +733,7 @@ class Modulos_Controller extends BaseController
         $directorio =
             FCPATH
             . 'uploads/modulos';
+
 
         if (!is_dir($directorio)) {
 
@@ -749,6 +754,7 @@ class Modulos_Controller extends BaseController
                 $archivo->getExtension()
             );
 
+
         $nombreArchivo =
             'modulo-'
             . $idModulo
@@ -758,84 +764,117 @@ class Modulos_Controller extends BaseController
             . $extension;
 
 
-        /*==================================================
-        =              GUARDAR ARCHIVO                    =
-        ==================================================*/
+        try {
 
-        $archivo->move(
-            $directorio,
-            $nombreArchivo
-        );
+            /*==================================================
+            =              GUARDAR ARCHIVO                    =
+            ==================================================*/
 
-
-        /*==================================================
-        =              RUTA PÚBLICA                       =
-        ==================================================*/
-
-        $rutaImagen =
-            base_url(
-                'uploads/modulos/'
-                . $nombreArchivo
+            $archivo->move(
+                $directorio,
+                $nombreArchivo
             );
 
 
-        /*==================================================
-        =              ACTUALIZAR MÓDULO                  =
-        ==================================================*/
+            /*==================================================
+            =              RUTA PÚBLICA                       =
+            ==================================================*/
 
-        $moduloActualizado =
-            $this->moduloStorage
-            ->actualizarImagen(
+            $rutaImagen =
+                base_url(
+                    'uploads/modulos/'
+                    . $nombreArchivo
+                );
+
+
+            /*==================================================
+            =              ACTUALIZAR BD                      =
+            ==================================================*/
+
+            $moduloActualizado =
+                $this->moduloStorage
+                ->actualizarImagen(
+                    $idModulo,
+                    $rutaImagen
+                );
+
+
+            if ($moduloActualizado === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No fue posible actualizar la imagen del módulo.',
+                    ]);
+            }
+
+
+            /*==================================================
+            =              REGISTRAR ACTIVIDAD                 =
+            ==================================================*/
+
+            $this->registrarActividad(
+                'Editó',
                 $idModulo,
-                $rutaImagen
+                'Actualizó la imagen del módulo "'
+                    . (
+                        $moduloActualizado[
+                            'nombre'
+                        ]
+                        ?? 'Módulo'
+                    )
+                    . '".'
             );
 
-        if ($moduloActualizado === null) {
+
+            /*==================================================
+            =                  RESPUESTA                       =
+            ==================================================*/
 
             return $this->response
-                ->setStatusCode(404)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        'Imagen actualizada correctamente.',
+
+                    'imagen' =>
+                        $rutaImagen,
+
+                    'modulo' =>
+                        $moduloActualizado,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al actualizar imagen del módulo {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idModulo,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'No fue posible actualizar la imagen del módulo.',
                 ]);
         }
-
-
-        /*==================================================
-        =              REGISTRAR ACTIVIDAD                 =
-        ==================================================*/
-
-        $this->registrarActividad(
-            'Editó',
-            $idModulo,
-            'Actualizó la imagen del módulo "'
-                . (
-                    $moduloActualizado['nombre']
-                    ?? 'Módulo'
-                )
-                . '".'
-        );
-
-
-        /*==================================================
-        =                  RESPUESTA                       =
-        ==================================================*/
-
-        return $this->response
-            ->setJSON([
-                'ok' => true,
-
-                'mensaje' =>
-                    'Imagen actualizada correctamente.',
-
-                'imagen' =>
-                    $rutaImagen,
-
-                'modulo' =>
-                    $moduloActualizado,
-            ]);
     }
 
 
@@ -846,35 +885,25 @@ class Modulos_Controller extends BaseController
     public function eliminar(
         int $idModulo
     ) {
-        $modulos =
+
+        /*==================================================
+        =              OBTENER MÓDULO                     =
+        ==================================================*/
+
+        $modulo =
             $this->moduloStorage
-            ->obtenerTodos();
+            ->obtenerPorId(
+                $idModulo
+            );
 
-        $moduloEncontrado =
-            null;
 
-        foreach ($modulos as $modulo) {
-
-            if (
-                (int) (
-                    $modulo['id_modulo']
-                    ?? 0
-                ) === $idModulo
-            ) {
-
-                $moduloEncontrado =
-                    $modulo;
-
-                break;
-            }
-        }
-
-        if ($moduloEncontrado === null) {
+        if ($modulo === null) {
 
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'No se encontró el módulo solicitado.',
@@ -882,99 +911,142 @@ class Modulos_Controller extends BaseController
         }
 
 
-        /*==================================================
-        =              OBTENER SISTEMA                     =
-        ==================================================*/
-
         $idSistema =
             (int) (
-                $moduloEncontrado['id_sistema']
+                $modulo[
+                    'id_sistema'
+                ]
                 ?? 0
             );
 
+
         $sistema =
-            $this->sistemaStorage
-            ->obtenerPorId(
-                $idSistema
-            );
+            $idSistema > 0
+                ? $this->sistemaStorage
+                    ->obtenerPorId(
+                        $idSistema
+                    )
+                : null;
 
 
-        /*==================================================
-        =                ELIMINAR                          =
-        ==================================================*/
+        try {
 
-        $modulos =
-            array_values(
-                array_filter(
-                    $modulos,
-                    static fn(array $modulo): bool =>
-                        (int) (
-                            $modulo['id_modulo']
-                            ?? 0
-                        ) !== $idModulo
-                )
-            );
+            /*==================================================
+            =                    ELIMINAR                      =
+            ==================================================*/
 
-        $this->moduloStorage
-            ->guardarTodos(
-                $modulos
-            );
-
-
-        /*==================================================
-        =             TOTAL ACTUALIZADO                    =
-        ==================================================*/
-
-        $totalModulos =
-            count(
+            $eliminado =
                 $this->moduloStorage
-                ->obtenerPorSistema(
-                    $idSistema
-                )
+                ->eliminar(
+                    $idModulo
+                );
+
+
+            if (!$eliminado) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró el módulo solicitado.',
+                    ]);
+            }
+
+
+            /*==================================================
+            =             TOTAL ACTUALIZADO                   =
+            ==================================================*/
+
+            $totalModulos =
+                $idSistema > 0
+                    ? count(
+                        $this->moduloStorage
+                        ->obtenerPorSistema(
+                            $idSistema
+                        )
+                    )
+                    : 0;
+
+
+            /*==================================================
+            =              REGISTRAR ACTIVIDAD                 =
+            ==================================================*/
+
+            $this->registrarActividad(
+                'Eliminó',
+                $idModulo,
+                'Eliminó el módulo "'
+                    . (
+                        $modulo[
+                            'nombre'
+                        ]
+                        ?? 'Módulo'
+                    )
+                    . '" del sistema "'
+                    . (
+                        $sistema[
+                            'nombre'
+                        ]
+                        ?? 'Sistema'
+                    )
+                    . '".'
             );
 
 
-        /*==================================================
-        =              REGISTRAR ACTIVIDAD                 =
-        ==================================================*/
+            /*==================================================
+            =                  RESPUESTA                       =
+            ==================================================*/
 
-        $this->registrarActividad(
-            'Eliminó',
-            $idModulo,
-            'Eliminó el módulo "'
-                . (
-                    $moduloEncontrado['nombre']
-                    ?? 'Módulo'
-                )
-                . '" del sistema "'
-                . (
-                    $sistema['nombre']
-                    ?? 'Sistema'
-                )
-                . '".'
-        );
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        'Módulo eliminado correctamente.',
+
+                    'id_modulo' =>
+                        $idModulo,
+
+                    'id_sistema' =>
+                        $idSistema,
+
+                    'total_modulos' =>
+                        $totalModulos,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            /*
+             * Cuando existan registros dependientes,
+             * las FK de MySQL protegerán el módulo.
+             */
+            log_message(
+                'error',
+                'No fue posible eliminar módulo {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idModulo,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
 
 
-        /*==================================================
-        =                  RESPUESTA                       =
-        ==================================================*/
+            return $this->response
+                ->setStatusCode(409)
+                ->setJSON([
+                    'ok' =>
+                        false,
 
-        return $this->response
-            ->setJSON([
-                'ok' => true,
-
-                'mensaje' =>
-                    'Módulo eliminado correctamente.',
-
-                'id_modulo' =>
-                    $idModulo,
-
-                'id_sistema' =>
-                    $idSistema,
-
-                'total_modulos' =>
-                    $totalModulos,
-            ]);
+                    'mensaje' =>
+                        'No se puede eliminar el módulo porque existen registros asociados.',
+                ]);
+        }
     }
 
 
@@ -985,21 +1057,25 @@ class Modulos_Controller extends BaseController
     public function cambiarEstado(
         int $idModulo
     ) {
+
         $datos =
             $this->request
             ->getJSON(true);
+
 
         if (!is_array($datos)) {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'Los datos enviados no son válidos.',
                 ]);
         }
+
 
         if (
             !array_key_exists(
@@ -1011,12 +1087,14 @@ class Modulos_Controller extends BaseController
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'No se recibió el estado del módulo.',
                 ]);
         }
+
 
         $activo =
             filter_var(
@@ -1025,12 +1103,14 @@ class Modulos_Controller extends BaseController
                 FILTER_NULL_ON_FAILURE
             );
 
+
         if ($activo === null) {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
                         'El estado enviado no es válido.',
@@ -1038,106 +1118,107 @@ class Modulos_Controller extends BaseController
         }
 
 
-        /*==================================================
-        =              BUSCAR MÓDULO                      =
-        ==================================================*/
+        try {
 
-        $modulos =
-            $this->moduloStorage
-            ->obtenerTodos();
+            /*==================================================
+            =              ACTUALIZAR ESTADO                  =
+            ==================================================*/
 
-        $indiceModulo =
-            null;
+            $modulo =
+                $this->moduloStorage
+                ->cambiarEstado(
+                    $idModulo,
+                    $activo
+                );
 
-        foreach (
-            $modulos as
-            $indice => $modulo
-        ) {
 
-            if (
-                (int) (
-                    $modulo['id_modulo']
-                    ?? 0
-                ) === $idModulo
-            ) {
+            if ($modulo === null) {
 
-                $indiceModulo =
-                    $indice;
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
 
-                break;
+                        'mensaje' =>
+                            'No se encontró el módulo solicitado.',
+                    ]);
             }
-        }
-
-        if ($indiceModulo === null) {
-
-            return $this->response
-                ->setStatusCode(404)
-                ->setJSON([
-                    'ok' => false,
-
-                    'mensaje' =>
-                        'No se encontró el módulo solicitado.',
-                ]);
-        }
 
 
-        /*==================================================
-        =              ACTUALIZAR ESTADO                  =
-        ==================================================*/
+            /*==================================================
+            =              REGISTRAR ACTIVIDAD                 =
+            ==================================================*/
 
-        $modulos[$indiceModulo]['activo'] =
-            $activo;
-
-        $this->moduloStorage
-            ->guardarTodos(
-                $modulos
+            $this->registrarActividad(
+                $activo
+                    ? 'Activó'
+                    : 'Desactivó',
+                $idModulo,
+                (
+                    $activo
+                        ? 'Activó el módulo "'
+                        : 'Desactivó el módulo "'
+                )
+                    . (
+                        $modulo[
+                            'nombre'
+                        ]
+                        ?? 'Módulo'
+                    )
+                    . '".'
             );
 
 
-        /*==================================================
-        =              REGISTRAR ACTIVIDAD                 =
-        ==================================================*/
+            /*==================================================
+            =                  RESPUESTA                       =
+            ==================================================*/
 
-        $this->registrarActividad(
-            $activo
-                ? 'Activó'
-                : 'Desactivó',
-            $idModulo,
-            (
-                $activo
-                    ? 'Activó el módulo "'
-                    : 'Desactivó el módulo "'
-            )
-                . (
-                    $modulos[$indiceModulo]['nombre']
-                    ?? 'Módulo'
-                )
-                . '".'
-        );
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        $activo
+                            ? 'Módulo activado correctamente.'
+                            : 'Módulo desactivado correctamente.',
+
+                    'id_modulo' =>
+                        $idModulo,
+
+                    'activo' =>
+                        $activo,
+
+                    'modulo' =>
+                        $modulo,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al cambiar estado del módulo {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idModulo,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
 
 
-        /*==================================================
-        =                  RESPUESTA                       =
-        ==================================================*/
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
 
-        return $this->response
-            ->setJSON([
-                'ok' => true,
-
-                'mensaje' =>
-                    $activo
-                        ? 'Módulo activado correctamente.'
-                        : 'Módulo desactivado correctamente.',
-
-                'id_modulo' =>
-                    $idModulo,
-
-                'activo' =>
-                    $activo,
-
-                'modulo' =>
-                    $modulos[$indiceModulo],
-            ]);
+                    'mensaje' =>
+                        'No fue posible actualizar el estado del módulo.',
+                ]);
+        }
     }
 
 
@@ -1150,8 +1231,15 @@ class Modulos_Controller extends BaseController
         int $idModulo,
         string $detalle
     ): void {
+
         try {
 
+            /*
+             * Actividad todavía trabaja con su
+             * StorageService actual.
+             *
+             * Se migrará posteriormente.
+             */
             $this->actividadStorage
                 ->registrar([
                     'bloque' =>
