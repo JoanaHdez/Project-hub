@@ -250,6 +250,17 @@ class Sistemas_Controller extends BaseController
         }
 
 
+        $respuestaPermisoProyecto =
+            $this->validarPermisoProyecto(
+                $proyecto,
+                'agregar sistemas a'
+            );
+
+        if ($respuestaPermisoProyecto !== null) {
+            return $respuestaPermisoProyecto;
+        }
+
+
         try {
 
             /*==================================================
@@ -363,6 +374,33 @@ class Sistemas_Controller extends BaseController
 
         try {
 
+            $sistemaExistente =
+                $this->storage
+                ->obtenerPorId(
+                    $idSistema
+                );
+
+            if ($sistemaExistente === null) {
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' => false,
+                        'mensaje' =>
+                            'No se encontró el sistema solicitado.',
+                    ]);
+            }
+
+            $respuestaPermiso =
+                $this->validarPermisoSistema(
+                    $sistemaExistente,
+                    'desactivar'
+                );
+
+            if ($respuestaPermiso !== null) {
+                return $respuestaPermiso;
+            }
+
+
             $sistema =
                 $this->storage
                 ->desactivar(
@@ -448,6 +486,33 @@ class Sistemas_Controller extends BaseController
     ) {
 
         try {
+
+            $sistemaExistente =
+                $this->storage
+                ->obtenerPorId(
+                    $idSistema
+                );
+
+            if ($sistemaExistente === null) {
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' => false,
+                        'mensaje' =>
+                            'No se encontró el sistema solicitado.',
+                    ]);
+            }
+
+            $respuestaPermiso =
+                $this->validarPermisoSistema(
+                    $sistemaExistente,
+                    'activar'
+                );
+
+            if ($respuestaPermiso !== null) {
+                return $respuestaPermiso;
+            }
+
 
             $sistema =
                 $this->storage
@@ -555,6 +620,17 @@ class Sistemas_Controller extends BaseController
                     'mensaje' =>
                     'No se encontró el sistema solicitado.',
                 ]);
+        }
+
+
+        $respuestaPermiso =
+            $this->validarPermisoSistema(
+                $sistema,
+                'eliminar'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
         }
 
 
@@ -789,6 +865,17 @@ class Sistemas_Controller extends BaseController
         }
 
 
+        $respuestaPermiso =
+            $this->validarPermisoSistema(
+                $sistemaExistente,
+                'modificar'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
+
+
         /*
          * El formulario actual no necesariamente
          * vuelve a enviar id_proyecto al editar.
@@ -855,6 +942,17 @@ class Sistemas_Controller extends BaseController
                     'mensaje' =>
                     'El proyecto asociado no existe.',
                 ]);
+        }
+
+
+        $respuestaPermisoProyecto =
+            $this->validarPermisoProyecto(
+                $proyecto,
+                'asociar sistemas a'
+            );
+
+        if ($respuestaPermisoProyecto !== null) {
+            return $respuestaPermisoProyecto;
         }
 
 
@@ -943,6 +1041,104 @@ class Sistemas_Controller extends BaseController
                         ?: 'Ocurrió un error al actualizar el sistema.',
                 ]);
         }
+    }
+
+
+    /*==================================================
+    =              VALIDAR PERMISO SISTEMA             =
+    ==================================================*/
+
+    private function validarPermisoSistema(
+        array $sistema,
+        string $accion = 'modificar'
+    ): ?\CodeIgniter\HTTP\ResponseInterface {
+
+        $rolUsuario =
+            (string) session()
+                ->get('usuario_rol');
+
+        $idUsuario =
+            (int) session()
+                ->get('id_usuario');
+
+        $idUsuarioCreador =
+            (int) (
+                $sistema['id_usuario_creador']
+                ?? 0
+            );
+
+        if (
+            $rolUsuario === 'superadministrador'
+            ||
+            (
+                $rolUsuario === 'desarrollador'
+                &&
+                $idUsuario > 0
+                &&
+                $idUsuarioCreador === $idUsuario
+            )
+        ) {
+            return null;
+        }
+
+        return $this->response
+            ->setStatusCode(403)
+            ->setJSON([
+                'ok' => false,
+                'mensaje' =>
+                    'No tienes permisos para '
+                    . $accion
+                    . ' este sistema.',
+            ]);
+    }
+
+
+    /*==================================================
+    =             VALIDAR PERMISO PROYECTO             =
+    ==================================================*/
+
+    private function validarPermisoProyecto(
+        array $proyecto,
+        string $accion = 'modificar'
+    ): ?\CodeIgniter\HTTP\ResponseInterface {
+
+        $rolUsuario =
+            (string) session()
+                ->get('usuario_rol');
+
+        $idUsuario =
+            (int) session()
+                ->get('id_usuario');
+
+        $idUsuarioCreador =
+            (int) (
+                $proyecto['id_usuario_creador']
+                ?? 0
+            );
+
+        if (
+            $rolUsuario === 'superadministrador'
+            ||
+            (
+                $rolUsuario === 'desarrollador'
+                &&
+                $idUsuario > 0
+                &&
+                $idUsuarioCreador === $idUsuario
+            )
+        ) {
+            return null;
+        }
+
+        return $this->response
+            ->setStatusCode(403)
+            ->setJSON([
+                'ok' => false,
+                'mensaje' =>
+                    'No tienes permisos para '
+                    . $accion
+                    . ' este proyecto.',
+            ]);
     }
 
 

@@ -11,9 +11,6 @@ class Sistema_StorageService
 
     private BaseConnection $db;
 
-    private const ID_USUARIO_TEMPORAL = 1;
-
-
     public function __construct()
     {
         $this->model =
@@ -126,8 +123,18 @@ class Sistema_StorageService
             );
 
 
+        $idUsuarioCreador =
+            (int) session()
+                ->get('id_usuario');
+
+        if ($idUsuarioCreador <= 0) {
+            throw new \RuntimeException(
+                'No se pudo identificar al usuario creador del sistema.'
+            );
+        }
+
         $datosBd['id_usuario_creador'] =
-            self::ID_USUARIO_TEMPORAL;
+            $idUsuarioCreador;
 
         $datosBd['activo'] =
             1;
