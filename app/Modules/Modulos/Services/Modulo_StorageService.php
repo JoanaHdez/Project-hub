@@ -8,9 +8,6 @@ class Modulo_StorageService
 {
     private Modulo_Model $model;
 
-    private const ID_USUARIO_TEMPORAL = 1;
-
-
     public function __construct()
     {
         $this->model =
@@ -104,8 +101,18 @@ class Modulo_StorageService
             );
 
 
+        $idUsuarioCreador =
+            (int) session()
+                ->get('id_usuario');
+
+        if ($idUsuarioCreador <= 0) {
+            throw new \RuntimeException(
+                'No se pudo identificar al usuario creador del módulo.'
+            );
+        }
+
         $datosBd['id_usuario_creador'] =
-            self::ID_USUARIO_TEMPORAL;
+            $idUsuarioCreador;
 
         $datosBd['activo'] =
             1;

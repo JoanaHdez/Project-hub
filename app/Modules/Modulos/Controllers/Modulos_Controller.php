@@ -230,6 +230,17 @@ class Modulos_Controller extends BaseController
         }
 
 
+        $respuestaPermisoSistema =
+            $this->validarPermisoSistema(
+                $sistema,
+                'agregar módulos a'
+            );
+
+        if ($respuestaPermisoSistema !== null) {
+            return $respuestaPermisoSistema;
+        }
+
+
         /*==================================================
         =              VALIDAR NOMBRE                      =
         ==================================================*/
@@ -425,6 +436,17 @@ class Modulos_Controller extends BaseController
         }
 
 
+        $respuestaPermiso =
+            $this->validarPermisoModulo(
+                $moduloExistente,
+                'modificar'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
+
+
         /*==================================================
         =              SISTEMA ASOCIADO                    =
         ==================================================*/
@@ -473,6 +495,17 @@ class Modulos_Controller extends BaseController
                     'mensaje' =>
                         'El sistema asociado no existe.',
                 ]);
+        }
+
+
+        $respuestaPermisoSistema =
+            $this->validarPermisoSistema(
+                $sistema,
+                'asociar módulos a'
+            );
+
+        if ($respuestaPermisoSistema !== null) {
+            return $respuestaPermisoSistema;
         }
 
 
@@ -631,6 +664,17 @@ class Modulos_Controller extends BaseController
                     'mensaje' =>
                         'No se encontró el módulo solicitado.',
                 ]);
+        }
+
+
+        $respuestaPermiso =
+            $this->validarPermisoModulo(
+                $modulo,
+                'actualizar la imagen de'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
         }
 
 
@@ -911,6 +955,17 @@ class Modulos_Controller extends BaseController
         }
 
 
+        $respuestaPermiso =
+            $this->validarPermisoModulo(
+                $modulo,
+                'eliminar'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
+
+
         $idSistema =
             (int) (
                 $modulo[
@@ -1118,6 +1173,35 @@ class Modulos_Controller extends BaseController
         }
 
 
+        $moduloExistente =
+            $this->moduloStorage
+                ->obtenerPorId(
+                    $idModulo
+                );
+
+        if ($moduloExistente === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                        'No se encontró el módulo solicitado.',
+                ]);
+        }
+
+        $respuestaPermiso =
+            $this->validarPermisoModulo(
+                $moduloExistente,
+                $activo
+                    ? 'activar'
+                    : 'desactivar'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
+
+
         try {
 
             /*==================================================
@@ -1219,6 +1303,104 @@ class Modulos_Controller extends BaseController
                         'No fue posible actualizar el estado del módulo.',
                 ]);
         }
+    }
+
+
+    /*==================================================
+    =              VALIDAR PERMISO MÓDULO              =
+    ==================================================*/
+
+    private function validarPermisoModulo(
+        array $modulo,
+        string $accion = 'modificar'
+    ): ?\CodeIgniter\HTTP\ResponseInterface {
+
+        $rolUsuario =
+            (string) session()
+                ->get('usuario_rol');
+
+        $idUsuario =
+            (int) session()
+                ->get('id_usuario');
+
+        $idUsuarioCreador =
+            (int) (
+                $modulo['id_usuario_creador']
+                ?? 0
+            );
+
+        if (
+            $rolUsuario === 'superadministrador'
+            ||
+            (
+                $rolUsuario === 'desarrollador'
+                &&
+                $idUsuario > 0
+                &&
+                $idUsuarioCreador === $idUsuario
+            )
+        ) {
+            return null;
+        }
+
+        return $this->response
+            ->setStatusCode(403)
+            ->setJSON([
+                'ok' => false,
+                'mensaje' =>
+                    'No tienes permisos para '
+                    . $accion
+                    . ' este módulo.',
+            ]);
+    }
+
+
+    /*==================================================
+    =              VALIDAR PERMISO SISTEMA             =
+    ==================================================*/
+
+    private function validarPermisoSistema(
+        array $sistema,
+        string $accion = 'modificar'
+    ): ?\CodeIgniter\HTTP\ResponseInterface {
+
+        $rolUsuario =
+            (string) session()
+                ->get('usuario_rol');
+
+        $idUsuario =
+            (int) session()
+                ->get('id_usuario');
+
+        $idUsuarioCreador =
+            (int) (
+                $sistema['id_usuario_creador']
+                ?? 0
+            );
+
+        if (
+            $rolUsuario === 'superadministrador'
+            ||
+            (
+                $rolUsuario === 'desarrollador'
+                &&
+                $idUsuario > 0
+                &&
+                $idUsuarioCreador === $idUsuario
+            )
+        ) {
+            return null;
+        }
+
+        return $this->response
+            ->setStatusCode(403)
+            ->setJSON([
+                'ok' => false,
+                'mensaje' =>
+                    'No tienes permisos para '
+                    . $accion
+                    . ' este sistema.',
+            ]);
     }
 
 
