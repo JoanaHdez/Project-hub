@@ -39,11 +39,17 @@ export function inicializarModalNuevoModulo() {
                 return;
             }
 
+
+            /*==================================================*
+            *=              SISTEMA SELECCIONADO              =*
+            *==================================================*/
+
             const idSistema =
                 document.body.dataset
                     .sistemaSeleccionadoId ?? "";
 
             if (!idSistema) {
+
                 console.error(
                     "No hay un sistema seleccionado.",
                 );
@@ -63,6 +69,75 @@ export function inicializarModalNuevoModulo() {
                 idSistema;
 
             formulario.reset();
+
+
+            /*==================================================*
+            *=              LIMPIAR IMAGEN                     =*
+            *==================================================*/
+
+            const editorImagen =
+                formulario.querySelector(
+                    "[data-modulo-imagen-editor]",
+                );
+
+            const previewImagen =
+                formulario.querySelector(
+                    "[data-modulo-imagen-preview]",
+                );
+
+            const estadoVacioImagen =
+                formulario.querySelector(
+                    "[data-modulo-imagen-vacia]",
+                );
+
+            const botonImagen =
+                formulario.querySelector(
+                    "[data-modulo-imagen-seleccionar]",
+                );
+
+            const inputImagen =
+                formulario.querySelector(
+                    "[data-modulo-imagen-input]",
+                );
+
+
+            /*
+             * En modo nuevo no se solicita imagen.
+             *
+             * La imagen solamente se administra
+             * posteriormente desde la edición
+             * del módulo.
+             */
+
+            if (editorImagen) {
+                editorImagen.hidden =
+                    true;
+            }
+
+            if (previewImagen) {
+
+                previewImagen.removeAttribute(
+                    "src",
+                );
+
+                previewImagen.hidden =
+                    true;
+            }
+
+            if (estadoVacioImagen) {
+                estadoVacioImagen.hidden =
+                    false;
+            }
+
+            if (botonImagen) {
+                botonImagen.hidden =
+                    true;
+            }
+
+            if (inputImagen) {
+                inputImagen.value =
+                    "";
+            }
 
 
             /*==================================================*
@@ -94,8 +169,10 @@ export function inicializarModalNuevoModulo() {
                     "modulo-url",
                 );
 
+
             if (campoId) {
-                campoId.value = "";
+                campoId.value =
+                    "";
             }
 
             if (campoTipo) {
@@ -129,6 +206,7 @@ export function inicializarModalNuevoModulo() {
                 );
 
             if (tituloModal) {
+
                 tituloModal.textContent =
                     "Nuevo módulo";
             }
@@ -163,6 +241,7 @@ export function inicializarModalNuevoModulo() {
                     "[data-modulo-texto-cerrar]",
                 );
 
+
             if (botonEliminar) {
                 botonEliminar.hidden =
                     true;
@@ -179,11 +258,13 @@ export function inicializarModalNuevoModulo() {
             }
 
             if (textoGuardar) {
+
                 textoGuardar.textContent =
                     "Guardar módulo";
             }
 
             if (textoCerrar) {
+
                 textoCerrar.textContent =
                     "Cancelar";
             }
