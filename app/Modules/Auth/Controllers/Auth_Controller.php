@@ -26,7 +26,7 @@ class Auth_Controller extends BaseController
     {
         if (
             session()
-            ->get('autenticado')
+                ->get('autenticado')
         ) {
             return $this->redirigirPorRol();
         }
@@ -86,9 +86,9 @@ class Auth_Controller extends BaseController
 
         $usuario =
             $this->usuarioStorage
-            ->obtenerPorCorreo(
-                $correo
-            );
+                ->obtenerPorCorreo(
+                    $correo
+                );
 
         if (
             $usuario === null ||
@@ -136,6 +136,40 @@ class Auth_Controller extends BaseController
 
 
         /*==================================================
+        =                  VALIDAR ROL                     =
+        ==================================================*/
+
+        $rol =
+            (string) (
+                $usuario['rol']
+                ?? ''
+            );
+
+        $rolesPermitidos = [
+            'superadministrador',
+            'desarrollador',
+        ];
+
+        if (
+            !in_array(
+                $rol,
+                $rolesPermitidos,
+                true
+            )
+        ) {
+
+            return redirect()
+                ->to(
+                    base_url('login')
+                )
+                ->with(
+                    'error',
+                    'Tu cuenta no tiene un rol válido para acceder a Project Hub.'
+                );
+        }
+
+
+        /*==================================================
         =                  CREAR SESIÓN                    =
         ==================================================*/
 
@@ -162,8 +196,7 @@ class Auth_Controller extends BaseController
                     ?? '',
 
                 'usuario_rol' =>
-                    $usuario['rol']
-                    ?? 'usuario',
+                    $rol,
             ]);
 
 
@@ -194,27 +227,63 @@ class Auth_Controller extends BaseController
     private function redirigirPorRol()
     {
         $rol =
-            session()
-            ->get('usuario_rol');
+            (string) session()
+                ->get('usuario_rol');
 
-        /*
-         * En el siguiente paso crearemos
-         * /mis-sistemas para el usuario normal.
-         *
-         * Por ahora ambos roles entran al sistema
-         * para comprobar el login.
-         */
-        if ($rol === 'usuario') {
 
-    return redirect()
-        ->to(
-            base_url('mis-sistemas')
-        );
-}
+        /*==================================================
+        =               SUPERADMINISTRADOR                =
+        ==================================================*/
+
+        if (
+            $rol === 'superadministrador'
+        ) {
+
+            return redirect()
+                ->to(
+                    base_url('/')
+                );
+        }
+
+
+        /*==================================================
+        =                  DESARROLLADOR                  =
+        ==================================================*/
+
+        if (
+            $rol === 'desarrollador'
+        ) {
+
+            /*
+             * El desarrollador entra al mismo Project Hub.
+             *
+             * Los permisos para editar, eliminar,
+             * activar o desactivar registros ajenos
+             * se validarán posteriormente mediante
+             * id_usuario_creador.
+             */
+
+            return redirect()
+                ->to(
+                    base_url('/')
+                );
+        }
+
+
+        /*==================================================
+        =                   ROL INVÁLIDO                  =
+        ==================================================*/
+
+        session()
+            ->destroy();
 
         return redirect()
             ->to(
-                base_url('/')
+                base_url('login')
+            )
+            ->with(
+                'error',
+                'Tu cuenta no tiene un rol válido para acceder a Project Hub.'
             );
     }
 }

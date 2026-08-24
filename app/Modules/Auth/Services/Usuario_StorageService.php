@@ -2,18 +2,17 @@
 
 namespace App\Modules\Auth\Services;
 
+use App\Modules\Auth\Models\Usuario_Model;
+
 class Usuario_StorageService
 {
-    private string $rutaArchivo;
+    private Usuario_Model $model;
 
 
     public function __construct()
     {
-        $this->rutaArchivo =
-            APPPATH
-            . 'Modules/Auth/Data/usuarios.json';
-
-        $this->inicializarUsuarios();
+        $this->model =
+            new Usuario_Model();
     }
 
 
@@ -23,31 +22,44 @@ class Usuario_StorageService
 
     public function obtenerTodos(): array
     {
-        if (!is_file($this->rutaArchivo)) {
-            return [];
-        }
-
-        $contenido =
-            file_get_contents(
-                $this->rutaArchivo
-            );
-
-        if (
-            $contenido === false ||
-            trim($contenido) === ''
-        ) {
-            return [];
-        }
-
         $usuarios =
-            json_decode(
-                $contenido,
-                true
+            $this->model
+            ->obtenerTodosCompletos();
+
+
+        return array_map(
+            fn(array $usuario): array =>
+                $this->prepararUsuario(
+                    $usuario
+                ),
+            $usuarios
+        );
+    }
+
+
+    /*==================================================
+    =               OBTENER POR ID                    =
+    ==================================================*/
+
+    public function obtenerPorId(
+        int $idUsuario
+    ): ?array {
+
+        $usuario =
+            $this->model
+            ->obtenerCompletoPorId(
+                $idUsuario
             );
 
-        return is_array($usuarios)
-            ? $usuarios
-            : [];
+
+        if ($usuario === null) {
+            return null;
+        }
+
+
+        return $this->prepararUsuario(
+            $usuario
+        );
     }
 
 
@@ -58,134 +70,115 @@ class Usuario_StorageService
     public function obtenerPorCorreo(
         string $correo
     ): ?array {
+
         $correo =
             strtolower(
-                trim($correo)
+                trim(
+                    $correo
+                )
             );
 
-        foreach (
-            $this->obtenerTodos()
-            as $usuario
-        ) {
 
-            $correoUsuario =
-                strtolower(
-                    trim(
-                        (string) (
-                            $usuario['correo']
-                            ?? ''
-                        )
-                    )
-                );
-
-            if ($correoUsuario === $correo) {
-                return $usuario;
-            }
+        if ($correo === '') {
+            return null;
         }
 
-        return null;
+
+        $usuario =
+            $this->model
+            ->obtenerPorCorreo(
+                $correo
+            );
+
+
+        if ($usuario === null) {
+            return null;
+        }
+
+
+        return $this->prepararUsuario(
+            $usuario
+        );
     }
 
 
     /*==================================================
-    =              USUARIOS INICIALES                 =
+    =                PREPARAR USUARIO                 =
     ==================================================*/
 
-    private function inicializarUsuarios(): void
-    {
-        if (is_file($this->rutaArchivo)) {
+    private function prepararUsuario(
+        array $usuario
+    ): array {
 
-            $contenido =
-                file_get_contents(
-                    $this->rutaArchivo
-                );
-
-            if (
-                $contenido !== false &&
-                trim($contenido) !== '' &&
-                json_decode(
-                    $contenido,
-                    true
-                )
-            ) {
-                return;
-            }
-        }
-
-        $directorio =
-            dirname(
-                $this->rutaArchivo
+        $usuario['id_usuario'] =
+            (int) (
+                $usuario[
+                    'id_usuario'
+                ]
+                ?? 0
             );
 
-        if (!is_dir($directorio)) {
 
-            mkdir(
-                $directorio,
-                0775,
-                true
+        $usuario['id_rol'] =
+            (int) (
+                $usuario[
+                    'id_rol'
+                ]
+                ?? 0
             );
-        }
 
 
-        $usuarios = [
-
-            [
-                'id_usuario' =>
-                    1,
-
-                'nombre' =>
-                    'Administrador',
-
-                'correo' =>
-                    'admin@projecthub.local',
-
-                'password_hash' =>
-                    password_hash(
-                        'Admin123!',
-                        PASSWORD_DEFAULT
-                    ),
-
-                'rol' =>
-                    'administrador',
-
-                'activo' =>
-                    true,
-            ],
-
-            [
-                'id_usuario' =>
-                    2,
-
-                'nombre' =>
-                    'Usuario',
-
-                'correo' =>
-                    'usuario@projecthub.local',
-
-                'password_hash' =>
-                    password_hash(
-                        'Usuario123!',
-                        PASSWORD_DEFAULT
-                    ),
-
-                'rol' =>
-                    'usuario',
-
-                'activo' =>
-                    true,
-            ],
-        ];
+        $usuario['activo'] =
+            (bool) (
+                $usuario[
+                    'activo'
+                ]
+                ?? false
+            );
 
 
-        file_put_contents(
-            $this->rutaArchivo,
-            json_encode(
-                $usuarios,
-                JSON_PRETTY_PRINT
-                | JSON_UNESCAPED_UNICODE
-                | JSON_UNESCAPED_SLASHES
-            ),
-            LOCK_EX
-        );
+        $usuario['nombre'] =
+            $usuario[
+                'nombre'
+            ]
+            ?? '';
+
+
+        $usuario['apellido_paterno'] =
+            $usuario[
+                'apellido_paterno'
+            ]
+            ?? '';
+
+
+        $usuario['apellido_materno'] =
+            $usuario[
+                'apellido_materno'
+            ]
+            ?? '';
+
+
+        $usuario['correo'] =
+            $usuario[
+                'correo'
+            ]
+            ?? '';
+
+
+        $usuario['password_hash'] =
+            $usuario[
+                'password_hash'
+            ]
+            ?? '';
+
+
+        $usuario['rol'] =
+            $usuario[
+                'rol'
+            ]
+            ?? '';
+
+
+        return $usuario;
     }
 }

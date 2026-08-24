@@ -42,12 +42,26 @@ $seccionActiva =
         'documentos' =>
             'documentos',
 
-        'mis-sistemas' =>
-            'mis-sistemas',
-
         default =>
             '',
     };
+
+
+/*==================================================
+=              VALIDAR ROL INTERNO                 =
+==================================================*/
+
+$rolesInternos = [
+    'superadministrador',
+    'desarrollador',
+];
+
+$puedeVerMenu =
+    in_array(
+        $rolUsuario,
+        $rolesInternos,
+        true
+    );
 
 ?>
 
@@ -57,7 +71,7 @@ $seccionActiva =
     <nav class="app-sidebar__nav">
 
 
-        <?php if ($rolUsuario === 'administrador'): ?>
+        <?php if ($puedeVerMenu): ?>
 
 
             <!--==========================================
@@ -189,31 +203,6 @@ $seccionActiva =
                 ?>
             >
                 Documentos
-            </a>
-
-
-        <?php elseif ($rolUsuario === 'usuario'): ?>
-
-
-            <!--==========================================
-            =                MIS SISTEMAS                =
-            ===========================================-->
-
-            <a
-                href="<?= base_url('mis-sistemas') ?>"
-                class="
-                    app-sidebar__link
-                    <?= $seccionActiva === 'mis-sistemas'
-                        ? 'app-sidebar__link--activo'
-                        : ''
-                    ?>
-                "
-                <?= $seccionActiva === 'mis-sistemas'
-                    ? 'aria-current="page"'
-                    : ''
-                ?>
-            >
-                Mis sistemas
             </a>
 
 

@@ -28,17 +28,37 @@ class AdminFilter implements FilterInterface
 
 
         /*==================================================
-        =                  VALIDAR ROL                    =
+        =                  VALIDAR ROL                     =
         ==================================================*/
 
+        $rol =
+            (string) session()
+                ->get('usuario_rol');
+
+
+        $rolesPermitidos = [
+            'superadministrador',
+            'desarrollador',
+        ];
+
+
         if (
-            session()
-                ->get('usuario_rol')
-            !== 'administrador'
+            !in_array(
+                $rol,
+                $rolesPermitidos,
+                true
+            )
         ) {
+            session()
+                ->destroy();
+
             return redirect()
                 ->to(
-                    base_url('mis-sistemas')
+                    base_url('login')
+                )
+                ->with(
+                    'error',
+                    'No tienes permisos para acceder a Project Hub.'
                 );
         }
     }
