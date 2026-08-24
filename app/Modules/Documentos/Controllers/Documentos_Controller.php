@@ -306,6 +306,17 @@ class Documentos_Controller extends BaseController
         }
 
 
+        $respuestaPermisoSistema =
+            $this->validarPermisoSistema(
+                $sistema,
+                'agregar documentos a'
+            );
+
+        if ($respuestaPermisoSistema !== null) {
+            return $respuestaPermisoSistema;
+        }
+
+
         /*==================================================
         =                VALIDAR ARCHIVO                   =
         ==================================================*/
@@ -974,6 +985,17 @@ class Documentos_Controller extends BaseController
         }
 
 
+        $respuestaPermisoDocumento =
+            $this->validarPermisoDocumento(
+                $documento,
+                'eliminar'
+            );
+
+        if ($respuestaPermisoDocumento !== null) {
+            return $respuestaPermisoDocumento;
+        }
+
+
         /*==================================================
         =              DATOS IMPORTANTES                   =
         ==================================================*/
@@ -1195,6 +1217,17 @@ class Documentos_Controller extends BaseController
         }
 
 
+        $respuestaPermisoSistema =
+            $this->validarPermisoSistema(
+                $sistemaSeleccionado,
+                'agregar documentos a'
+            );
+
+        if ($respuestaPermisoSistema !== null) {
+            return $respuestaPermisoSistema;
+        }
+
+
         /*==================================================
         =              OBTENER SISTEMAS                    =
         ==================================================*/
@@ -1239,6 +1272,104 @@ class Documentos_Controller extends BaseController
                     $idSistema,
             ]
         );
+    }
+
+
+    /*==================================================
+    =             VALIDAR PERMISO DOCUMENTO            =
+    ==================================================*/
+
+    private function validarPermisoDocumento(
+        array $documento,
+        string $accion = 'modificar'
+    ): ?\CodeIgniter\HTTP\ResponseInterface {
+
+        $rolUsuario =
+            (string) session()
+                ->get('usuario_rol');
+
+        $idUsuario =
+            (int) session()
+                ->get('id_usuario');
+
+        $idUsuarioCreador =
+            (int) (
+                $documento['id_usuario_creador']
+                ?? 0
+            );
+
+        if (
+            $rolUsuario === 'superadministrador'
+            ||
+            (
+                $rolUsuario === 'desarrollador'
+                &&
+                $idUsuario > 0
+                &&
+                $idUsuarioCreador === $idUsuario
+            )
+        ) {
+            return null;
+        }
+
+        return $this->response
+            ->setStatusCode(403)
+            ->setJSON([
+                'ok' => false,
+                'mensaje' =>
+                    'No tienes permisos para '
+                    . $accion
+                    . ' este documento.',
+            ]);
+    }
+
+
+    /*==================================================
+    =              VALIDAR PERMISO SISTEMA             =
+    ==================================================*/
+
+    private function validarPermisoSistema(
+        array $sistema,
+        string $accion = 'modificar'
+    ): ?\CodeIgniter\HTTP\ResponseInterface {
+
+        $rolUsuario =
+            (string) session()
+                ->get('usuario_rol');
+
+        $idUsuario =
+            (int) session()
+                ->get('id_usuario');
+
+        $idUsuarioCreador =
+            (int) (
+                $sistema['id_usuario_creador']
+                ?? 0
+            );
+
+        if (
+            $rolUsuario === 'superadministrador'
+            ||
+            (
+                $rolUsuario === 'desarrollador'
+                &&
+                $idUsuario > 0
+                &&
+                $idUsuarioCreador === $idUsuario
+            )
+        ) {
+            return null;
+        }
+
+        return $this->response
+            ->setStatusCode(403)
+            ->setJSON([
+                'ok' => false,
+                'mensaje' =>
+                    'No tienes permisos para '
+                    . $accion
+                    . ' este sistema.',
+            ]);
     }
 
 

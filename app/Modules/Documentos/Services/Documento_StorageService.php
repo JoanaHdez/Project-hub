@@ -8,9 +8,6 @@ class Documento_StorageService
 {
     private Documento_Model $model;
 
-    private const ID_USUARIO_TEMPORAL = 1;
-
-
     public function __construct()
     {
         $this->model =
@@ -173,7 +170,7 @@ class Documento_StorageService
                 $idSistema,
 
             'id_usuario_creador' =>
-                self::ID_USUARIO_TEMPORAL,
+                $this->obtenerIdUsuarioActual(),
 
             'nombre_original' =>
                 $nombreOriginal,
@@ -561,6 +558,26 @@ class Documento_StorageService
 
 
         return $documento;
+    }
+
+
+    /*==================================================
+    =              USUARIO AUTENTICADO                =
+    ==================================================*/
+
+    private function obtenerIdUsuarioActual(): int
+    {
+        $idUsuario =
+            (int) session()
+                ->get('id_usuario');
+
+        if ($idUsuario <= 0) {
+            throw new \RuntimeException(
+                'No se pudo identificar al usuario creador del documento.'
+            );
+        }
+
+        return $idUsuario;
     }
 
 
