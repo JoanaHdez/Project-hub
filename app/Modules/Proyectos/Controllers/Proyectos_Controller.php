@@ -366,6 +366,72 @@ class Proyectos_Controller extends BaseController
         }
 
 
+        /*==================================================
+        =              VALIDAR EXISTENCIA                  =
+        ==================================================*/
+
+        $proyectoExistente =
+            $this->storage
+            ->obtenerPorId(
+                $idProyecto
+            );
+
+
+        if ($proyectoExistente === null) {
+
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'El proyecto solicitado no existe.',
+                ]);
+        }
+
+
+        /*==================================================
+        =                VALIDAR PROPIEDAD                  =
+        ==================================================*/
+
+        $rolUsuario =
+            (string) session()
+                ->get('usuario_rol');
+
+
+        $idUsuario =
+            (int) session()
+                ->get('id_usuario');
+
+
+        $idUsuarioCreador =
+            (int) (
+                $proyectoExistente[
+                    'id_usuario_creador'
+                ]
+                ?? 0
+            );
+
+
+        if (
+            $rolUsuario !== 'superadministrador'
+            &&
+            $idUsuarioCreador !== $idUsuario
+        ) {
+
+            return $this->response
+                ->setStatusCode(403)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No tienes permisos para modificar este proyecto.',
+                ]);
+        }
+
+
         try {
 
             /*==================================================
@@ -493,6 +559,32 @@ class Proyectos_Controller extends BaseController
         int $idProyecto
     ) {
 
+        $proyectoExistente =
+            $this->storage
+            ->obtenerPorId(
+                $idProyecto
+            );
+
+        if ($proyectoExistente === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                        'No se encontró el proyecto solicitado.',
+                ]);
+        }
+
+        $respuestaPermiso =
+            $this->validarPermisoProyecto(
+                $proyectoExistente,
+                'desactivar'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
+
         $proyecto =
             $this->storage
             ->desactivar(
@@ -547,6 +639,32 @@ class Proyectos_Controller extends BaseController
     public function activar(
         int $idProyecto
     ) {
+
+        $proyectoExistente =
+            $this->storage
+            ->obtenerPorId(
+                $idProyecto
+            );
+
+        if ($proyectoExistente === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                        'No se encontró el proyecto solicitado.',
+                ]);
+        }
+
+        $respuestaPermiso =
+            $this->validarPermisoProyecto(
+                $proyectoExistente,
+                'activar'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
 
         $proyecto =
             $this->storage
@@ -625,6 +743,21 @@ class Proyectos_Controller extends BaseController
                     'mensaje' =>
                         'No se encontró el proyecto solicitado.',
                 ]);
+        }
+
+
+        /*==================================================
+        =                VALIDAR PROPIEDAD                  =
+        ==================================================*/
+
+        $respuestaPermiso =
+            $this->validarPermisoProyecto(
+                $proyecto,
+                'eliminar'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
         }
 
 
@@ -1289,6 +1422,55 @@ class Proyectos_Controller extends BaseController
                         'No se puede eliminar la ficha técnica porque existen registros asociados.',
                 ]);
         }
+    }
+
+
+    /*==================================================
+    =             VALIDAR PERMISO PROYECTO             =
+    ==================================================*/
+
+    private function validarPermisoProyecto(
+        array $proyecto,
+        string $accion = 'modificar'
+    ): ?\CodeIgniter\HTTP\ResponseInterface {
+
+        $rolUsuario =
+            (string) session()
+                ->get('usuario_rol');
+
+        $idUsuario =
+            (int) session()
+                ->get('id_usuario');
+
+        $idUsuarioCreador =
+            (int) (
+                $proyecto['id_usuario_creador']
+                ?? 0
+            );
+
+        if (
+            $rolUsuario === 'superadministrador'
+            ||
+            (
+                $rolUsuario === 'desarrollador'
+                &&
+                $idUsuario > 0
+                &&
+                $idUsuarioCreador === $idUsuario
+            )
+        ) {
+            return null;
+        }
+
+        return $this->response
+            ->setStatusCode(403)
+            ->setJSON([
+                'ok' => false,
+                'mensaje' =>
+                    'No tienes permisos para '
+                    . $accion
+                    . ' este proyecto.',
+            ]);
     }
 
 

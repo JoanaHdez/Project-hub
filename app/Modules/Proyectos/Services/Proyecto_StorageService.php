@@ -11,9 +11,6 @@ class Proyecto_StorageService
 
     private BaseConnection $db;
 
-    private const ID_USUARIO_TEMPORAL = 1;
-
-
     public function __construct()
     {
         $this->model =
@@ -87,8 +84,18 @@ class Proyecto_StorageService
                 $datos
             );
 
-        $datosBd['id_usuario_creador'] =
-            self::ID_USUARIO_TEMPORAL;
+        $idUsuario =
+    (int) session()
+        ->get('id_usuario');
+
+if ($idUsuario <= 0) {
+    throw new \RuntimeException(
+        'No se pudo identificar al usuario que está creando el proyecto.'
+    );
+}
+
+$datosBd['id_usuario_creador'] =
+    $idUsuario;
 
         $datosBd['activo'] =
             1;
