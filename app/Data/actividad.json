@@ -372,5 +372,181 @@
         "entidad_id": 1,
         "detalle": "Eliminó el proyecto \"1 Proyecto de Prueba\".",
         "fecha_hora": "2026-08-24 11:19:32"
+    },
+    {
+        "id_actividad": 35,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Proyectos",
+        "accion": "Agregó",
+        "entidad_tipo": "Proyecto",
+        "entidad_id": 2,
+        "detalle": "Agregó el proyecto \"Proyecto de prueba\".",
+        "fecha_hora": "2026-08-24 11:42:33"
+    },
+    {
+        "id_actividad": 36,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Agregó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Agregó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 11:43:14"
+    },
+    {
+        "id_actividad": 37,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Proyectos",
+        "accion": "Editó",
+        "entidad_tipo": "Proyecto",
+        "entidad_id": 2,
+        "detalle": "Editó el proyecto \"Proyecto de prueba\".",
+        "fecha_hora": "2026-08-24 11:45:45"
+    },
+    {
+        "id_actividad": 38,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Desactivó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Desactivó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 11:47:56"
+    },
+    {
+        "id_actividad": 39,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Activó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Activó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 11:48:00"
+    },
+    {
+        "id_actividad": 40,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Desactivó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Desactivó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 11:48:07"
+    },
+    {
+        "id_actividad": 41,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Activó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Activó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 11:48:17"
+    },
+    {
+        "id_actividad": 42,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Editó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Editó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 11:49:05"
+    },
+    {
+        "id_actividad": 43,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Editó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Editó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 11:50:24"
+    },
+    {
+        "id_actividad": 44,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Editó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Editó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 11:51:15"
+    },
+    {
+        "id_actividad": 45,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Editó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Editó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 11:52:10"
+    },
+    {
+        "id_actividad": 46,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Editó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Editó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 11:53:35"
+    },
+    {
+        "id_actividad": 47,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Editó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Editó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 11:55:42"
+    },
+    {
+        "id_actividad": 48,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Editó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Editó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 12:04:08"
+    },
+    {
+        "id_actividad": 49,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Editó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Editó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 12:04:28"
+    },
+    {
+        "id_actividad": 50,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Sistemas",
+        "accion": "Editó",
+        "entidad_tipo": "Sistema",
+        "entidad_id": 1,
+        "detalle": "Editó el sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 12:04:48"
     }
 ]

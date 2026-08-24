@@ -7,11 +7,12 @@ use App\Modules\Sistemas\Services\Sistema_StorageService;
 use App\Modules\Proyectos\Services\Proyecto_StorageService;
 use App\Services\Actividad_StorageService;
 
-
 class Sistemas_Controller extends BaseController
 {
     private Sistema_StorageService $storage;
+
     private Proyecto_StorageService $proyectoStorage;
+
     private Actividad_StorageService $actividadStorage;
 
 
@@ -38,34 +39,6 @@ class Sistemas_Controller extends BaseController
             $this->storage
             ->obtenerTodos();
 
-        $proyectos =
-            $this->proyectoStorage
-            ->obtenerTodos();
-
-
-        /*==================================================
-        =              NOMBRES DE PROYECTOS                =
-        ==================================================*/
-
-        $nombresProyectos = [];
-
-        foreach ($proyectos as $proyecto) {
-
-            $idProyecto =
-                (int) (
-                    $proyecto['id_proyecto']
-                    ?? 0
-                );
-
-            if ($idProyecto <= 0) {
-                continue;
-            }
-
-            $nombresProyectos[$idProyecto] =
-                $proyecto['nombre']
-                ?? 'Sin proyecto';
-        }
-
 
         /*==================================================
         =              PREPARAR SISTEMAS                   =
@@ -75,60 +48,79 @@ class Sistemas_Controller extends BaseController
             array_map(
                 static function (
                     array $sistema
-                ) use (
-                    $nombresProyectos
                 ): array {
 
-                    $idProyecto =
-                        isset(
-                            $sistema['id_proyecto']
-                        )
-                            ? (int) $sistema['id_proyecto']
-                            : null;
-
                     return [
+
                         'id' =>
-                            $sistema['id_sistema']
+                        $sistema['id_sistema']
                             ?? null,
 
                         'id_proyecto' =>
-                            $idProyecto,
+                        isset(
+                            $sistema['id_proyecto']
+                        )
+                            ? (int)
+                            $sistema['id_proyecto']
+                            : null,
 
                         'nombre' =>
-                            $sistema['nombre']
+                        $sistema['nombre']
                             ?? 'Sistema sin nombre',
 
+                        /*
+                         * El Model ya devuelve
+                         * proyecto_nombre mediante JOIN.
+                         */
                         'proyecto' =>
-                            $idProyecto !== null
-                                ? (
-                                    $nombresProyectos[$idProyecto]
-                                    ?? 'Sin proyecto'
-                                )
-                                : 'Sin proyecto',
+                        $sistema['proyecto_nombre']
+                            ?? 'Sin proyecto',
 
                         'estado' =>
-                            $sistema['estado']
+                        $sistema['estado']
                             ?? 'Sin estado',
 
+                        'estado_tipo' =>
+                        $sistema['estado_tipo']
+                            ?? 'inactivo',
+
+                        'tipo' =>
+                        $sistema['tipo']
+                            ?? 'Sistema',
+
                         'modo_visualizacion' =>
-                            $sistema['modo_visualizacion']
+                        $sistema['modo_visualizacion']
                             ?? 'registro',
 
                         'url' =>
-                            $sistema['url']
+                        $sistema['url']
                             ?? '',
 
                         'repositorio' =>
-                            $sistema['repositorio_url']
+                        $sistema['repositorio_url']
                             ?? '',
 
                         'ruta_local' =>
-                            $sistema['ruta_local']
+                        $sistema['ruta_local']
                             ?? '',
 
                         'servidor' =>
-                            $sistema['url_servidor']
+                        $sistema['url_servidor']
                             ?? '',
+
+                        'responsable' =>
+                        $sistema['responsable']
+                            ?? '',
+
+                        'observaciones' =>
+                        $sistema['observaciones']
+                            ?? '',
+
+                        'activo' =>
+                        (bool) (
+                            $sistema['activo']
+                            ?? false
+                        ),
                     ];
                 },
                 $sistemasAlmacenados
@@ -143,10 +135,10 @@ class Sistemas_Controller extends BaseController
             'App\Modules\Sistemas\Views\index',
             [
                 'title' =>
-                    'Sistemas | Project Hub',
+                'Sistemas | Project Hub',
 
                 'sistemas' =>
-                    $sistemas,
+                $sistemas,
             ]
         );
     }
@@ -159,24 +151,26 @@ class Sistemas_Controller extends BaseController
     public function obtenerPorProyecto(
         int $idProyecto
     ) {
+
         $sistemas =
             $this->storage
             ->obtenerPorProyecto(
                 $idProyecto
             );
 
+
         return $this->response
             ->setJSON([
                 'ok' =>
-                    true,
+                true,
 
                 'sistemas' =>
-                    $sistemas,
+                $sistemas,
 
                 'total' =>
-                    count(
-                        $sistemas
-                    ),
+                count(
+                    $sistemas
+                ),
             ]);
     }
 
@@ -191,16 +185,17 @@ class Sistemas_Controller extends BaseController
             $this->request
             ->getJSON(true);
 
+
         if (!is_array($datos)) {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'Los datos enviados no son válidos.',
+                    'Los datos enviados no son válidos.',
                 ]);
         }
 
@@ -215,200 +210,146 @@ class Sistemas_Controller extends BaseController
                 ?? 0
             );
 
+
         if ($idProyecto <= 0) {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'No se encontró el proyecto asociado.',
+                    'No se encontró el proyecto asociado.',
                 ]);
         }
 
 
-        /*==================================================
-        =              CONSTRUIR SISTEMA                   =
-        ==================================================*/
-
-        $sistemas =
-            $this->storage
-            ->obtenerTodos();
-
-        $estado =
-            trim(
-                (string) (
-                    $datos['estado']
-                    ?? ''
-                )
+        /*
+         * Ahora que Proyectos ya trabaja con MySQL,
+         * comprobamos que el proyecto exista realmente.
+         */
+        $proyecto =
+            $this->proyectoStorage
+            ->obtenerPorId(
+                $idProyecto
             );
 
-        $sistema = [
 
-            'id_sistema' =>
+        if ($proyecto === null) {
+
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' =>
+                    false,
+
+                    'mensaje' =>
+                    'El proyecto asociado no existe.',
+                ]);
+        }
+
+
+        try {
+
+            /*==================================================
+            =                    CREAR                         =
+            ==================================================*/
+
+            $sistema =
                 $this->storage
-                ->generarNuevoId(
-                    $sistemas
+                ->crear(
+                    $datos
+                );
+
+
+            if ($sistema === null) {
+
+                return $this->response
+                    ->setStatusCode(500)
+                    ->setJSON([
+                        'ok' =>
+                        false,
+
+                        'mensaje' =>
+                        'No fue posible registrar el sistema.',
+                    ]);
+            }
+
+
+            /*==================================================
+            =              TOTAL DEL PROYECTO                 =
+            ==================================================*/
+
+            $totalSistemasProyecto =
+                count(
+                    $this->storage
+                        ->obtenerPorProyecto(
+                            $idProyecto
+                        )
+                );
+
+
+            /*==================================================
+            =              REGISTRAR ACTIVIDAD                =
+            ==================================================*/
+
+            $this->registrarActividad(
+                'Agregó',
+                (int) (
+                    $sistema['id_sistema']
+                    ?? 0
                 ),
-
-            'id_proyecto' =>
-                $idProyecto,
-
-            'nombre' =>
-                trim(
-                    (string) (
-                        $datos['nombre']
-                        ?? ''
-                    )
-                ),
-
-            'tipo' =>
-                trim(
-                    (string) (
-                        $datos['tipo']
+                'Agregó el sistema "'
+                    . (
+                        $sistema['nombre']
                         ?? 'Sistema'
                     )
-                ),
-
-            'estado' =>
-                $estado,
-
-            'estado_tipo' =>
-                $this->obtenerTipoEstado(
-                    $estado
-                ),
-
-            'modo_visualizacion' =>
-                trim(
-                    (string) (
-                        $datos['modo_visualizacion']
-                        ?? 'registro'
-                    )
-                ),
-
-            'descripcion' =>
-                trim(
-                    (string) (
-                        $datos['descripcion']
-                        ?? ''
-                    )
-                ),
-
-            'url' =>
-                trim(
-                    (string) (
-                        $datos['url']
-                        ?? ''
-                    )
-                ),
-
-            'repositorio_url' =>
-                trim(
-                    (string) (
-                        $datos['repositorio_url']
-                        ?? ''
-                    )
-                ),
-
-            'ruta_local' =>
-                trim(
-                    (string) (
-                        $datos['ruta_local']
-                        ?? ''
-                    )
-                ),
-
-            'url_servidor' =>
-                trim(
-                    (string) (
-                        $datos['url_servidor']
-                        ?? ''
-                    )
-                ),
-
-            'responsable' =>
-                trim(
-                    (string) (
-                        $datos['responsable']
-                        ?? ''
-                    )
-                ),
-
-            'observaciones' =>
-                trim(
-                    (string) (
-                        $datos['observaciones']
-                        ?? ''
-                    )
-                ),
-
-            'activo' =>
-                true,
-        ];
-
-
-        /*==================================================
-        =                  GUARDAR                        =
-        ==================================================*/
-
-        $sistemas[] =
-            $sistema;
-
-        $this->storage
-            ->guardarTodos(
-                $sistemas
+                    . '".'
             );
 
 
-        /*==================================================
-        =              TOTAL DEL PROYECTO                 =
-        ==================================================*/
+            /*==================================================
+            =                  RESPUESTA                      =
+            ==================================================*/
 
-        $totalSistemasProyecto =
-            count(
-                $this->storage
-                ->obtenerPorProyecto(
-                    $idProyecto
-                )
-            );
-
-
-        /*==================================================
-        =              REGISTRAR ACTIVIDAD                =
-        ==================================================*/
-
-        $this->registrarActividad(
-            'Agregó',
-            (int) $sistema['id_sistema'],
-            'Agregó el sistema "'
-                . (
-                    $sistema['nombre']
-                    ?? 'Sistema'
-                )
-                . '".'
-        );
-
-
-        /*==================================================
-        =                  RESPUESTA                      =
-        ==================================================*/
-
-        return $this->response
-            ->setJSON([
-                'ok' =>
+            return $this->response
+                ->setJSON([
+                    'ok' =>
                     true,
 
-                'mensaje' =>
+                    'mensaje' =>
                     'Sistema registrado correctamente.',
 
-                'sistema' =>
+                    'sistema' =>
                     $sistema,
 
-                'total_sistemas' =>
+                    'total_sistemas' =>
                     $totalSistemasProyecto,
-            ]);
+                ]);
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al registrar sistema: {mensaje}',
+                [
+                    'mensaje' =>
+                    $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                    false,
+
+                    'mensaje' =>
+                    $error->getMessage()
+                        ?: 'Ocurrió un error al registrar el sistema.',
+                ]);
+        }
     }
 
 
@@ -419,30 +360,28 @@ class Sistemas_Controller extends BaseController
     public function desactivar(
         int $idSistema
     ) {
-        $sistemas =
-            $this->storage
-            ->obtenerTodos();
 
-        foreach (
-            $sistemas as
-            $indice => $sistema
-        ) {
-            if (
-                (int) (
-                    $sistema['id_sistema']
-                    ?? 0
-                ) !== $idSistema
-            ) {
-                continue;
-            }
+        try {
 
-            $sistemas[$indice]['activo'] =
-                false;
-
-            $this->storage
-                ->guardarTodos(
-                    $sistemas
+            $sistema =
+                $this->storage
+                ->desactivar(
+                    $idSistema
                 );
+
+
+            if ($sistema === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                        false,
+
+                        'mensaje' =>
+                        'No se encontró el sistema solicitado.',
+                    ]);
+            }
 
 
             /*==================================================
@@ -454,7 +393,7 @@ class Sistemas_Controller extends BaseController
                 $idSistema,
                 'Desactivó el sistema "'
                     . (
-                        $sistemas[$indice]['nombre']
+                        $sistema['nombre']
                         ?? 'Sistema'
                     )
                     . '".'
@@ -464,25 +403,39 @@ class Sistemas_Controller extends BaseController
             return $this->response
                 ->setJSON([
                     'ok' =>
-                        true,
+                    true,
 
                     'mensaje' =>
-                        'Sistema desactivado correctamente.',
+                    'Sistema desactivado correctamente.',
 
                     'sistema' =>
-                        $sistemas[$indice],
+                    $sistema,
                 ]);
-        }
+        } catch (\Throwable $error) {
 
-        return $this->response
-            ->setStatusCode(404)
-            ->setJSON([
-                'ok' =>
+            log_message(
+                'error',
+                'Error al desactivar sistema {id}: {mensaje}',
+                [
+                    'id' =>
+                    $idSistema,
+
+                    'mensaje' =>
+                    $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
                     false,
 
-                'mensaje' =>
-                    'No se encontró el sistema solicitado.',
-            ]);
+                    'mensaje' =>
+                    'No fue posible desactivar el sistema.',
+                ]);
+        }
     }
 
 
@@ -493,30 +446,28 @@ class Sistemas_Controller extends BaseController
     public function activar(
         int $idSistema
     ) {
-        $sistemas =
-            $this->storage
-            ->obtenerTodos();
 
-        foreach (
-            $sistemas as
-            $indice => $sistema
-        ) {
-            if (
-                (int) (
-                    $sistema['id_sistema']
-                    ?? 0
-                ) !== $idSistema
-            ) {
-                continue;
-            }
+        try {
 
-            $sistemas[$indice]['activo'] =
-                true;
-
-            $this->storage
-                ->guardarTodos(
-                    $sistemas
+            $sistema =
+                $this->storage
+                ->activar(
+                    $idSistema
                 );
+
+
+            if ($sistema === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                        false,
+
+                        'mensaje' =>
+                        'No se encontró el sistema solicitado.',
+                    ]);
+            }
 
 
             /*==================================================
@@ -528,7 +479,7 @@ class Sistemas_Controller extends BaseController
                 $idSistema,
                 'Activó el sistema "'
                     . (
-                        $sistemas[$indice]['nombre']
+                        $sistema['nombre']
                         ?? 'Sistema'
                     )
                     . '".'
@@ -538,25 +489,39 @@ class Sistemas_Controller extends BaseController
             return $this->response
                 ->setJSON([
                     'ok' =>
-                        true,
+                    true,
 
                     'mensaje' =>
-                        'Sistema activado correctamente.',
+                    'Sistema activado correctamente.',
 
                     'sistema' =>
-                        $sistemas[$indice],
+                    $sistema,
                 ]);
-        }
+        } catch (\Throwable $error) {
 
-        return $this->response
-            ->setStatusCode(404)
-            ->setJSON([
-                'ok' =>
+            log_message(
+                'error',
+                'Error al activar sistema {id}: {mensaje}',
+                [
+                    'id' =>
+                    $idSistema,
+
+                    'mensaje' =>
+                    $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
                     false,
 
-                'mensaje' =>
-                    'No se encontró el sistema solicitado.',
-            ]);
+                    'mensaje' =>
+                    'No fue posible activar el sistema.',
+                ]);
+        }
     }
 
 
@@ -567,127 +532,148 @@ class Sistemas_Controller extends BaseController
     public function eliminar(
         int $idSistema
     ) {
-        $sistemas =
+
+        /*==================================================
+        =              OBTENER SISTEMA                    =
+        ==================================================*/
+
+        $sistema =
             $this->storage
-            ->obtenerTodos();
+            ->obtenerPorId(
+                $idSistema
+            );
 
-        $sistemaEncontrado =
-            null;
 
-        foreach ($sistemas as $sistema) {
-
-            if (
-                (int) (
-                    $sistema['id_sistema']
-                    ?? 0
-                ) === $idSistema
-            ) {
-                $sistemaEncontrado =
-                    $sistema;
-
-                break;
-            }
-        }
-
-        if ($sistemaEncontrado === null) {
+        if ($sistema === null) {
 
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'No se encontró el sistema solicitado.',
+                    'No se encontró el sistema solicitado.',
                 ]);
         }
 
 
-        /*==================================================
-        =              PROYECTO ASOCIADO                  =
-        ==================================================*/
-
         $idProyecto =
             (int) (
-                $sistemaEncontrado['id_proyecto']
+                $sistema['id_proyecto']
                 ?? 0
             );
 
 
-        /*==================================================
-        =                  ELIMINAR                       =
-        ==================================================*/
+        try {
 
-        $sistemas =
-            array_values(
-                array_filter(
-                    $sistemas,
-                    static fn(array $sistema): bool =>
-                        (int) (
-                            $sistema['id_sistema']
-                            ?? 0
-                        ) !== $idSistema
-                )
-            );
+            /*==================================================
+            =                   ELIMINAR                       =
+            ==================================================*/
 
-        $this->storage
-            ->guardarTodos(
-                $sistemas
-            );
+            $eliminado =
+                $this->storage
+                ->eliminar(
+                    $idSistema
+                );
 
 
-        /*==================================================
-        =              TOTAL DEL PROYECTO                 =
-        ==================================================*/
+            if (!$eliminado) {
 
-        $totalSistemasProyecto =
-            $idProyecto > 0
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                        false,
+
+                        'mensaje' =>
+                        'No se encontró el sistema solicitado.',
+                    ]);
+            }
+
+
+            /*==================================================
+            =              TOTAL DEL PROYECTO                 =
+            ==================================================*/
+
+            $totalSistemasProyecto =
+                $idProyecto > 0
                 ? count(
                     $this->storage
-                    ->obtenerPorProyecto(
-                        $idProyecto
-                    )
+                        ->obtenerPorProyecto(
+                            $idProyecto
+                        )
                 )
                 : 0;
 
 
-        /*==================================================
-        =              REGISTRAR ACTIVIDAD                =
-        ==================================================*/
+            /*==================================================
+            =              REGISTRAR ACTIVIDAD                =
+            ==================================================*/
 
-        $this->registrarActividad(
-            'Eliminó',
-            $idSistema,
-            'Eliminó el sistema "'
-                . (
-                    $sistemaEncontrado['nombre']
-                    ?? 'Sistema'
-                )
-                . '".'
-        );
+            $this->registrarActividad(
+                'Eliminó',
+                $idSistema,
+                'Eliminó el sistema "'
+                    . (
+                        $sistema['nombre']
+                        ?? 'Sistema'
+                    )
+                    . '".'
+            );
 
 
-        /*==================================================
-        =                  RESPUESTA                      =
-        ==================================================*/
+            /*==================================================
+            =                  RESPUESTA                      =
+            ==================================================*/
 
-        return $this->response
-            ->setJSON([
-                'ok' =>
+            return $this->response
+                ->setJSON([
+                    'ok' =>
                     true,
 
-                'mensaje' =>
+                    'mensaje' =>
                     'Sistema eliminado correctamente.',
 
-                'id_sistema' =>
+                    'id_sistema' =>
                     $idSistema,
 
-                'id_proyecto' =>
+                    'id_proyecto' =>
                     $idProyecto,
 
-                'total_sistemas' =>
+                    'total_sistemas' =>
                     $totalSistemasProyecto,
-            ]);
+                ]);
+        } catch (\Throwable $error) {
+
+            /*
+             * MySQL protegerá el sistema cuando existan
+             * registros dependientes mediante sus
+             * llaves foráneas.
+             */
+            log_message(
+                'error',
+                'No fue posible eliminar el sistema {id}: {mensaje}',
+                [
+                    'id' =>
+                    $idSistema,
+
+                    'mensaje' =>
+                    $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(409)
+                ->setJSON([
+                    'ok' =>
+                    false,
+
+                    'mensaje' =>
+                    'No se puede eliminar el sistema porque existen registros asociados.',
+                ]);
+        }
     }
 
 
@@ -698,11 +684,13 @@ class Sistemas_Controller extends BaseController
     public function obtener(
         int $idSistema
     ) {
+
         $sistema =
             $this->storage
             ->obtenerPorId(
                 $idSistema
             );
+
 
         if ($sistema === null) {
 
@@ -710,59 +698,41 @@ class Sistemas_Controller extends BaseController
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'No se encontró el sistema solicitado.',
+                    'No se encontró el sistema solicitado.',
                 ]);
         }
 
 
-        /*==================================================
-        =              NOMBRE DEL PROYECTO                 =
-        ==================================================*/
+        /*
+         * Sistema_Model ya obtiene proyecto_nombre
+         * directamente mediante JOIN con proyectos.
+         */
+        if (
+            !isset(
+                $sistema['proyecto_nombre']
+            )
+            ||
+            trim(
+                (string)
+                $sistema['proyecto_nombre']
+            ) === ''
+        ) {
 
-        $nombreProyecto =
-            'Sin proyecto';
-
-        $idProyecto =
-            (int) (
-                $sistema['id_proyecto']
-                ?? 0
-            );
-
-        if ($idProyecto > 0) {
-
-            foreach (
-                $this->proyectoStorage
-                ->obtenerTodos() as $proyecto
-            ) {
-                if (
-                    (int) (
-                        $proyecto['id_proyecto']
-                        ?? 0
-                    ) === $idProyecto
-                ) {
-                    $nombreProyecto =
-                        $proyecto['nombre']
-                        ?? 'Sin proyecto';
-
-                    break;
-                }
-            }
+            $sistema['proyecto_nombre'] =
+                'Sin proyecto';
         }
-
-        $sistema['proyecto_nombre'] =
-            $nombreProyecto;
 
 
         return $this->response
             ->setJSON([
                 'ok' =>
-                    true,
+                true,
 
                 'sistema' =>
-                    $sistema,
+                $sistema,
             ]);
     }
 
@@ -774,9 +744,11 @@ class Sistemas_Controller extends BaseController
     public function actualizar(
         int $idSistema
     ) {
+
         $datos =
             $this->request
             ->getJSON(true);
+
 
         if (!is_array($datos)) {
 
@@ -784,213 +756,193 @@ class Sistemas_Controller extends BaseController
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'Los datos enviados no son válidos.',
+                    'Los datos enviados no son válidos.',
                 ]);
         }
 
 
         /*==================================================
-        =              BUSCAR SISTEMA                     =
+        =              VALIDAR EXISTENCIA                  =
         ==================================================*/
 
-        $sistemas =
+        $sistemaExistente =
             $this->storage
-            ->obtenerTodos();
+            ->obtenerPorId(
+                $idSistema
+            );
 
-        $indiceSistema =
-            null;
 
-        foreach (
-            $sistemas as
-            $indice => $sistema
-        ) {
-            if (
-                (int) (
-                    $sistema['id_sistema']
-                    ?? 0
-                ) === $idSistema
-            ) {
-                $indiceSistema =
-                    $indice;
-
-                break;
-            }
-        }
-
-        if ($indiceSistema === null) {
+        if ($sistemaExistente === null) {
 
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                        false,
+                    false,
 
                     'mensaje' =>
-                        'No se encontró el sistema solicitado.',
+                    'No se encontró el sistema solicitado.',
+                ]);
+        }
+
+
+        /*
+         * El formulario actual no necesariamente
+         * vuelve a enviar id_proyecto al editar.
+         *
+         * Si no llega, conservamos el proyecto
+         * al que ya pertenece el sistema.
+         */
+        if (
+            !isset(
+                $datos['id_proyecto']
+            )
+            ||
+            (int) $datos['id_proyecto'] <= 0
+        ) {
+
+            $datos['id_proyecto'] =
+                (int) (
+                    $sistemaExistente['id_proyecto']
+                    ?? 0
+                );
+        }
+
+
+        $idProyecto =
+            (int) (
+                $datos['id_proyecto']
+                ?? 0
+            );
+
+
+        if ($idProyecto <= 0) {
+
+            return $this->response
+                ->setStatusCode(400)
+                ->setJSON([
+                    'ok' =>
+                    false,
+
+                    'mensaje' =>
+                    'El sistema debe estar asociado a un proyecto.',
                 ]);
         }
 
 
         /*==================================================
-        =              DATOS EXISTENTES                   =
+        =            VALIDAR PROYECTO REAL                 =
         ==================================================*/
 
-        $sistemaActual =
-            $sistemas[$indiceSistema];
-
-        $estado =
-            trim(
-                (string) (
-                    $datos['estado']
-                    ?? ''
-                )
+        $proyecto =
+            $this->proyectoStorage
+            ->obtenerPorId(
+                $idProyecto
             );
 
 
-        /*==================================================
-        =              ACTUALIZAR SISTEMA                 =
-        ==================================================*/
+        if ($proyecto === null) {
 
-        $sistemaActualizado = [
-            ...$sistemaActual,
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' =>
+                    false,
 
-            'nombre' =>
-                trim(
-                    (string) (
-                        $datos['nombre']
-                        ?? ''
-                    )
-                ),
+                    'mensaje' =>
+                    'El proyecto asociado no existe.',
+                ]);
+        }
 
-            'estado' =>
-                $estado,
 
-            'estado_tipo' =>
-                $this->obtenerTipoEstado(
-                    $estado
-                ),
+        try {
 
-            'tipo' =>
-                trim(
-                    (string) (
-                        $datos['tipo']
+            /*==================================================
+            =                  ACTUALIZAR                      =
+            ==================================================*/
+
+            $sistemaActualizado =
+                $this->storage
+                ->actualizar(
+                    $idSistema,
+                    $datos
+                );
+
+
+            if ($sistemaActualizado === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                        false,
+
+                        'mensaje' =>
+                        'No se encontró el sistema solicitado.',
+                    ]);
+            }
+
+
+            /*==================================================
+            =              REGISTRAR ACTIVIDAD                =
+            ==================================================*/
+
+            $this->registrarActividad(
+                'Editó',
+                $idSistema,
+                'Editó el sistema "'
+                    . (
+                        $sistemaActualizado['nombre']
                         ?? 'Sistema'
                     )
-                ),
-
-            'modo_visualizacion' =>
-                trim(
-                    (string) (
-                        $datos['modo_visualizacion']
-                        ?? 'registro'
-                    )
-                ),
-
-            'descripcion' =>
-                trim(
-                    (string) (
-                        $datos['descripcion']
-                        ?? ''
-                    )
-                ),
-
-            'url' =>
-                trim(
-                    (string) (
-                        $datos['url']
-                        ?? ''
-                    )
-                ),
-
-            'repositorio_url' =>
-                trim(
-                    (string) (
-                        $datos['repositorio_url']
-                        ?? ''
-                    )
-                ),
-
-            'ruta_local' =>
-                trim(
-                    (string) (
-                        $datos['ruta_local']
-                        ?? ''
-                    )
-                ),
-
-            'url_servidor' =>
-                trim(
-                    (string) (
-                        $datos['url_servidor']
-                        ?? ''
-                    )
-                ),
-
-            'responsable' =>
-                trim(
-                    (string) (
-                        $datos['responsable']
-                        ?? ''
-                    )
-                ),
-
-            'observaciones' =>
-                trim(
-                    (string) (
-                        $datos['observaciones']
-                        ?? ''
-                    )
-                ),
-        ];
-
-
-        /*==================================================
-        =                  GUARDAR                        =
-        ==================================================*/
-
-        $sistemas[$indiceSistema] =
-            $sistemaActualizado;
-
-        $this->storage
-            ->guardarTodos(
-                $sistemas
+                    . '".'
             );
 
 
-        /*==================================================
-        =              REGISTRAR ACTIVIDAD                =
-        ==================================================*/
+            /*==================================================
+            =                  RESPUESTA                      =
+            ==================================================*/
 
-        $this->registrarActividad(
-            'Editó',
-            $idSistema,
-            'Editó el sistema "'
-                . (
-                    $sistemaActualizado['nombre']
-                    ?? 'Sistema'
-                )
-                . '".'
-        );
-
-
-        /*==================================================
-        =                  RESPUESTA                      =
-        ==================================================*/
-
-        return $this->response
-            ->setJSON([
-                'ok' =>
+            return $this->response
+                ->setJSON([
+                    'ok' =>
                     true,
 
-                'mensaje' =>
+                    'mensaje' =>
                     'Sistema actualizado correctamente.',
 
-                'sistema' =>
+                    'sistema' =>
                     $sistemaActualizado,
-            ]);
+                ]);
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al actualizar sistema {id}: {mensaje}',
+                [
+                    'id' =>
+                    $idSistema,
+
+                    'mensaje' =>
+                    $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                    false,
+
+                    'mensaje' =>
+                    $error->getMessage()
+                        ?: 'Ocurrió un error al actualizar el sistema.',
+                ]);
+        }
     }
 
 
@@ -1003,26 +955,32 @@ class Sistemas_Controller extends BaseController
         int $idSistema,
         string $detalle
     ): void {
+
         try {
 
+            /*
+             * Actividad todavía mantiene su
+             * StorageService actual.
+             *
+             * Lo migraremos en su etapa.
+             */
             $this->actividadStorage
                 ->registrar([
                     'bloque' =>
-                        'Sistemas',
+                    'Sistemas',
 
                     'accion' =>
-                        $accion,
+                    $accion,
 
                     'entidad_tipo' =>
-                        'Sistema',
+                    'Sistema',
 
                     'entidad_id' =>
-                        $idSistema,
+                    $idSistema,
 
                     'detalle' =>
-                        $detalle,
+                    $detalle,
                 ]);
-
         } catch (\Throwable $error) {
 
             log_message(
@@ -1030,39 +988,12 @@ class Sistemas_Controller extends BaseController
                 'No fue posible registrar actividad del sistema {id}: {mensaje}',
                 [
                     'id' =>
-                        $idSistema,
+                    $idSistema,
 
                     'mensaje' =>
-                        $error->getMessage(),
+                    $error->getMessage(),
                 ]
             );
         }
-    }
-
-
-    /*==================================================
-    =              TIPO DE ESTADO                    =
-    ==================================================*/
-
-    private function obtenerTipoEstado(
-        string $estado
-    ): string {
-        return match ($estado) {
-
-            'Producción' =>
-                'produccion',
-
-            'Desarrollo' =>
-                'desarrollo',
-
-            'Detenido' =>
-                'detenido',
-
-            'Mantenimiento' =>
-                'mantenimiento',
-
-            default =>
-                'inactivo',
-        };
     }
 }
