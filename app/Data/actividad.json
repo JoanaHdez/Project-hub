@@ -724,5 +724,181 @@
         "entidad_id": 2,
         "detalle": "Actualizó la imagen del módulo \"Modulo de prueba\".",
         "fecha_hora": "2026-08-24 12:32:41"
+    },
+    {
+        "id_actividad": 67,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Agregó",
+        "entidad_tipo": "API",
+        "entidad_id": 1,
+        "detalle": "Agregó la API \"API de prueba\".",
+        "fecha_hora": "2026-08-24 13:16:58"
+    },
+    {
+        "id_actividad": 68,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Editó",
+        "entidad_tipo": "API",
+        "entidad_id": 1,
+        "detalle": "Editó la API \"API de prueba\".",
+        "fecha_hora": "2026-08-24 13:54:50"
+    },
+    {
+        "id_actividad": 69,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Editó arquitectura",
+        "entidad_tipo": "API",
+        "entidad_id": 1,
+        "detalle": "Actualizó la arquitectura de la API \"API de prueba\".",
+        "fecha_hora": "2026-08-24 13:57:05"
+    },
+    {
+        "id_actividad": 70,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Editó dependencias",
+        "entidad_tipo": "API",
+        "entidad_id": 1,
+        "detalle": "Actualizó las dependencias de la API \"API de prueba\".",
+        "fecha_hora": "2026-08-24 13:59:34"
+    },
+    {
+        "id_actividad": 71,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Editó observaciones",
+        "entidad_tipo": "API",
+        "entidad_id": 1,
+        "detalle": "Actualizó las observaciones técnicas de la API \"API de prueba\".",
+        "fecha_hora": "2026-08-24 14:00:52"
+    },
+    {
+        "id_actividad": 72,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Editó historial",
+        "entidad_tipo": "API",
+        "entidad_id": 1,
+        "detalle": "Actualizó el historial de la API \"API de prueba\".",
+        "fecha_hora": "2026-08-24 14:01:53"
+    },
+    {
+        "id_actividad": 73,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Eliminó arquitectura",
+        "entidad_tipo": "API",
+        "entidad_id": 1,
+        "detalle": "Eliminó la arquitectura de la API \"API de prueba\".",
+        "fecha_hora": "2026-08-24 14:02:57"
+    },
+    {
+        "id_actividad": 74,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Eliminó dependencias",
+        "entidad_tipo": "API",
+        "entidad_id": 1,
+        "detalle": "Eliminó las dependencias de la API \"API de prueba\".",
+        "fecha_hora": "2026-08-24 14:06:03"
+    },
+    {
+        "id_actividad": 75,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Eliminó observaciones",
+        "entidad_tipo": "API",
+        "entidad_id": 1,
+        "detalle": "Eliminó las observaciones técnicas de la API \"API de prueba\".",
+        "fecha_hora": "2026-08-24 14:07:03"
+    },
+    {
+        "id_actividad": 76,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Eliminó historial",
+        "entidad_tipo": "API",
+        "entidad_id": 1,
+        "detalle": "Eliminó el historial de la API \"API de prueba\".",
+        "fecha_hora": "2026-08-24 14:07:31"
+    },
+    {
+        "id_actividad": 77,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Desactivó",
+        "entidad_tipo": "API",
+        "entidad_id": 1,
+        "detalle": "Desactivó la API \"API de prueba\".",
+        "fecha_hora": "2026-08-24 14:08:25"
+    },
+    {
+        "id_actividad": 78,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Activó",
+        "entidad_tipo": "API",
+        "entidad_id": 1,
+        "detalle": "Activó la API \"API de prueba\".",
+        "fecha_hora": "2026-08-24 14:09:09"
+    },
+    {
+        "id_actividad": 79,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Eliminó",
+        "entidad_tipo": "API",
+        "entidad_id": 1,
+        "detalle": "Eliminó la API \"API de prueba\".",
+        "fecha_hora": "2026-08-24 14:21:01"
+    },
+    {
+        "id_actividad": 80,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Agregó",
+        "entidad_tipo": "API",
+        "entidad_id": 2,
+        "detalle": "Agregó la API \"prueba\".",
+        "fecha_hora": "2026-08-24 14:26:23"
+    },
+    {
+        "id_actividad": 81,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Eliminó",
+        "entidad_tipo": "API",
+        "entidad_id": 2,
+        "detalle": "Eliminó la API \"prueba\".",
+        "fecha_hora": "2026-08-24 14:26:31"
+    },
+    {
+        "id_actividad": 82,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "APIs",
+        "accion": "Agregó",
+        "entidad_tipo": "API",
+        "entidad_id": 3,
+        "detalle": "Agregó la API \"prueba\".",
+        "fecha_hora": "2026-08-24 14:30:24"
     }
 ]

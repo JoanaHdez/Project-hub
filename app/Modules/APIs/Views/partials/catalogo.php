@@ -6,126 +6,234 @@
             type="search"
             id="buscar-api"
             class="input"
-            placeholder="Buscar API...">
+            placeholder="Buscar API..."
+        >
 
     </div>
 
     <div class="catalogo__lista">
 
-        <?php foreach ($apis as $api): ?>
+        <?php if (empty($apis)): ?>
 
-            <?= view(
-                'App\Modules\APIs\Views\components\api_selector',
-                [
-                    'titulo'   => $api['nombre'],
-                    'proyecto' => $api['proyecto'],
-                    'estado'   => $api['estado'],
-                    'metodo'   => $api['metodo'],
+            <div class="catalogo-vacio">
 
-                    'badgeClase' => 'badge badge--success',
+                <span class="catalogo-vacio__icono">
+                    🔌
+                </span>
 
-                    'atributos' => [
-                        'class' => 'api-selector',
+                <strong class="catalogo-vacio__titulo">
+                    Aún no hay APIs registradas
+                </strong>
 
-                        'data-api-id' =>
-                        $api['id'],
+                <p class="catalogo-vacio__descripcion">
+                    Las APIs aparecerán aquí cuando registres la primera.
+                </p>
 
-                        'data-api-activo' =>
-                        !empty($api['activo'])
-                            ? '1'
-                            : '0',
+            </div>
 
-                        'data-api-id-proyecto' =>
-                        $api['id_proyecto'] ?? '',
+        <?php else: ?>
 
-                        'data-api-id-sistema' =>
-                        $api['id_sistema'] ?? '',
+            <?php foreach ($apis as $api): ?>
 
-                        'data-api-nombre' =>
-                        $api['nombre'],
+                <?= view(
+                    'App\Modules\APIs\Views\components\api_selector',
+                    [
+                        'titulo' =>
+                            $api['nombre'],
 
-                        'data-api-proyecto' =>
-                        $api['proyecto'],
+                        'proyecto' =>
+                            $api['proyecto'],
 
-                        'data-api-descripcion' =>
-                        $api['descripcion'],
+                        'estado' =>
+                            $api['estado'],
 
-                        'data-api-estado' =>
-                        $api['estado'],
+                        'metodo' =>
+                            $api['metodo'],
 
-                        'data-api-metodo' =>
-                        $api['metodo'],
+                        'badgeClase' =>
+                            'badge badge--success',
 
-                        'data-api-endpoint' =>
-                        $api['endpoint'],
+                        'atributos' => [
 
-                        'data-api-url' =>
-                        $api['url'],
+                            'class' =>
+                                'api-selector',
 
-                        'data-api-autenticacion' =>
-                        $api['autenticacion'],
+                            'data-api-id' =>
+                                $api['id'],
 
-                        'data-api-repositorio' =>
-                        $api['repositorio'],
+                            'data-api-activo' =>
+                                !empty(
+                                    $api['activo']
+                                )
+                                    ? '1'
+                                    : '0',
 
-                        'data-api-ruta' =>
-                        $api['ruta_local'],
+                            'data-api-id-proyecto' =>
+                                $api[
+                                    'id_proyecto'
+                                ]
+                                ?? '',
 
-                        'data-api-servidor' =>
-                        $api['servidor'],
+                            'data-api-id-sistema' =>
+                                $api[
+                                    'id_sistema'
+                                ]
+                                ?? '',
 
-                        'data-api-headers' =>
-                        json_encode(
-                            $api['headers'] ?? [],
-                            JSON_UNESCAPED_UNICODE
-                                | JSON_UNESCAPED_SLASHES
-                        ),
+                            'data-api-nombre' =>
+                                $api['nombre'],
 
-                        'data-api-parametros' =>
-                        json_encode(
-                            $api['parametros'] ?? [],
-                            JSON_UNESCAPED_UNICODE
-                                | JSON_UNESCAPED_SLASHES
-                        ),
+                            'data-api-proyecto' =>
+                                $api['proyecto'],
 
-                        'data-api-ejemplo' =>
-                        json_encode(
-                            $api['ejemplo'] ?? [],
-                            JSON_UNESCAPED_UNICODE
-                                | JSON_UNESCAPED_SLASHES
-                        ),
+                            'data-api-descripcion' =>
+                                $api[
+                                    'descripcion'
+                                ]
+                                ?? '',
 
-                        'data-api-respuestas' =>
-                        json_encode(
-                            $api['respuestas'] ?? [],
-                            JSON_UNESCAPED_UNICODE
-                                | JSON_UNESCAPED_SLASHES
-                        ),
+                            'data-api-estado' =>
+                                $api[
+                                    'estado'
+                                ]
+                                ?? '',
 
-                        'data-api-arquitectura' => json_encode(
-                            $api['arquitectura'] ?? [],
-                            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-                        ),
+                            'data-api-metodo' =>
+                                $api[
+                                    'metodo'
+                                ]
+                                ?? '',
 
-                        'data-api-dependencias' => json_encode(
-                            $api['dependencias'] ?? [],
-                            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-                        ),
+                            'data-api-endpoint' =>
+                                $api[
+                                    'endpoint'
+                                ]
+                                ?? '',
 
-                        'data-api-observaciones' => json_encode(
-                            $api['observaciones_tecnicas'] ?? [],
-                            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-                        ),
+                            'data-api-url' =>
+                                $api[
+                                    'url'
+                                ]
+                                ?? '',
 
-                        'data-api-historial' => json_encode(
-                            $api['historial'] ?? [],
-                            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-                        ),
-                    ],
-                ]
-            ) ?>
+                            'data-api-autenticacion' =>
+                                $api[
+                                    'autenticacion'
+                                ]
+                                ?? '',
 
-        <?php endforeach; ?>
+                            'data-api-repositorio' =>
+                                $api[
+                                    'repositorio'
+                                ]
+                                ?? '',
+
+                            'data-api-ruta' =>
+                                $api[
+                                    'ruta_local'
+                                ]
+                                ?? '',
+
+                            'data-api-servidor' =>
+                                $api[
+                                    'servidor'
+                                ]
+                                ?? '',
+
+                            'data-api-headers' =>
+                                json_encode(
+                                    $api[
+                                        'headers'
+                                    ]
+                                    ?? [],
+                                    JSON_UNESCAPED_UNICODE
+                                    |
+                                    JSON_UNESCAPED_SLASHES
+                                ),
+
+                            'data-api-parametros' =>
+                                json_encode(
+                                    $api[
+                                        'parametros'
+                                    ]
+                                    ?? [],
+                                    JSON_UNESCAPED_UNICODE
+                                    |
+                                    JSON_UNESCAPED_SLASHES
+                                ),
+
+                            'data-api-ejemplo' =>
+                                json_encode(
+                                    $api[
+                                        'ejemplo'
+                                    ]
+                                    ?? [],
+                                    JSON_UNESCAPED_UNICODE
+                                    |
+                                    JSON_UNESCAPED_SLASHES
+                                ),
+
+                            'data-api-respuestas' =>
+                                json_encode(
+                                    $api[
+                                        'respuestas'
+                                    ]
+                                    ?? [],
+                                    JSON_UNESCAPED_UNICODE
+                                    |
+                                    JSON_UNESCAPED_SLASHES
+                                ),
+
+                            'data-api-arquitectura' =>
+                                json_encode(
+                                    $api[
+                                        'arquitectura'
+                                    ]
+                                    ?? [],
+                                    JSON_UNESCAPED_UNICODE
+                                    |
+                                    JSON_UNESCAPED_SLASHES
+                                ),
+
+                            'data-api-dependencias' =>
+                                json_encode(
+                                    $api[
+                                        'dependencias'
+                                    ]
+                                    ?? [],
+                                    JSON_UNESCAPED_UNICODE
+                                    |
+                                    JSON_UNESCAPED_SLASHES
+                                ),
+
+                            'data-api-observaciones' =>
+                                json_encode(
+                                    $api[
+                                        'observaciones_tecnicas'
+                                    ]
+                                    ?? [],
+                                    JSON_UNESCAPED_UNICODE
+                                    |
+                                    JSON_UNESCAPED_SLASHES
+                                ),
+
+                            'data-api-historial' =>
+                                json_encode(
+                                    $api[
+                                        'historial'
+                                    ]
+                                    ?? [],
+                                    JSON_UNESCAPED_UNICODE
+                                    |
+                                    JSON_UNESCAPED_SLASHES
+                                ),
+                        ],
+                    ]
+                ) ?>
+
+            <?php endforeach; ?>
+
+        <?php endif; ?>
 
     </div>
 

@@ -10,8 +10,11 @@ use App\Services\Actividad_StorageService;
 class APIs_Controller extends BaseController
 {
     private API_StorageService $storage;
+
     private Proyecto_StorageService $proyectoStorage;
+
     private Actividad_StorageService $actividadStorage;
+
 
     public function __construct()
     {
@@ -33,7 +36,9 @@ class APIs_Controller extends BaseController
     public function index()
     {
         $apisAlmacenadas =
-            $this->storage->obtenerTodos();
+            $this->storage
+            ->obtenerTodos();
+
 
         usort(
             $apisAlmacenadas,
@@ -41,102 +46,83 @@ class APIs_Controller extends BaseController
                 array $a,
                 array $b
             ): int {
+
                 return (int) (
-                    $b['id_api'] ?? 0
-                ) <=> (int) (
-                    $a['id_api'] ?? 0
+                    $b['id_api']
+                    ?? 0
+                )
+                <=>
+                (int) (
+                    $a['id_api']
+                    ?? 0
                 );
             }
         );
+
 
         $proyectos =
             $this->proyectoStorage
             ->obtenerTodos();
 
-        $nombresProyectos = [];
 
-        foreach ($proyectos as $proyecto) {
-            $idProyecto = (int) (
-                $proyecto['id_proyecto']
-                ?? 0
+        /*==================================================
+        =                 PREPARAR APIs                    =
+        ==================================================*/
+
+        $apis =
+            array_map(
+                function (
+                    array $api
+                ): array {
+
+                    return $this->construirApiVista(
+                        $api
+                    );
+                },
+                $apisAlmacenadas
             );
 
-            if ($idProyecto <= 0) {
-                continue;
-            }
 
-            $nombresProyectos[$idProyecto] =
-                $proyecto['nombre']
-                ?? 'Sin proyecto';
-        }
-
-        $apis = array_map(
-            static function (
-                array $api
-            ) use (
-                $nombresProyectos
-            ): array {
-                $idProyecto =
-                    isset(
-                        $api['id_proyecto']
-                    )
-                    ? (int) $api['id_proyecto']
-                    : null;
-
-                return array_merge(
-                    $api,
-                    [
-                        'id' =>
-                        $api['id_api']
-                            ?? null,
-
-                        'proyecto' =>
-                        $idProyecto !== null
-                            ? (
-                                $nombresProyectos[$idProyecto]
-                                ?? 'Sin proyecto'
-                            )
-                            : 'Sin proyecto',
-
-                        'repositorio' =>
-                        $api['repositorio_url'] ?? '',
-
-                        'servidor' =>
-                        $api['url_servidor'] ?? '',
-                    ]
-                );
-            },
-            $apisAlmacenadas
-        );
+        /*==================================================
+        =           PROYECTOS DISPONIBLES                 =
+        ==================================================*/
 
         $proyectosDisponibles =
             array_map(
                 static function (
                     array $proyecto
                 ): array {
+
                     return [
+
                         'id_proyecto' =>
-                        $proyecto['id_proyecto'] ?? null,
+                            $proyecto[
+                                'id_proyecto'
+                            ]
+                            ?? null,
 
                         'nombre' =>
-                        $proyecto['nombre']
+                            $proyecto[
+                                'nombre'
+                            ]
                             ?? 'Proyecto sin nombre',
                     ];
                 },
                 $proyectos
             );
 
+
         return view(
             'App\Modules\APIs\Views\index',
             [
                 'title' =>
-                'APIs | Project Hub',
+                    'APIs | Project Hub',
 
                 'apis' =>
-                $apis,
+                    $apis,
 
                 'proyectos' =>
-                $proyectosDisponibles,
+                    $proyectosDisponibles,
             ]
         );
     }
@@ -152,71 +138,156 @@ class APIs_Controller extends BaseController
             $this->request
             ->getJSON(true);
 
+
         $error =
             $this->validarDatosApi(
                 $datos
             );
 
+
         if ($error !== null) {
             return $error;
         }
 
-        $apis =
-            $this->storage
-            ->obtenerTodos();
 
-        $api =
-            $this->construirDatosApi(
-                $datos,
+        /*==================================================
+        =              VALIDAR PROYECTO                   =
+        ==================================================*/
+
+        $idProyecto =
+            (int) (
+                $datos[
+                    'id_proyecto'
+                ]
+                ?? 0
+            );
+
+
+        $proyecto =
+            $this->proyectoStorage
+            ->obtenerPorId(
+                $idProyecto
+            );
+
+
+        if ($proyecto === null) {
+
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'El proyecto seleccionado no existe.',
+                ]);
+        }
+
+
+        try {
+
+            /*==================================================
+            =                     CREAR                        =
+            ==================================================*/
+
+            $api =
+                $this->storage
+                ->crear(
+                    $datos
+                );
+
+
+            if ($api === null) {
+
+                return $this->response
+                    ->setStatusCode(500)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No fue posible registrar la API.',
+                    ]);
+            }
+
+
+            /*==================================================
+            =              REGISTRAR ACTIVIDAD                =
+            ==================================================*/
+
+            $this->registrarActividad(
+                'Agregó',
+                (int) (
+                    $api[
+                        'id_api'
+                    ]
+                    ?? 0
+                ),
+                'Agregó la API "'
+                    . (
+                        $api[
+                            'nombre'
+                        ]
+                        ?? 'API'
+                    )
+                    . '".'
+            );
+
+
+            /*==================================================
+            =                  PREPARAR VISTA                  =
+            ==================================================*/
+
+            $apiVista =
+                $this->construirApiVista(
+                    $api
+                );
+
+
+            $selectorHtml =
+                $this->construirSelectorHtml(
+                    $apiVista
+                );
+
+
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        'API registrada correctamente.',
+
+                    'api' =>
+                        $apiVista,
+
+                    'selector_html' =>
+                        $selectorHtml,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al registrar API: {mensaje}',
                 [
-                    'id_api' =>
-                    $this->storage
-                        ->generarNuevoId(
-                            $apis
-                        ),
-
-                    'activo' => true,
+                    'mensaje' =>
+                        $error->getMessage(),
                 ]
             );
 
-        $apis[] = $api;
 
-        $this->storage
-            ->guardarTodos(
-                $apis
-            );
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
 
-        $this->registrarActividad(
-            'Agregó',
-            (int) ($api['id_api'] ?? 0),
-            'Agregó la API "'
-                . ($api['nombre'] ?? 'API')
-                . '".'
-        );
-
-        $apiVista =
-            $this->construirApiVista(
-                $api
-            );
-
-        $selectorHtml =
-            $this->construirSelectorHtml(
-                $apiVista
-            );
-
-        return $this->response
-            ->setJSON([
-                'ok' => true,
-
-                'mensaje' =>
-                'API registrada correctamente.',
-
-                'api' =>
-                $apiVista,
-
-                'selector_html' =>
-                $selectorHtml,
-            ]);
+                    'mensaje' =>
+                        $error->getMessage()
+                        ?: 'Ocurrió un error al registrar la API.',
+                ]);
+        }
     }
 
 
@@ -227,1772 +298,2171 @@ class APIs_Controller extends BaseController
     public function actualizar(
         int $idApi
     ) {
+
         $datos =
             $this->request
             ->getJSON(true);
+
 
         $error =
             $this->validarDatosApi(
                 $datos
             );
 
+
         if ($error !== null) {
             return $error;
         }
 
-        $apis =
+
+        /*==================================================
+        =                 VALIDAR API                     =
+        ==================================================*/
+
+        $apiExistente =
             $this->storage
-            ->obtenerTodos();
+            ->obtenerPorId(
+                $idApi
+            );
 
-        $indiceApi = null;
-        $apiExistente = null;
 
-        foreach (
-            $apis as
-            $indice => $api
-        ) {
-            if (
-                (int) (
-                    $api['id_api']
-                    ?? 0
-                ) === $idApi
-            ) {
-                $indiceApi =
-                    $indice;
+        if ($apiExistente === null) {
 
-                $apiExistente =
-                    $api;
-
-                break;
-            }
-        }
-
-        if (
-            $indiceApi === null ||
-            $apiExistente === null
-        ) {
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'No se encontró la API solicitada.',
+                        'No se encontró la API solicitada.',
                 ]);
         }
 
-        $apiActualizada =
-            $this->construirDatosApi(
-                $datos,
-                [
-                    'id_api' =>
+
+        /*==================================================
+        =              VALIDAR PROYECTO                   =
+        ==================================================*/
+
+        $idProyecto =
+            (int) (
+                $datos[
+                    'id_proyecto'
+                ]
+                ?? 0
+            );
+
+
+        $proyecto =
+            $this->proyectoStorage
+            ->obtenerPorId(
+                $idProyecto
+            );
+
+
+        if ($proyecto === null) {
+
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'El proyecto seleccionado no existe.',
+                ]);
+        }
+
+
+        try {
+
+            /*==================================================
+            =                  ACTUALIZAR                      =
+            ==================================================*/
+
+            $apiActualizada =
+                $this->storage
+                ->actualizar(
                     $idApi,
+                    $datos
+                );
 
-                    'activo' =>
-                    (bool) (
-                        $apiExistente['activo'] ?? true
-                    ),
 
-                    'arquitectura' =>
-                    $apiExistente['arquitectura'] ?? [],
+            if ($apiActualizada === null) {
 
-                    'dependencias' =>
-                    $apiExistente['dependencias'] ?? [],
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
 
-                    'observaciones_tecnicas' =>
-                    $apiExistente['observaciones_tecnicas'] ?? [],
+                        'mensaje' =>
+                            'No se encontró la API solicitada.',
+                    ]);
+            }
 
-                    'historial' =>
-                    $apiExistente['historial'] ?? [],
+
+            /*==================================================
+            =              REGISTRAR ACTIVIDAD                =
+            ==================================================*/
+
+            $this->registrarActividad(
+                'Editó',
+                $idApi,
+                'Editó la API "'
+                    . (
+                        $apiActualizada[
+                            'nombre'
+                        ]
+                        ?? 'API'
+                    )
+                    . '".'
+            );
+
+
+            /*==================================================
+            =                 PREPARAR VISTA                   =
+            ==================================================*/
+
+            $apiVista =
+                $this->construirApiVista(
+                    $apiActualizada
+                );
+
+
+            $selectorHtml =
+                $this->construirSelectorHtml(
+                    $apiVista
+                );
+
+
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        'API actualizada correctamente.',
+
+                    'api' =>
+                        $apiVista,
+
+                    'selector_html' =>
+                        $selectorHtml,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al actualizar API {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idApi,
+
+                    'mensaje' =>
+                        $error->getMessage(),
                 ]
             );
 
-        $apis[$indiceApi] =
-            $apiActualizada;
 
-        $this->storage
-            ->guardarTodos(
-                $apis
-            );
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
 
-        $this->registrarActividad(
-            'Editó',
-            $idApi,
-            'Editó la API "'
-                . ($apiActualizada['nombre'] ?? 'API')
-                . '".'
-        );
-
-        $apiVista =
-            $this->construirApiVista(
-                $apiActualizada
-            );
-
-        $selectorHtml =
-            $this->construirSelectorHtml(
-                $apiVista
-            );
-
-        return $this->response
-            ->setJSON([
-                'ok' => true,
-
-                'mensaje' =>
-                'API actualizada correctamente.',
-
-                'api' =>
-                $apiVista,
-
-                'selector_html' =>
-                $selectorHtml,
-            ]);
+                    'mensaje' =>
+                        $error->getMessage()
+                        ?: 'Ocurrió un error al actualizar la API.',
+                ]);
+        }
     }
 
 
     /*==================================================
-    =             ACTUALIZAR ARQUITECTURA              =
+    =             ACTUALIZAR ARQUITECTURA             =
     ==================================================*/
 
     public function actualizarArquitectura(
         int $idApi
     ) {
+
         $datos =
             $this->request
             ->getJSON(true);
 
+
         if (!is_array($datos)) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
+
                     'mensaje' =>
-                    'Los datos enviados no son válidos.',
+                        'Los datos enviados no son válidos.',
                 ]);
         }
+
 
         $arquitectura =
-            $datos['arquitectura']
+            $datos[
+                'arquitectura'
+            ]
             ?? null;
 
+
         if (!is_array($arquitectura)) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
+
                     'mensaje' =>
-                    'La arquitectura enviada no es válida.',
+                        'La arquitectura enviada no es válida.',
                 ]);
         }
 
-        $apis =
-            $this->storage
-            ->obtenerTodos();
 
-        $indiceApi = null;
+        /*==================================================
+        =              NORMALIZAR DATOS                   =
+        ==================================================*/
 
-        foreach (
-            $apis as
-            $indice => $api
-        ) {
-            if (
-                (int) (
-                    $api['id_api']
-                    ?? 0
-                ) === $idApi
-            ) {
-                $indiceApi =
-                    $indice;
+        $arquitecturaNormalizada = [
 
-                break;
-            }
-        }
-
-        if ($indiceApi === null) {
-            return $this->response
-                ->setStatusCode(404)
-                ->setJSON([
-                    'ok' => false,
-                    'mensaje' =>
-                    'No se encontró la API solicitada.',
-                ]);
-        }
-
-        $apis[$indiceApi]['arquitectura'] = [
             'modulo' =>
-            trim(
-                (string) (
-                    $arquitectura['modulo']
-                    ?? ''
-                )
-            ),
+                trim(
+                    (string) (
+                        $arquitectura[
+                            'modulo'
+                        ]
+                        ?? ''
+                    )
+                ),
 
             'componentes' =>
-            is_array(
-                $arquitectura['componentes']
+                is_array(
+                    $arquitectura[
+                        'componentes'
+                    ]
                     ?? null
-            )
-                ? $arquitectura['componentes']
-                : [],
+                )
+                    ? $arquitectura[
+                        'componentes'
+                    ]
+                    : [],
         ];
 
-        $this->storage
-            ->guardarTodos(
-                $apis
+
+        try {
+
+            $resultado =
+                $this->storage
+                ->actualizarArquitectura(
+                    $idApi,
+                    $arquitecturaNormalizada
+                );
+
+
+            if ($resultado === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró la API solicitada.',
+                    ]);
+            }
+
+
+            $api =
+                $this->storage
+                ->obtenerPorId(
+                    $idApi
+                );
+
+
+            $this->registrarActividad(
+                'Editó arquitectura',
+                $idApi,
+                'Actualizó la arquitectura de la API "'
+                    . (
+                        $api[
+                            'nombre'
+                        ]
+                        ?? 'API'
+                    )
+                    . '".'
             );
 
-        $this->registrarActividad(
-            'Editó arquitectura',
-            $idApi,
-            'Actualizó la arquitectura de la API "'
-                . ($apis[$indiceApi]['nombre'] ?? 'API')
-                . '".'
-        );
 
-        return $this->response
-            ->setJSON([
-                'ok' => true,
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
 
-                'mensaje' =>
-                'Arquitectura guardada correctamente.',
+                    'mensaje' =>
+                        'Arquitectura guardada correctamente.',
 
-                'arquitectura' =>
-                $apis[$indiceApi]['arquitectura'],
-            ]);
+                    'arquitectura' =>
+                        $resultado,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al actualizar arquitectura de API {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idApi,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        $error->getMessage()
+                        ?: 'No fue posible guardar la arquitectura.',
+                ]);
+        }
     }
 
 
     /*==================================================
-    =             ACTUALIZAR DEPENDENCIAS              =
+    =             ACTUALIZAR DEPENDENCIAS             =
     ==================================================*/
 
     public function actualizarDependencias(
         int $idApi
     ) {
+
         $datos =
             $this->request
             ->getJSON(true);
 
+
         if (!is_array($datos)) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'Los datos enviados no son válidos.',
+                        'Los datos enviados no son válidos.',
                 ]);
         }
+
 
         $dependencias =
-            $datos['dependencias']
+            $datos[
+                'dependencias'
+            ]
             ?? null;
 
+
         if (!is_array($dependencias)) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'Las dependencias enviadas no son válidas.',
+                        'Las dependencias enviadas no son válidas.',
                 ]);
         }
 
-        $apis =
-            $this->storage
-            ->obtenerTodos();
 
-        $indiceApi = null;
-
-        foreach (
-            $apis as
-            $indice => $api
-        ) {
-            if (
-                (int) (
-                    $api['id_api']
-                    ?? 0
-                ) === $idApi
-            ) {
-                $indiceApi =
-                    $indice;
-
-                break;
-            }
-        }
-
-        if ($indiceApi === null) {
-            return $this->response
-                ->setStatusCode(404)
-                ->setJSON([
-                    'ok' => false,
-
-                    'mensaje' =>
-                    'No se encontró la API solicitada.',
-                ]);
-        }
+        /*==================================================
+        =              NORMALIZAR DATOS                   =
+        ==================================================*/
 
         $dependenciasNormalizadas = [];
 
+
         foreach (
-            $dependencias as
-            $dependencia
+            $dependencias
+            as $dependencia
         ) {
+
             if (!is_array($dependencia)) {
                 continue;
             }
 
+
             $tipo =
                 trim(
                     (string) (
-                        $dependencia['tipo']
+                        $dependencia[
+                            'tipo'
+                        ]
                         ?? ''
                     )
                 );
+
 
             $nombre =
                 trim(
                     (string) (
-                        $dependencia['nombre']
+                        $dependencia[
+                            'nombre'
+                        ]
                         ?? ''
                     )
                 );
+
 
             $descripcion =
                 trim(
                     (string) (
-                        $dependencia['descripcion']
+                        $dependencia[
+                            'descripcion'
+                        ]
                         ?? ''
                     )
                 );
+
 
             $estado =
                 trim(
                     (string) (
-                        $dependencia['estado']
+                        $dependencia[
+                            'estado'
+                        ]
                         ?? ''
                     )
                 );
 
+
             if (
-                $tipo === '' &&
-                $nombre === '' &&
-                $descripcion === '' &&
+                $tipo === ''
+                &&
+                $nombre === ''
+                &&
+                $descripcion === ''
+                &&
                 $estado === ''
             ) {
                 continue;
             }
 
+
             $dependenciasNormalizadas[] = [
+
                 'tipo' =>
-                $tipo,
+                    $tipo,
 
                 'nombre' =>
-                $nombre,
+                    $nombre,
 
                 'descripcion' =>
-                $descripcion,
+                    $descripcion,
 
                 'estado' =>
-                $estado,
+                    $estado,
             ];
         }
 
-        $apis[$indiceApi]['dependencias'] =
-            $dependenciasNormalizadas;
 
-        $this->storage
-            ->guardarTodos(
-                $apis
+        try {
+
+            $resultado =
+                $this->storage
+                ->actualizarDependencias(
+                    $idApi,
+                    $dependenciasNormalizadas
+                );
+
+
+            if ($resultado === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró la API solicitada.',
+                    ]);
+            }
+
+
+            $api =
+                $this->storage
+                ->obtenerPorId(
+                    $idApi
+                );
+
+
+            $this->registrarActividad(
+                'Editó dependencias',
+                $idApi,
+                'Actualizó las dependencias de la API "'
+                    . (
+                        $api[
+                            'nombre'
+                        ]
+                        ?? 'API'
+                    )
+                    . '".'
             );
 
-        $this->registrarActividad(
-            'Editó dependencias',
-            $idApi,
-            'Actualizó las dependencias de la API "'
-                . ($apis[$indiceApi]['nombre'] ?? 'API')
-                . '".'
-        );
 
-        return $this->response
-            ->setJSON([
-                'ok' => true,
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
 
-                'mensaje' =>
-                'Dependencias guardadas correctamente.',
+                    'mensaje' =>
+                        'Dependencias guardadas correctamente.',
 
-                'dependencias' =>
-                $apis[$indiceApi]['dependencias'],
-            ]);
+                    'dependencias' =>
+                        $resultado,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al actualizar dependencias de API {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idApi,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        $error->getMessage()
+                        ?: 'No fue posible guardar las dependencias.',
+                ]);
+        }
     }
 
 
     /*==================================================
-    =               ACTUALIZAR HISTORIAL               =
+    =               ACTUALIZAR HISTORIAL              =
     ==================================================*/
 
     public function actualizarHistorial(
         int $idApi
     ) {
+
         $datos =
             $this->request
             ->getJSON(true);
 
+
         if (!is_array($datos)) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'Los datos enviados no son válidos.',
+                        'Los datos enviados no son válidos.',
                 ]);
         }
+
 
         $historial =
-            $datos['historial']
+            $datos[
+                'historial'
+            ]
             ?? null;
 
+
         if (!is_array($historial)) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'El historial enviado no es válido.',
+                        'El historial enviado no es válido.',
                 ]);
         }
 
-        $apis =
-            $this->storage
-            ->obtenerTodos();
 
-        $indiceApi = null;
-
-        foreach (
-            $apis as
-            $indice => $api
-        ) {
-            if (
-                (int) (
-                    $api['id_api']
-                    ?? 0
-                ) === $idApi
-            ) {
-                $indiceApi =
-                    $indice;
-
-                break;
-            }
-        }
-
-        if ($indiceApi === null) {
-            return $this->response
-                ->setStatusCode(404)
-                ->setJSON([
-                    'ok' => false,
-
-                    'mensaje' =>
-                    'No se encontró la API solicitada.',
-                ]);
-        }
+        /*==================================================
+        =              NORMALIZAR DATOS                   =
+        ==================================================*/
 
         $historialNormalizado = [];
 
+
         foreach (
-            $historial as
-            $registro
+            $historial
+            as $registro
         ) {
+
             if (!is_array($registro)) {
                 continue;
             }
 
+
             $version =
                 trim(
                     (string) (
-                        $registro['version']
+                        $registro[
+                            'version'
+                        ]
                         ?? ''
                     )
                 );
+
 
             $descripcion =
                 trim(
                     (string) (
-                        $registro['descripcion']
+                        $registro[
+                            'descripcion'
+                        ]
                         ?? ''
                     )
                 );
+
 
             $fecha =
                 trim(
                     (string) (
-                        $registro['fecha']
+                        $registro[
+                            'fecha'
+                        ]
                         ?? ''
                     )
                 );
 
+
             if (
-                $version === '' &&
-                $descripcion === '' &&
+                $version === ''
+                &&
+                $descripcion === ''
+                &&
                 $fecha === ''
             ) {
                 continue;
             }
 
+
             $historialNormalizado[] = [
+
                 'version' =>
-                $version,
+                    $version,
 
                 'descripcion' =>
-                $descripcion,
+                    $descripcion,
 
                 'fecha' =>
-                $fecha,
+                    $fecha,
             ];
         }
 
-        $apis[$indiceApi]['historial'] =
-            $historialNormalizado;
 
-        $this->storage
-            ->guardarTodos(
-                $apis
+        try {
+
+            $resultado =
+                $this->storage
+                ->actualizarHistorial(
+                    $idApi,
+                    $historialNormalizado
+                );
+
+
+            if ($resultado === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró la API solicitada.',
+                    ]);
+            }
+
+
+            $api =
+                $this->storage
+                ->obtenerPorId(
+                    $idApi
+                );
+
+
+            $this->registrarActividad(
+                'Editó historial',
+                $idApi,
+                'Actualizó el historial de la API "'
+                    . (
+                        $api[
+                            'nombre'
+                        ]
+                        ?? 'API'
+                    )
+                    . '".'
             );
 
-        $this->registrarActividad(
-            'Editó historial',
-            $idApi,
-            'Actualizó el historial de la API "'
-                . ($apis[$indiceApi]['nombre'] ?? 'API')
-                . '".'
-        );
 
-        return $this->response
-            ->setJSON([
-                'ok' => true,
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
 
-                'mensaje' =>
-                'Historial guardado correctamente.',
+                    'mensaje' =>
+                        'Historial guardado correctamente.',
 
-                'historial' =>
-                $apis[$indiceApi]['historial'],
-            ]);
+                    'historial' =>
+                        $resultado,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al actualizar historial de API {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idApi,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        $error->getMessage()
+                        ?: 'No fue posible guardar el historial.',
+                ]);
+        }
     }
 
 
     /*==================================================
-    =             ACTUALIZAR OBSERVACIONES              =
+    =             ACTUALIZAR OBSERVACIONES            =
     ==================================================*/
 
     public function actualizarObservaciones(
         int $idApi
     ) {
+
         $datos =
             $this->request
             ->getJSON(true);
 
+
         if (!is_array($datos)) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'Los datos enviados no son válidos.',
+                        'Los datos enviados no son válidos.',
                 ]);
         }
+
 
         $observaciones =
-            $datos['observaciones']
+            $datos[
+                'observaciones'
+            ]
             ?? null;
 
+
         if (!is_array($observaciones)) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'Las observaciones enviadas no son válidas.',
-                ]);
-        }
-
-        $apis =
-            $this->storage
-            ->obtenerTodos();
-
-        $indiceApi = null;
-
-        foreach (
-            $apis as
-            $indice => $api
-        ) {
-            if (
-                (int) (
-                    $api['id_api']
-                    ?? 0
-                ) === $idApi
-            ) {
-                $indiceApi =
-                    $indice;
-
-                break;
-            }
-        }
-
-        if ($indiceApi === null) {
-            return $this->response
-                ->setStatusCode(404)
-                ->setJSON([
-                    'ok' => false,
-
-                    'mensaje' =>
-                    'No se encontró la API solicitada.',
+                        'Las observaciones enviadas no son válidas.',
                 ]);
         }
 
 
         /*==================================================
-        =          NORMALIZAR OBSERVACIONES               =
+        =              NORMALIZAR DATOS                   =
         ==================================================*/
 
         $observacionesNormalizadas = [];
 
+
         foreach (
-            $observaciones as
-            $observacion
+            $observaciones
+            as $observacion
         ) {
+
             if (!is_array($observacion)) {
                 continue;
             }
 
+
             $tipo =
                 trim(
                     (string) (
-                        $observacion['tipo']
+                        $observacion[
+                            'tipo'
+                        ]
                         ?? ''
                     )
                 );
+
 
             $mensaje =
                 trim(
                     (string) (
-                        $observacion['mensaje']
+                        $observacion[
+                            'mensaje'
+                        ]
                         ?? ''
                     )
                 );
 
-            /*
-         * Ignorar observaciones
-         * completamente vacías.
-         */
+
             if (
-                $tipo === '' &&
+                $tipo === ''
+                &&
                 $mensaje === ''
             ) {
                 continue;
             }
 
+
             $observacionesNormalizadas[] = [
+
                 'tipo' =>
-                $tipo,
+                    $tipo,
 
                 'mensaje' =>
-                $mensaje,
+                    $mensaje,
             ];
         }
 
 
-        /*==================================================
-        =                  GUARDAR                        =
-        ==================================================*/
+        try {
 
-        $apis[$indiceApi]['observaciones_tecnicas'] =
-            $observacionesNormalizadas;
+            $resultado =
+                $this->storage
+                ->actualizarObservaciones(
+                    $idApi,
+                    $observacionesNormalizadas
+                );
 
-        $this->storage
-            ->guardarTodos(
-                $apis
+
+            if ($resultado === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró la API solicitada.',
+                    ]);
+            }
+
+
+            $api =
+                $this->storage
+                ->obtenerPorId(
+                    $idApi
+                );
+
+
+            $this->registrarActividad(
+                'Editó observaciones',
+                $idApi,
+                'Actualizó las observaciones técnicas de la API "'
+                    . (
+                        $api[
+                            'nombre'
+                        ]
+                        ?? 'API'
+                    )
+                    . '".'
             );
 
-        $this->registrarActividad(
-            'Editó observaciones',
-            $idApi,
-            'Actualizó las observaciones técnicas de la API "'
-                . ($apis[$indiceApi]['nombre'] ?? 'API')
-                . '".'
-        );
 
-        return $this->response
-            ->setJSON([
-                'ok' => true,
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
 
-                'mensaje' =>
-                'Observaciones guardadas correctamente.',
+                    'mensaje' =>
+                        'Observaciones guardadas correctamente.',
 
-                'observaciones' =>
-                $apis[$indiceApi]['observaciones_tecnicas'],
-            ]);
+                    'observaciones' =>
+                        $resultado,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al actualizar observaciones de API {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idApi,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        $error->getMessage()
+                        ?: 'No fue posible guardar las observaciones.',
+                ]);
+        }
     }
 
 
     /*==================================================
-    =                  DESACTIVAR API                   =
+    =                  DESACTIVAR API                  =
     ==================================================*/
 
     public function desactivar(
         int $idApi
     ) {
-        $apis =
-            $this->storage
-            ->obtenerTodos();
 
-        $indiceApi = null;
-        $apiEncontrada = null;
+        try {
 
-        foreach (
-            $apis as
-            $indice => $api
-        ) {
-            if (
-                (int) (
-                    $api['id_api']
-                    ?? 0
-                ) === $idApi
-            ) {
-                $indiceApi =
-                    $indice;
+            $api =
+                $this->storage
+                ->desactivar(
+                    $idApi
+                );
 
-                $apiEncontrada =
-                    $api;
 
-                break;
+            if ($api === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró la API solicitada.',
+                    ]);
             }
-        }
 
-        if (
-            $indiceApi === null ||
-            $apiEncontrada === null
-        ) {
+
+            $this->registrarActividad(
+                'Desactivó',
+                $idApi,
+                'Desactivó la API "'
+                    . (
+                        $api[
+                            'nombre'
+                        ]
+                        ?? 'API'
+                    )
+                    . '".'
+            );
+
+
+            $apiVista =
+                $this->construirApiVista(
+                    $api
+                );
+
+
+            $selectorHtml =
+                $this->construirSelectorHtml(
+                    $apiVista
+                );
+
+
             return $this->response
-                ->setStatusCode(404)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        true,
 
                     'mensaje' =>
-                    'No se encontró la API solicitada.',
+                        'API desactivada correctamente.',
+
+                    'api' =>
+                        $apiVista,
+
+                    'selector_html' =>
+                        $selectorHtml,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al desactivar API {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idApi,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No fue posible desactivar la API.',
                 ]);
         }
-
-        $apiEncontrada['activo'] =
-            false;
-
-        $apis[$indiceApi] =
-            $apiEncontrada;
-
-        $this->storage
-            ->guardarTodos(
-                $apis
-            );
-
-        $this->registrarActividad(
-            'Desactivó',
-            $idApi,
-            'Desactivó la API "'
-                . ($apiEncontrada['nombre'] ?? 'API')
-                . '".'
-        );
-
-        $apiVista =
-            $this->construirApiVista(
-                $apiEncontrada
-            );
-
-        $selectorHtml =
-            $this->construirSelectorHtml(
-                $apiVista
-            );
-
-        return $this->response
-            ->setJSON([
-                'ok' => true,
-
-                'mensaje' =>
-                'API desactivada correctamente.',
-
-                'api' =>
-                $apiVista,
-
-                'selector_html' =>
-                $selectorHtml,
-            ]);
     }
 
 
     /*==================================================
-    =                    ACTIVAR API                    =
+    =                    ACTIVAR API                   =
     ==================================================*/
 
     public function activar(
         int $idApi
     ) {
-        $apis =
-            $this->storage
-            ->obtenerTodos();
 
-        $indiceApi = null;
-        $apiEncontrada = null;
+        try {
 
-        foreach (
-            $apis as
-            $indice => $api
-        ) {
-            if (
-                (int) (
-                    $api['id_api']
-                    ?? 0
-                ) === $idApi
-            ) {
-                $indiceApi =
-                    $indice;
+            $api =
+                $this->storage
+                ->activar(
+                    $idApi
+                );
 
-                $apiEncontrada =
-                    $api;
 
-                break;
+            if ($api === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró la API solicitada.',
+                    ]);
             }
-        }
 
-        if (
-            $indiceApi === null ||
-            $apiEncontrada === null
-        ) {
+
+            $this->registrarActividad(
+                'Activó',
+                $idApi,
+                'Activó la API "'
+                    . (
+                        $api[
+                            'nombre'
+                        ]
+                        ?? 'API'
+                    )
+                    . '".'
+            );
+
+
+            $apiVista =
+                $this->construirApiVista(
+                    $api
+                );
+
+
+            $selectorHtml =
+                $this->construirSelectorHtml(
+                    $apiVista
+                );
+
+
             return $this->response
-                ->setStatusCode(404)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        true,
 
                     'mensaje' =>
-                    'No se encontró la API solicitada.',
+                        'API activada correctamente.',
+
+                    'api' =>
+                        $apiVista,
+
+                    'selector_html' =>
+                        $selectorHtml,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al activar API {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idApi,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No fue posible activar la API.',
                 ]);
         }
-
-        $apiEncontrada['activo'] =
-            true;
-
-        $apis[$indiceApi] =
-            $apiEncontrada;
-
-        $this->storage
-            ->guardarTodos(
-                $apis
-            );
-
-        $this->registrarActividad(
-            'Activó',
-            $idApi,
-            'Activó la API "'
-                . ($apiEncontrada['nombre'] ?? 'API')
-                . '".'
-        );
-
-        $apiVista =
-            $this->construirApiVista(
-                $apiEncontrada
-            );
-
-        $selectorHtml =
-            $this->construirSelectorHtml(
-                $apiVista
-            );
-
-        return $this->response
-            ->setJSON([
-                'ok' => true,
-
-                'mensaje' =>
-                'API activada correctamente.',
-
-                'api' =>
-                $apiVista,
-
-                'selector_html' =>
-                $selectorHtml,
-            ]);
     }
 
 
     /*==================================================
-    =                    ELIMINAR API                    =
+    =                    ELIMINAR API                  =
     ==================================================*/
 
     public function eliminar(
         int $idApi
     ) {
-        $apis =
+
+        $api =
             $this->storage
-            ->obtenerTodos();
+            ->obtenerPorId(
+                $idApi
+            );
 
-        $indiceApi = null;
-        $apiEncontrada = null;
 
-        foreach (
-            $apis as
-            $indice => $api
-        ) {
-            if (
-                (int) (
-                    $api['id_api']
-                    ?? 0
-                ) === $idApi
-            ) {
-                $indiceApi =
-                    $indice;
+        if ($api === null) {
 
-                $apiEncontrada =
-                    $api;
-
-                break;
-            }
-        }
-
-        if (
-            $indiceApi === null ||
-            $apiEncontrada === null
-        ) {
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'No se encontró la API solicitada.',
+                        'No se encontró la API solicitada.',
                 ]);
         }
 
-        /*
-     * Eliminar la API del arreglo.
-     */
-        array_splice(
-            $apis,
-            $indiceApi,
-            1
-        );
 
-        $this->storage
-            ->guardarTodos(
-                $apis
+        try {
+
+            $eliminada =
+                $this->storage
+                ->eliminar(
+                    $idApi
+                );
+
+
+            if (!$eliminada) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró la API solicitada.',
+                    ]);
+            }
+
+
+            $this->registrarActividad(
+                'Eliminó',
+                $idApi,
+                'Eliminó la API "'
+                    . (
+                        $api[
+                            'nombre'
+                        ]
+                        ?? 'API'
+                    )
+                    . '".'
             );
 
-        $this->registrarActividad(
-            'Eliminó',
-            $idApi,
-            'Eliminó la API "'
-                . ($apiEncontrada['nombre'] ?? 'API')
-                . '".'
-        );
 
-        return $this->response
-            ->setJSON([
-                'ok' => true,
+            $totalApis =
+                count(
+                    $this->storage
+                    ->obtenerTodos()
+                );
 
-                'mensaje' =>
-                'API eliminada correctamente.',
 
-                'id_api' =>
-                $idApi,
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
 
-                'total_apis' =>
-                count($apis),
-            ]);
+                    'mensaje' =>
+                        'API eliminada correctamente.',
+
+                    'id_api' =>
+                        $idApi,
+
+                    'total_apis' =>
+                        $totalApis,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al eliminar API {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idApi,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(409)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No fue posible eliminar la API porque existen registros relacionados.',
+                ]);
+        }
     }
 
 
     /*==================================================
-    =                VALIDAR DATOS                    =
+    =             ELIMINAR ARQUITECTURA               =
+    ==================================================*/
+
+    public function eliminarArquitectura(
+        int $idApi
+    ) {
+
+        $api =
+            $this->storage
+            ->obtenerPorId(
+                $idApi
+            );
+
+
+        if ($api === null) {
+
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No se encontró la API solicitada.',
+                ]);
+        }
+
+
+        try {
+
+            $arquitectura =
+                $this->storage
+                ->eliminarArquitectura(
+                    $idApi
+                );
+
+
+            if ($arquitectura === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró la API solicitada.',
+                    ]);
+            }
+
+
+            $this->registrarActividad(
+                'Eliminó arquitectura',
+                $idApi,
+                'Eliminó la arquitectura de la API "'
+                    . (
+                        $api[
+                            'nombre'
+                        ]
+                        ?? 'API'
+                    )
+                    . '".'
+            );
+
+
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        'Arquitectura eliminada correctamente.',
+
+                    'arquitectura' =>
+                        $arquitectura,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al eliminar arquitectura de API {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idApi,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No fue posible eliminar la arquitectura.',
+                ]);
+        }
+    }
+
+
+    /*==================================================
+    =             ELIMINAR DEPENDENCIAS               =
+    ==================================================*/
+
+    public function eliminarDependencias(
+        int $idApi
+    ) {
+
+        $api =
+            $this->storage
+            ->obtenerPorId(
+                $idApi
+            );
+
+
+        if ($api === null) {
+
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No se encontró la API solicitada.',
+                ]);
+        }
+
+
+        try {
+
+            $dependencias =
+                $this->storage
+                ->eliminarDependencias(
+                    $idApi
+                );
+
+
+            if ($dependencias === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró la API solicitada.',
+                    ]);
+            }
+
+
+            $this->registrarActividad(
+                'Eliminó dependencias',
+                $idApi,
+                'Eliminó las dependencias de la API "'
+                    . (
+                        $api[
+                            'nombre'
+                        ]
+                        ?? 'API'
+                    )
+                    . '".'
+            );
+
+
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        'Dependencias eliminadas correctamente.',
+
+                    'dependencias' =>
+                        $dependencias,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al eliminar dependencias de API {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idApi,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No fue posible eliminar las dependencias.',
+                ]);
+        }
+    }
+
+
+    /*==================================================
+    =             ELIMINAR OBSERVACIONES              =
+    ==================================================*/
+
+    public function eliminarObservaciones(
+        int $idApi
+    ) {
+
+        $api =
+            $this->storage
+            ->obtenerPorId(
+                $idApi
+            );
+
+
+        if ($api === null) {
+
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No se encontró la API solicitada.',
+                ]);
+        }
+
+
+        try {
+
+            $observaciones =
+                $this->storage
+                ->eliminarObservaciones(
+                    $idApi
+                );
+
+
+            if ($observaciones === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró la API solicitada.',
+                    ]);
+            }
+
+
+            $this->registrarActividad(
+                'Eliminó observaciones',
+                $idApi,
+                'Eliminó las observaciones técnicas de la API "'
+                    . (
+                        $api[
+                            'nombre'
+                        ]
+                        ?? 'API'
+                    )
+                    . '".'
+            );
+
+
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        'Observaciones eliminadas correctamente.',
+
+                    'observaciones' =>
+                        $observaciones,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al eliminar observaciones de API {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idApi,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No fue posible eliminar las observaciones.',
+                ]);
+        }
+    }
+
+
+    /*==================================================
+    =               ELIMINAR HISTORIAL                =
+    ==================================================*/
+
+    public function eliminarHistorial(
+        int $idApi
+    ) {
+
+        $api =
+            $this->storage
+            ->obtenerPorId(
+                $idApi
+            );
+
+
+        if ($api === null) {
+
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No se encontró la API solicitada.',
+                ]);
+        }
+
+
+        try {
+
+            $historial =
+                $this->storage
+                ->eliminarHistorial(
+                    $idApi
+                );
+
+
+            if ($historial === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró la API solicitada.',
+                    ]);
+            }
+
+
+            $this->registrarActividad(
+                'Eliminó historial',
+                $idApi,
+                'Eliminó el historial de la API "'
+                    . (
+                        $api[
+                            'nombre'
+                        ]
+                        ?? 'API'
+                    )
+                    . '".'
+            );
+
+
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        'Historial eliminado correctamente.',
+
+                    'historial' =>
+                        $historial,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al eliminar historial de API {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idApi,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No fue posible eliminar el historial.',
+                ]);
+        }
+    }
+
+
+    /*==================================================
+    =                VALIDAR DATOS                     =
     ==================================================*/
 
     private function validarDatosApi(
         mixed $datos
     ) {
+
         if (!is_array($datos)) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'Los datos enviados no son válidos.',
+                        'Los datos enviados no son válidos.',
                 ]);
         }
 
-        $idProyecto = (int) (
-            $datos['id_proyecto']
-            ?? 0
-        );
+
+        $idProyecto =
+            (int) (
+                $datos[
+                    'id_proyecto'
+                ]
+                ?? 0
+            );
+
 
         if ($idProyecto <= 0) {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'Debes seleccionar un proyecto.',
+                        'Debes seleccionar un proyecto.',
                 ]);
         }
 
-        $nombre = trim(
-            (string) (
-                $datos['nombre']
-                ?? ''
-            )
-        );
+
+        $nombre =
+            trim(
+                (string) (
+                    $datos[
+                        'nombre'
+                    ]
+                    ?? ''
+                )
+            );
+
 
         if ($nombre === '') {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'El nombre de la API es obligatorio.',
+                        'El nombre de la API es obligatorio.',
                 ]);
         }
 
-        $estado = trim(
-            (string) (
-                $datos['estado']
-                ?? ''
-            )
-        );
+
+        $estado =
+            trim(
+                (string) (
+                    $datos[
+                        'estado'
+                    ]
+                    ?? ''
+                )
+            );
+
 
         if ($estado === '') {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'El estado es obligatorio.',
+                        'El estado es obligatorio.',
                 ]);
         }
 
-        $metodo = trim(
-            (string) (
-                $datos['metodo']
-                ?? ''
-            )
-        );
+
+        $metodo =
+            trim(
+                (string) (
+                    $datos[
+                        'metodo'
+                    ]
+                    ?? ''
+                )
+            );
+
 
         if ($metodo === '') {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'El método HTTP es obligatorio.',
+                        'El método HTTP es obligatorio.',
                 ]);
         }
 
-        $endpoint = trim(
-            (string) (
-                $datos['endpoint']
-                ?? ''
-            )
-        );
+
+        $endpoint =
+            trim(
+                (string) (
+                    $datos[
+                        'endpoint'
+                    ]
+                    ?? ''
+                )
+            );
+
 
         if ($endpoint === '') {
+
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'El endpoint es obligatorio.',
+                        'El endpoint es obligatorio.',
                 ]);
         }
+
 
         return null;
     }
 
 
     /*==================================================
-    =             CONSTRUIR DATOS API                =
-    ==================================================*/
-
-    private function construirDatosApi(
-        array $datos,
-        array $datosBase = []
-    ): array {
-        $idSistema =
-            $datos['id_sistema']
-            ?? null;
-
-        if (
-            $idSistema === ''
-            || $idSistema === null
-        ) {
-            $idSistema = null;
-        } else {
-            $idSistema =
-                (int) $idSistema;
-        }
-
-        return array_merge(
-            $datosBase,
-            [
-                'id_proyecto' =>
-                (int) (
-                    $datos['id_proyecto'] ?? 0
-                ),
-
-                'id_sistema' =>
-                $idSistema,
-
-                'nombre' =>
-                trim(
-                    (string) (
-                        $datos['nombre']
-                        ?? ''
-                    )
-                ),
-
-                'descripcion' =>
-                trim(
-                    (string) (
-                        $datos['descripcion'] ?? ''
-                    )
-                ),
-
-                'estado' =>
-                trim(
-                    (string) (
-                        $datos['estado']
-                        ?? ''
-                    )
-                ),
-
-                'metodo' =>
-                strtoupper(
-                    trim(
-                        (string) (
-                            $datos['metodo']
-                            ?? ''
-                        )
-                    )
-                ),
-
-                'endpoint' =>
-                trim(
-                    (string) (
-                        $datos['endpoint']
-                        ?? ''
-                    )
-                ),
-
-                'url' =>
-                trim(
-                    (string) (
-                        $datos['url']
-                        ?? ''
-                    )
-                ),
-
-                'autenticacion' =>
-                trim(
-                    (string) (
-                        $datos['autenticacion'] ?? ''
-                    )
-                ),
-
-                'repositorio_url' =>
-                trim(
-                    (string) (
-                        $datos['repositorio_url'] ?? ''
-                    )
-                ),
-
-                'ruta_local' =>
-                trim(
-                    (string) (
-                        $datos['ruta_local'] ?? ''
-                    )
-                ),
-
-                'url_servidor' =>
-                trim(
-                    (string) (
-                        $datos['url_servidor'] ?? ''
-                    )
-                ),
-
-                'headers' =>
-                is_array(
-                    $datos['headers']
-                        ?? null
-                )
-                    ? $datos['headers']
-                    : [],
-
-                'parametros' =>
-                is_array(
-                    $datos['parametros'] ?? null
-                )
-                    ? $datos['parametros']
-                    : [],
-
-                'ejemplo' =>
-                is_array(
-                    $datos['ejemplo']
-                        ?? null
-                )
-                    ? $datos['ejemplo']
-                    : [],
-
-                'respuestas' =>
-                is_array(
-                    $datos['respuestas'] ?? null
-                )
-                    ? $datos['respuestas']
-                    : [],
-
-                'responsable' =>
-                trim(
-                    (string) (
-                        $datos['responsable'] ?? ''
-                    )
-                ),
-
-                'observaciones' =>
-                trim(
-                    (string) (
-                        $datos['observaciones'] ?? ''
-                    )
-                ),
-
-                'arquitectura' =>
-                is_array(
-                    $datos['arquitectura']
-                        ?? ($datosBase['arquitectura'] ?? null)
-                )
-                    ? (
-                        $datos['arquitectura']
-                        ?? $datosBase['arquitectura']
-                    )
-                    : [],
-
-                'dependencias' =>
-                is_array(
-                    $datos['dependencias']
-                        ?? ($datosBase['dependencias'] ?? null)
-                )
-                    ? (
-                        $datos['dependencias']
-                        ?? $datosBase['dependencias']
-                    )
-                    : [],
-
-                'observaciones_tecnicas' =>
-                is_array(
-                    $datos['observaciones_tecnicas']
-                        ?? (
-                            $datosBase['observaciones_tecnicas']
-                            ?? null
-                        )
-                )
-                    ? (
-                        $datos['observaciones_tecnicas']
-                        ?? $datosBase['observaciones_tecnicas']
-                    )
-                    : [],
-
-                'historial' =>
-                is_array(
-                    $datos['historial']
-                        ?? ($datosBase['historial'] ?? null)
-                )
-                    ? (
-                        $datos['historial']
-                        ?? $datosBase['historial']
-                    )
-                    : [],
-            ]
-        );
-    }
-
-
-    /*==================================================
-    =               CONSTRUIR API VISTA              =
+    =               CONSTRUIR API VISTA               =
     ==================================================*/
 
     private function construirApiVista(
         array $api
     ): array {
+
         $nombreProyecto =
-            'Sin proyecto';
+            $api[
+                'proyecto_nombre'
+            ]
+            ?? '';
 
-        $idProyecto =
-            (int) (
-                $api['id_proyecto']
-                ?? 0
-            );
 
-        $proyectos =
-            $this->proyectoStorage
-            ->obtenerTodos();
-
-        foreach (
-            $proyectos as
-            $proyecto
+        /*
+         * Por compatibilidad, si por alguna razón
+         * el JOIN no devuelve el nombre, intentamos
+         * resolverlo desde Proyecto_StorageService.
+         */
+        if (
+            trim(
+                (string)
+                $nombreProyecto
+            ) === ''
         ) {
-            if (
-                (int) (
-                    $proyecto['id_proyecto'] ?? 0
-                ) === $idProyecto
-            ) {
-                $nombreProyecto =
-                    $proyecto['nombre']
-                    ?? 'Sin proyecto';
 
-                break;
-            }
+            $idProyecto =
+                (int) (
+                    $api[
+                        'id_proyecto'
+                    ]
+                    ?? 0
+                );
+
+
+            $proyecto =
+                $idProyecto > 0
+                    ? $this->proyectoStorage
+                        ->obtenerPorId(
+                            $idProyecto
+                        )
+                    : null;
+
+
+            $nombreProyecto =
+                $proyecto[
+                    'nombre'
+                ]
+                ?? 'Sin proyecto';
         }
+
 
         return array_merge(
             $api,
             [
                 'id' =>
-                $api['id_api']
+                    $api[
+                        'id_api'
+                    ]
                     ?? null,
 
                 'proyecto' =>
-                $nombreProyecto,
+                    $nombreProyecto,
 
                 'repositorio' =>
-                $api['repositorio_url'] ?? '',
+                    $api[
+                        'repositorio_url'
+                    ]
+                    ?? '',
 
                 'servidor' =>
-                $api['url_servidor'] ?? '',
+                    $api[
+                        'url_servidor'
+                    ]
+                    ?? '',
             ]
         );
     }
 
 
     /*==================================================
-    =             CONSTRUIR SELECTOR HTML              =
+    =             CONSTRUIR SELECTOR HTML             =
     ==================================================*/
 
     private function construirSelectorHtml(
         array $api
     ): string {
+
         return view(
             'App\Modules\APIs\Views\components\api_selector',
             [
                 'titulo' =>
-                $api['nombre'],
+                    $api[
+                        'nombre'
+                    ],
 
                 'proyecto' =>
-                $api['proyecto'],
+                    $api[
+                        'proyecto'
+                    ],
 
                 'estado' =>
-                $api['estado'],
+                    $api[
+                        'estado'
+                    ],
 
                 'metodo' =>
-                $api['metodo'],
+                    $api[
+                        'metodo'
+                    ],
 
                 'atributos' => [
+
                     'data-api-id' =>
-                    $api['id'],
+                        $api[
+                            'id'
+                        ],
 
                     'data-api-activo' =>
-                    !empty($api['activo'])
-                        ? '1'
-                        : '0',
+                        !empty(
+                            $api[
+                                'activo'
+                            ]
+                        )
+                            ? '1'
+                            : '0',
 
                     'data-api-id-proyecto' =>
-                    $api['id_proyecto'] ?? '',
+                        $api[
+                            'id_proyecto'
+                        ]
+                        ?? '',
 
                     'data-api-id-sistema' =>
-                    $api['id_sistema'] ?? '',
+                        $api[
+                            'id_sistema'
+                        ]
+                        ?? '',
 
                     'data-api-nombre' =>
-                    $api['nombre'],
+                        $api[
+                            'nombre'
+                        ],
 
                     'data-api-proyecto' =>
-                    $api['proyecto'],
+                        $api[
+                            'proyecto'
+                        ],
 
                     'data-api-descripcion' =>
-                    $api['descripcion'],
+                        $api[
+                            'descripcion'
+                        ]
+                        ?? '',
 
                     'data-api-estado' =>
-                    $api['estado'],
+                        $api[
+                            'estado'
+                        ]
+                        ?? '',
 
                     'data-api-metodo' =>
-                    $api['metodo'],
+                        $api[
+                            'metodo'
+                        ]
+                        ?? '',
 
                     'data-api-endpoint' =>
-                    $api['endpoint'],
+                        $api[
+                            'endpoint'
+                        ]
+                        ?? '',
 
                     'data-api-url' =>
-                    $api['url'],
+                        $api[
+                            'url'
+                        ]
+                        ?? '',
 
                     'data-api-autenticacion' =>
-                    $api['autenticacion'],
+                        $api[
+                            'autenticacion'
+                        ]
+                        ?? '',
 
                     'data-api-repositorio' =>
-                    $api['repositorio'],
+                        $api[
+                            'repositorio'
+                        ]
+                        ?? '',
 
                     'data-api-ruta' =>
-                    $api['ruta_local'],
+                        $api[
+                            'ruta_local'
+                        ]
+                        ?? '',
 
                     'data-api-servidor' =>
-                    $api['servidor'],
+                        $api[
+                            'servidor'
+                        ]
+                        ?? '',
 
                     'data-api-headers' =>
-                    json_encode(
-                        $api['headers'] ?? [],
-                        JSON_UNESCAPED_UNICODE
-                            | JSON_UNESCAPED_SLASHES
-                    ),
+                        json_encode(
+                            $api[
+                                'headers'
+                            ]
+                            ?? [],
+                            JSON_UNESCAPED_UNICODE
+                            |
+                            JSON_UNESCAPED_SLASHES
+                        ),
 
                     'data-api-parametros' =>
-                    json_encode(
-                        $api['parametros'] ?? [],
-                        JSON_UNESCAPED_UNICODE
-                            | JSON_UNESCAPED_SLASHES
-                    ),
+                        json_encode(
+                            $api[
+                                'parametros'
+                            ]
+                            ?? [],
+                            JSON_UNESCAPED_UNICODE
+                            |
+                            JSON_UNESCAPED_SLASHES
+                        ),
 
                     'data-api-ejemplo' =>
-                    json_encode(
-                        $api['ejemplo'] ?? [],
-                        JSON_UNESCAPED_UNICODE
-                            | JSON_UNESCAPED_SLASHES
-                    ),
+                        json_encode(
+                            $api[
+                                'ejemplo'
+                            ]
+                            ?? [],
+                            JSON_UNESCAPED_UNICODE
+                            |
+                            JSON_UNESCAPED_SLASHES
+                        ),
 
                     'data-api-respuestas' =>
-                    json_encode(
-                        $api['respuestas'] ?? [],
-                        JSON_UNESCAPED_UNICODE
-                            | JSON_UNESCAPED_SLASHES
-                    ),
+                        json_encode(
+                            $api[
+                                'respuestas'
+                            ]
+                            ?? [],
+                            JSON_UNESCAPED_UNICODE
+                            |
+                            JSON_UNESCAPED_SLASHES
+                        ),
 
                     'data-api-arquitectura' =>
-                    json_encode(
-                        $api['arquitectura'] ?? [],
-                        JSON_UNESCAPED_UNICODE
-                            | JSON_UNESCAPED_SLASHES
-                    ),
+                        json_encode(
+                            $api[
+                                'arquitectura'
+                            ]
+                            ?? [],
+                            JSON_UNESCAPED_UNICODE
+                            |
+                            JSON_UNESCAPED_SLASHES
+                        ),
 
                     'data-api-dependencias' =>
-                    json_encode(
-                        $api['dependencias'] ?? [],
-                        JSON_UNESCAPED_UNICODE
-                            | JSON_UNESCAPED_SLASHES
-                    ),
+                        json_encode(
+                            $api[
+                                'dependencias'
+                            ]
+                            ?? [],
+                            JSON_UNESCAPED_UNICODE
+                            |
+                            JSON_UNESCAPED_SLASHES
+                        ),
 
                     'data-api-observaciones' =>
-                    json_encode(
-                        $api['observaciones_tecnicas'] ?? [],
-                        JSON_UNESCAPED_UNICODE
-                            | JSON_UNESCAPED_SLASHES
-                    ),
+                        json_encode(
+                            $api[
+                                'observaciones_tecnicas'
+                            ]
+                            ?? [],
+                            JSON_UNESCAPED_UNICODE
+                            |
+                            JSON_UNESCAPED_SLASHES
+                        ),
 
                     'data-api-historial' =>
-                    json_encode(
-                        $api['historial'] ?? [],
-                        JSON_UNESCAPED_UNICODE
-                            | JSON_UNESCAPED_SLASHES
-                    ),
+                        json_encode(
+                            $api[
+                                'historial'
+                            ]
+                            ?? [],
+                            JSON_UNESCAPED_UNICODE
+                            |
+                            JSON_UNESCAPED_SLASHES
+                        ),
                 ],
             ],
             [
                 'saveData' =>
-                false,
+                    false,
             ]
         );
     }
 
 
     /*==================================================
-    =             ELIMINAR ARQUITECTURA                =
-    ==================================================*/
-
-    public function eliminarArquitectura(
-        int $idApi
-    ) {
-        $apis =
-            $this->storage
-            ->obtenerTodos();
-
-        $indiceApi = null;
-
-        foreach (
-            $apis as
-            $indice => $api
-        ) {
-            if (
-                (int) (
-                    $api['id_api']
-                    ?? 0
-                ) === $idApi
-            ) {
-                $indiceApi =
-                    $indice;
-
-                break;
-            }
-        }
-
-        if ($indiceApi === null) {
-            return $this->response
-                ->setStatusCode(404)
-                ->setJSON([
-                    'ok' => false,
-
-                    'mensaje' =>
-                    'No se encontró la API solicitada.',
-                ]);
-        }
-
-        $apis[$indiceApi]['arquitectura'] = [
-            'modulo' => '',
-            'componentes' => [],
-        ];
-
-        $this->storage
-            ->guardarTodos(
-                $apis
-            );
-
-        $this->registrarActividad(
-            'Eliminó arquitectura',
-            $idApi,
-            'Eliminó la arquitectura de la API "'
-                . ($apis[$indiceApi]['nombre'] ?? 'API')
-                . '".'
-        );
-
-        return $this->response
-            ->setJSON([
-                'ok' => true,
-
-                'mensaje' =>
-                'Arquitectura eliminada correctamente.',
-
-                'arquitectura' => [
-                    'modulo' => '',
-                    'componentes' => [],
-                ],
-            ]);
-    }
-
-
-    /*==================================================
-    =             ELIMINAR DEPENDENCIAS                =
-    ==================================================*/
-
-    public function eliminarDependencias(
-        int $idApi
-    ) {
-        $apis =
-            $this->storage
-            ->obtenerTodos();
-
-        $indiceApi = null;
-
-        foreach (
-            $apis as
-            $indice => $api
-        ) {
-            if (
-                (int) (
-                    $api['id_api']
-                    ?? 0
-                ) === $idApi
-            ) {
-                $indiceApi =
-                    $indice;
-
-                break;
-            }
-        }
-
-        if ($indiceApi === null) {
-            return $this->response
-                ->setStatusCode(404)
-                ->setJSON([
-                    'ok' => false,
-
-                    'mensaje' =>
-                    'No se encontró la API solicitada.',
-                ]);
-        }
-
-        $apis[$indiceApi]['dependencias'] = [];
-
-        $this->storage
-            ->guardarTodos(
-                $apis
-            );
-
-        $this->registrarActividad(
-            'Eliminó dependencias',
-            $idApi,
-            'Eliminó las dependencias de la API "'
-                . ($apis[$indiceApi]['nombre'] ?? 'API')
-                . '".'
-        );
-
-        return $this->response
-            ->setJSON([
-                'ok' => true,
-
-                'mensaje' =>
-                'Dependencias eliminadas correctamente.',
-
-                'dependencias' => [],
-            ]);
-    }
-
-    /*==================================================
-    =             ELIMINAR OBSERVACIONES               =
-    ==================================================*/
-
-    public function eliminarObservaciones(
-        int $idApi
-    ) {
-        $apis =
-            $this->storage
-            ->obtenerTodos();
-
-        $indiceApi = null;
-
-        foreach (
-            $apis as
-            $indice => $api
-        ) {
-            if (
-                (int) (
-                    $api['id_api']
-                    ?? 0
-                ) === $idApi
-            ) {
-                $indiceApi =
-                    $indice;
-
-                break;
-            }
-        }
-
-        if ($indiceApi === null) {
-            return $this->response
-                ->setStatusCode(404)
-                ->setJSON([
-                    'ok' => false,
-
-                    'mensaje' =>
-                    'No se encontró la API solicitada.',
-                ]);
-        }
-
-        $apis[$indiceApi]['observaciones_tecnicas'] = [];
-
-        $this->storage
-            ->guardarTodos(
-                $apis
-            );
-
-        $this->registrarActividad(
-            'Eliminó observaciones',
-            $idApi,
-            'Eliminó las observaciones técnicas de la API "'
-                . ($apis[$indiceApi]['nombre'] ?? 'API')
-                . '".'
-        );
-
-        return $this->response
-            ->setJSON([
-                'ok' => true,
-
-                'mensaje' =>
-                'Observaciones eliminadas correctamente.',
-
-                'observaciones' => [],
-            ]);
-    }
-
-    /*==================================================
-    =               ELIMINAR HISTORIAL                 =
-    ==================================================*/
-
-    public function eliminarHistorial(
-        int $idApi
-    ) {
-        $apis =
-            $this->storage
-            ->obtenerTodos();
-
-        $indiceApi = null;
-
-        foreach (
-            $apis as
-            $indice => $api
-        ) {
-            if (
-                (int) (
-                    $api['id_api']
-                    ?? 0
-                ) === $idApi
-            ) {
-                $indiceApi =
-                    $indice;
-
-                break;
-            }
-        }
-
-        if ($indiceApi === null) {
-            return $this->response
-                ->setStatusCode(404)
-                ->setJSON([
-                    'ok' => false,
-
-                    'mensaje' =>
-                    'No se encontró la API solicitada.',
-                ]);
-        }
-
-        $apis[$indiceApi]['historial'] = [];
-
-        $this->storage
-            ->guardarTodos(
-                $apis
-            );
-
-        $this->registrarActividad(
-            'Eliminó historial',
-            $idApi,
-            'Eliminó el historial de la API "'
-                . ($apis[$indiceApi]['nombre'] ?? 'API')
-                . '".'
-        );
-
-        return $this->response
-            ->setJSON([
-                'ok' => true,
-
-                'mensaje' =>
-                'Historial eliminado correctamente.',
-
-                'historial' => [],
-            ]);
-    }
-
-    /*==================================================
-    =              REGISTRAR ACTIVIDAD                 =
+    =              REGISTRAR ACTIVIDAD                =
     ==================================================*/
 
     private function registrarActividad(
@@ -2000,25 +2470,27 @@ class APIs_Controller extends BaseController
         int $idApi,
         string $detalle
     ): void {
+
         try {
 
             $this->actividadStorage
                 ->registrar([
                     'bloque' =>
-                    'APIs',
+                        'APIs',
 
                     'accion' =>
-                    $accion,
+                        $accion,
 
                     'entidad_tipo' =>
-                    'API',
+                        'API',
 
                     'entidad_id' =>
-                    $idApi,
+                        $idApi,
 
                     'detalle' =>
-                    $detalle,
+                        $detalle,
                 ]);
+
         } catch (\Throwable $error) {
 
             log_message(
@@ -2026,10 +2498,10 @@ class APIs_Controller extends BaseController
                 'No fue posible registrar actividad de la API {id}: {mensaje}',
                 [
                     'id' =>
-                    $idApi,
+                        $idApi,
 
                     'mensaje' =>
-                    $error->getMessage(),
+                        $error->getMessage(),
                 ]
             );
         }

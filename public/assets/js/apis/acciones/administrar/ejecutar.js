@@ -655,8 +655,49 @@ function eliminarSelectorApi(
   }
 
   selector.remove();
-}
 
+  /*
+   * Verificar si todavía quedan APIs
+   * registradas en el catálogo.
+   */
+  const catalogoLista =
+    document.querySelector(
+      ".catalogo__lista",
+    );
+
+  if (!catalogoLista) {
+    return;
+  }
+
+  const apisRestantes =
+    catalogoLista.querySelectorAll(
+      ".api-selector",
+    );
+
+  /*
+   * Si todavía existen APIs,
+   * no mostramos el estado vacío.
+   */
+  if (apisRestantes.length > 0) {
+    return;
+  }
+
+  /*
+   * Mostrar estado vacío cuando
+   * se eliminó la última API.
+   */
+  catalogoLista.innerHTML = `
+    <div class="catalogo__vacio">
+      <strong>
+        Aún no hay APIs registradas
+      </strong>
+
+      <p>
+        Las APIs aparecerán aquí cuando registres la primera.
+      </p>
+    </div>
+  `;
+}
 
 /*==================================================
 =              CERRAR MODAL                         =

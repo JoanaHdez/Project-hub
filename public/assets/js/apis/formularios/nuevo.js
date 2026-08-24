@@ -160,6 +160,24 @@ export function inicializarFormularioNuevaApi() {
           catalogo &&
           resultado.selector_html
         ) {
+
+          /*
+           * Si el catálogo estaba vacío,
+           * eliminar el mensaje antes
+           * de insertar la nueva API.
+           */
+          const estadoVacio =
+            catalogo.querySelector(
+              ".catalogo-vacio, .catalogo__vacio",
+            );
+
+          estadoVacio?.remove();
+
+
+          /*
+           * Insertar la nueva API
+           * al inicio del catálogo.
+           */
           catalogo.insertAdjacentHTML(
             "afterbegin",
             resultado.selector_html,
@@ -180,7 +198,7 @@ export function inicializarFormularioNuevaApi() {
           formulario.closest(".modal");
 
         if (modal) {
- 
+
           if (
             document.activeElement instanceof HTMLElement
           ) {
