@@ -2,15 +2,19 @@
 
 namespace App\Modules\Proyectos\Services;
 
+use App\Modules\Proyectos\Models\Especificacion_Model;
+
 class Especificacion_StorageService
 {
-    private string $rutaArchivo;
+    private Especificacion_Model $model;
+
+    private const ID_USUARIO_TEMPORAL = 1;
+
 
     public function __construct()
     {
-        $this->rutaArchivo =
-            APPPATH
-            . 'Modules/Proyectos/Data/especificaciones.json';
+        $this->model =
+            new Especificacion_Model();
     }
 
 
@@ -20,33 +24,12 @@ class Especificacion_StorageService
 
     public function obtenerTodos(): array
     {
-        if (!is_file($this->rutaArchivo)) {
-            return [];
-        }
-
-        $contenido =
-            file_get_contents(
-                $this->rutaArchivo
-            );
-
-        if (
-            $contenido === false ||
-            trim($contenido) === ''
-        ) {
-            return [];
-        }
-
-        $especificaciones =
-            json_decode(
-                $contenido,
-                true
-            );
-
-        if (!is_array($especificaciones)) {
-            return [];
-        }
-
-        return $especificaciones;
+        return $this->model
+            ->orderBy(
+                'id_especificacion',
+                'ASC'
+            )
+            ->findAll();
     }
 
 
@@ -57,80 +40,232 @@ class Especificacion_StorageService
     public function obtenerPorId(
         int $idEspecificacion
     ): ?array {
-        foreach (
-            $this->obtenerTodos()
-            as $especificacion
-        ) {
-            if (
-                (int) (
-                    $especificacion[
-                        'id_especificacion'
-                    ] ?? 0
-                ) === $idEspecificacion
-            ) {
-                return $especificacion;
-            }
-        }
 
-        return null;
+        $especificacion =
+            $this->model
+            ->find(
+                $idEspecificacion
+            );
+
+        return is_array($especificacion)
+            ? $especificacion
+            : null;
     }
 
 
     /*==================================================
-    =                   GUARDAR TODAS                  =
+    =                     CREAR                        =
     ==================================================*/
 
-    public function guardarTodos(
-        array $especificaciones
-    ): void {
-        $directorio =
-            dirname(
-                $this->rutaArchivo
+    public function crear(
+        array $datos
+    ): ?array {
+
+        $datosBd =
+            $this->prepararDatosBd(
+                $datos
             );
 
-        if (!is_dir($directorio)) {
-            mkdir(
-                $directorio,
-                0775,
+        $datosBd['id_usuario_creador'] =
+            self::ID_USUARIO_TEMPORAL;
+
+
+        $idEspecificacion =
+            $this->model
+            ->insert(
+                $datosBd,
                 true
             );
+
+
+        if (!$idEspecificacion) {
+            return null;
         }
 
-        file_put_contents(
-            $this->rutaArchivo,
-            json_encode(
-                $especificaciones,
-                JSON_PRETTY_PRINT
-                    | JSON_UNESCAPED_UNICODE
-                    | JSON_UNESCAPED_SLASHES
-            ),
-            LOCK_EX
+
+        return $this->obtenerPorId(
+            (int) $idEspecificacion
         );
     }
 
 
     /*==================================================
-    =                  GENERAR NUEVO ID                =
+    =                   ACTUALIZAR                     =
     ==================================================*/
 
-    public function generarNuevoId(
-        array $especificaciones
-    ): int {
-        $ids =
-            array_map(
-                static fn(
-                    array $especificacion
-                ): int =>
-                    (int) (
-                        $especificacion[
-                            'id_especificacion'
-                        ] ?? 0
-                    ),
-                $especificaciones
+    public function actualizar(
+        int $idEspecificacion,
+        array $datos
+    ): ?array {
+
+        $existente =
+            $this->model
+            ->find(
+                $idEspecificacion
             );
 
-        return empty($ids)
-            ? 1
-            : max($ids) + 1;
+        if (!is_array($existente)) {
+            return null;
+        }
+
+
+        $actualizado =
+            $this->model
+            ->update(
+                $idEspecificacion,
+                $this->prepararDatosBd(
+                    $datos
+                )
+            );
+
+
+        if ($actualizado === false) {
+            return null;
+        }
+
+
+        return $this->obtenerPorId(
+            $idEspecificacion
+        );
+    }
+
+
+    /*==================================================
+    =                    ELIMINAR                      =
+    ==================================================*/
+
+    public function eliminar(
+        int $idEspecificacion
+    ): bool {
+
+        $existente =
+            $this->model
+            ->find(
+                $idEspecificacion
+            );
+
+        if (!is_array($existente)) {
+            return false;
+        }
+
+
+        return $this->model
+            ->delete(
+                $idEspecificacion
+            );
+    }
+
+
+    /*==================================================
+    =                 CÓDIGO EXISTE                    =
+    ==================================================*/
+
+    public function existeCodigo(
+        string $codigo,
+        ?int $ignorarId = null
+    ): bool {
+
+        $builder =
+            $this->model
+            ->where(
+                'LOWER(codigo)',
+                mb_strtolower(
+                    trim($codigo),
+                    'UTF-8'
+                )
+            );
+
+
+        if ($ignorarId !== null) {
+
+            $builder->where(
+                'id_especificacion !=',
+                $ignorarId
+            );
+        }
+
+
+        return $builder
+            ->first() !== null;
+    }
+
+
+    /*==================================================
+    =              PREPARAR DATOS PARA BD              =
+    ==================================================*/
+
+    private function prepararDatosBd(
+        array $datos
+    ): array {
+
+        return [
+
+            'codigo' =>
+                trim(
+                    (string) (
+                        $datos['codigo']
+                        ?? ''
+                    )
+                ),
+
+            'framework' =>
+                $this->normalizarNullable(
+                    $datos['framework']
+                    ?? null
+                ),
+
+            'version_framework' =>
+                $this->normalizarNullable(
+                    $datos['version_framework']
+                    ?? null
+                ),
+
+            'php' =>
+                $this->normalizarNullable(
+                    $datos['php']
+                    ?? null
+                ),
+
+            'base_datos' =>
+                $this->normalizarNullable(
+                    $datos['base_datos']
+                    ?? null
+                ),
+
+            'repositorio' =>
+                $this->normalizarNullable(
+                    $datos['repositorio']
+                    ?? null
+                ),
+
+            'entorno_local' =>
+                $this->normalizarNullable(
+                    $datos['entorno_local']
+                    ?? null
+                ),
+        ];
+    }
+
+
+    /*==================================================
+    =                NORMALIZAR TEXTO                  =
+    ==================================================*/
+
+    private function normalizarNullable(
+        mixed $valor
+    ): ?string {
+
+        $valor =
+            trim(
+                (string) (
+                    $valor
+                    ?? ''
+                )
+            );
+
+
+        return $valor === ''
+            ? null
+            : $valor;
     }
 }

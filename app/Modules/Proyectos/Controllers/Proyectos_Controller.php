@@ -4,18 +4,20 @@ namespace App\Modules\Proyectos\Controllers;
 
 use App\Controllers\BaseController;
 use App\Modules\Proyectos\Services\Proyecto_StorageService;
+use App\Modules\Proyectos\Services\Especificacion_StorageService;
 use App\Modules\Sistemas\Services\Sistema_StorageService;
 use App\Services\Actividad_StorageService;
-
-use App\Modules\Proyectos\Services\Especificacion_StorageService;
-
 
 class Proyectos_Controller extends BaseController
 {
     private Proyecto_StorageService $storage;
+
     private Sistema_StorageService $sistemaStorage;
+
     private Actividad_StorageService $actividadStorage;
+
     private Especificacion_StorageService $especificacionStorage;
+
 
     public function __construct()
     {
@@ -43,6 +45,12 @@ class Proyectos_Controller extends BaseController
             $this->storage
             ->obtenerTodos();
 
+        /*
+         * Sistemas todavía continúa trabajando
+         * con su StorageService actual.
+         *
+         * Lo migraremos posteriormente.
+         */
         $sistemas =
             $this->sistemaStorage
             ->obtenerTodos();
@@ -51,13 +59,17 @@ class Proyectos_Controller extends BaseController
             $this->especificacionStorage
             ->obtenerTodos();
 
+
         /*==================================================
         =           TOTAL DE SISTEMAS POR PROYECTO          =
         ==================================================*/
 
         $totalesPorProyecto = [];
 
-        foreach ($sistemas as $sistema) {
+        foreach (
+            $sistemas
+            as $sistema
+        ) {
 
             $idProyecto =
                 (int) (
@@ -65,19 +77,28 @@ class Proyectos_Controller extends BaseController
                     ?? 0
                 );
 
+
             if ($idProyecto <= 0) {
                 continue;
             }
 
+
             if (
                 !isset(
-                    $totalesPorProyecto[$idProyecto]
+                    $totalesPorProyecto[
+                        $idProyecto
+                    ]
                 )
             ) {
-                $totalesPorProyecto[$idProyecto] = 0;
+                $totalesPorProyecto[
+                    $idProyecto
+                ] = 0;
             }
 
-            $totalesPorProyecto[$idProyecto]++;
+
+            $totalesPorProyecto[
+                $idProyecto
+            ]++;
         }
 
 
@@ -85,7 +106,10 @@ class Proyectos_Controller extends BaseController
         =              PREPARAR PROYECTOS                  =
         ==================================================*/
 
-        foreach ($proyectos as &$proyecto) {
+        foreach (
+            $proyectos
+            as &$proyecto
+        ) {
 
             $idProyecto =
                 (int) (
@@ -93,12 +117,17 @@ class Proyectos_Controller extends BaseController
                     ?? 0
                 );
 
+
             $proyecto['total_sistemas'] =
-                $totalesPorProyecto[$idProyecto]
+                $totalesPorProyecto[
+                    $idProyecto
+                ]
                 ?? 0;
         }
 
-        unset($proyecto);
+        unset(
+            $proyecto
+        );
 
 
         /*==================================================
@@ -109,13 +138,13 @@ class Proyectos_Controller extends BaseController
             'App\Modules\Proyectos\Views\index',
             [
                 'title' =>
-                'Proyectos | Project Hub',
+                    'Proyectos | Project Hub',
 
                 'proyectos' =>
-                $proyectos,
+                    $proyectos,
 
                 'especificaciones' =>
-                $especificaciones,
+                    $especificaciones,
             ]
         );
     }
@@ -131,194 +160,127 @@ class Proyectos_Controller extends BaseController
             $this->request
             ->getJSON(true);
 
+
         if (!is_array($datos)) {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'No se recibieron datos válidos del proyecto.',
+                        'No se recibieron datos válidos del proyecto.',
                 ]);
         }
 
 
-        /*==================================================
-        =              OBTENER PROYECTOS                   =
-        ==================================================*/
+        try {
 
-        $proyectos =
-            $this->storage
-            ->obtenerTodos();
+            /*==================================================
+            =                    CREAR                         =
+            ==================================================*/
 
-        $estado =
-            trim(
-                (string) (
-                    $datos['estado']
-                    ?? ''
-                )
-            );
+            $proyecto =
+                $this->storage
+                ->crear(
+                    $datos
+                );
 
 
-        /*==================================================
-        =              CONSTRUIR PROYECTO                  =
-        ==================================================*/
+            if ($proyecto === null) {
 
-        $proyecto = [
+                return $this->response
+                    ->setStatusCode(500)
+                    ->setJSON([
+                        'ok' =>
+                            false,
 
-            'id_proyecto' =>
-            $this->storage
-                ->generarNuevoId(
-                    $proyectos
-                ),
+                        'mensaje' =>
+                            'No fue posible registrar el proyecto.',
+                    ]);
+            }
 
-            'nombre' =>
-            trim(
-                (string) (
-                    $datos['nombre']
-                    ?? ''
-                )
-            ),
-
-            'estado' =>
-            $estado,
-
-            'estado_tipo' =>
-            $this->obtenerTipoEstado(
-                $estado
-            ),
-
-            'origen' =>
-            trim(
-                (string) (
-                    $datos['origen']
-                    ?? ''
-                )
-            ),
-
-            'descripcion' =>
-            trim(
-                (string) (
-                    $datos['descripcion']
-                    ?? ''
-                )
-            ),
-
-            'repositorio_url' =>
-            trim(
-                (string) (
-                    $datos['repositorio_url']
-                    ?? ''
-                )
-            ),
-
-            'ruta_local' =>
-            trim(
-                (string) (
-                    $datos['ruta_local']
-                    ?? ''
-                )
-            ),
-
-            'url_servidor' =>
-            trim(
-                (string) (
-                    $datos['url_servidor']
-                    ?? ''
-                )
-            ),
-
-            'id_especificacion' =>
-            (string) (
-                $datos['id_especificacion']
-                ?? ''
-            ),
-
-            'responsable' =>
-            trim(
-                (string) (
-                    $datos['responsable']
-                    ?? ''
-                )
-            ),
-
-            'observaciones' =>
-            trim(
-                (string) (
-                    $datos['observaciones']
-                    ?? ''
-                )
-            ),
 
             /*
-             * Al crear un proyecto todavía
+             * Al crear el proyecto todavía
              * no tiene sistemas asociados.
              */
-            'total_sistemas' =>
-            0,
-
-            'fecha_creacion' =>
-            date('d/m/Y'),
-        ];
+            $proyecto['total_sistemas'] =
+                0;
 
 
-        /*==================================================
-        =                  GUARDAR                        =
-        ==================================================*/
+            /*==================================================
+            =              REGISTRAR ACTIVIDAD                 =
+            ==================================================*/
 
-        $proyectos[] =
-            $proyecto;
-
-        $this->storage
-            ->guardarTodos(
-                $proyectos
+            $this->registrarActividad(
+                'Agregó',
+                (int) (
+                    $proyecto['id_proyecto']
+                    ?? 0
+                ),
+                'Agregó el proyecto "'
+                    . (
+                        $proyecto['nombre']
+                        ?? 'Proyecto'
+                    )
+                    . '".'
             );
 
 
-        /*==================================================
-        =              REGISTRAR ACTIVIDAD                 =
-        ==================================================*/
+            /*==================================================
+            =                  RESPUESTA                       =
+            ==================================================*/
 
-        $this->registrarActividad(
-            'Agregó',
-            (int) $proyecto['id_proyecto'],
-            'Agregó el proyecto "'
-                . (
-                    $proyecto['nombre']
-                    ?? 'Proyecto'
-                )
-                . '".'
-        );
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
 
+                    'mensaje' =>
+                        'Proyecto registrado correctamente.',
 
-        /*==================================================
-        =                  RESPUESTA                       =
-        ==================================================*/
-
-        return $this->response
-            ->setJSON([
-                'ok' => true,
-
-                'mensaje' =>
-                'Proyecto registrado correctamente.',
-
-                'proyecto' =>
-                $proyecto,
-
-                'fila_html' =>
-                view(
-                    'components/ui/fila_proyecto',
-                    [
-                        'proyecto' =>
+                    'proyecto' =>
                         $proyecto,
-                    ],
-                    [
-                        'saveData' =>
+
+                    'fila_html' =>
+                        view(
+                            'components/ui/fila_proyecto',
+                            [
+                                'proyecto' =>
+                                    $proyecto,
+                            ],
+                            [
+                                'saveData' =>
+                                    false,
+                            ]
+                        ),
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al registrar proyecto: {mensaje}',
+                [
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
                         false,
-                    ]
-                ),
-            ]);
+
+                    'mensaje' =>
+                        $error->getMessage()
+                        ?: 'Ocurrió un error al registrar el proyecto.',
+                ]);
+        }
     }
 
 
@@ -329,27 +291,13 @@ class Proyectos_Controller extends BaseController
     public function obtener(
         int $idProyecto
     ) {
-        $proyectos =
-            $this->storage
-            ->obtenerTodos();
 
         $proyectoEncontrado =
-            null;
+            $this->storage
+            ->obtenerPorId(
+                $idProyecto
+            );
 
-        foreach ($proyectos as $proyecto) {
-
-            if (
-                (int) (
-                    $proyecto['id_proyecto']
-                    ?? 0
-                ) === $idProyecto
-            ) {
-                $proyectoEncontrado =
-                    $proyecto;
-
-                break;
-            }
-        }
 
         if ($proyectoEncontrado === null) {
 
@@ -357,10 +305,10 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                    false,
+                        false,
 
                     'mensaje' =>
-                    'No se encontró el proyecto solicitado.',
+                        'No se encontró el proyecto solicitado.',
                 ]);
         }
 
@@ -369,26 +317,24 @@ class Proyectos_Controller extends BaseController
         =              TOTAL REAL DE SISTEMAS              =
         ==================================================*/
 
-        $proyectoEncontrado['total_sistemas'] =
+        $proyectoEncontrado[
+            'total_sistemas'
+        ] =
             count(
                 $this->sistemaStorage
-                    ->obtenerPorProyecto(
-                        $idProyecto
-                    )
+                ->obtenerPorProyecto(
+                    $idProyecto
+                )
             );
 
-
-        /*==================================================
-        =                  RESPUESTA                       =
-        ==================================================*/
 
         return $this->response
             ->setJSON([
                 'ok' =>
-                true,
+                    true,
 
                 'proyecto' =>
-                $proyectoEncontrado,
+                    $proyectoEncontrado,
             ]);
     }
 
@@ -400,9 +346,11 @@ class Proyectos_Controller extends BaseController
     public function actualizar(
         int $idProyecto
     ) {
+
         $datos =
             $this->request
             ->getJSON(true);
+
 
         if (!is_array($datos)) {
 
@@ -410,239 +358,130 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' =>
-                    false,
+                        false,
 
                     'mensaje' =>
-                    'Los datos enviados no son válidos.',
+                        'Los datos enviados no son válidos.',
                 ]);
         }
 
 
-        /*==================================================
-        =              BUSCAR PROYECTO                     =
-        ==================================================*/
+        try {
 
-        $proyectos =
-            $this->storage
-            ->obtenerTodos();
+            /*==================================================
+            =                 ACTUALIZAR                       =
+            ==================================================*/
 
-        $indiceProyecto =
-            null;
+            $proyectoActualizado =
+                $this->storage
+                ->actualizar(
+                    $idProyecto,
+                    $datos
+                );
 
-        $proyectoExistente =
-            null;
 
-        foreach (
-            $proyectos as
-            $indice => $proyecto
-        ) {
+            if ($proyectoActualizado === null) {
 
-            if (
-                (int) (
-                    $proyecto['id_proyecto']
-                    ?? 0
-                ) === $idProyecto
-            ) {
-                $indiceProyecto =
-                    $indice;
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
 
-                $proyectoExistente =
-                    $proyecto;
-
-                break;
+                        'mensaje' =>
+                            'El proyecto solicitado no existe.',
+                    ]);
             }
-        }
-
-        if (
-            $proyectoExistente === null ||
-            $indiceProyecto === null
-        ) {
-
-            return $this->response
-                ->setStatusCode(404)
-                ->setJSON([
-                    'ok' =>
-                    false,
-
-                    'mensaje' =>
-                    'El proyecto solicitado no existe.',
-                ]);
-        }
 
 
-        /*==================================================
-        =              PREPARAR DATOS                      =
-        ==================================================*/
+            /*==================================================
+            =              TOTAL DE SISTEMAS                   =
+            ==================================================*/
 
-        $estado =
-            trim(
-                (string) (
-                    $datos['estado']
-                    ?? ''
-                )
-            );
-
-        $totalSistemas =
-            count(
-                $this->sistemaStorage
+            $proyectoActualizado[
+                'total_sistemas'
+            ] =
+                count(
+                    $this->sistemaStorage
                     ->obtenerPorProyecto(
                         $idProyecto
                     )
+                );
+
+
+            /*==================================================
+            =              REGISTRAR ACTIVIDAD                 =
+            ==================================================*/
+
+            $this->registrarActividad(
+                'Editó',
+                $idProyecto,
+                'Editó el proyecto "'
+                    . (
+                        $proyectoActualizado[
+                            'nombre'
+                        ]
+                        ?? 'Proyecto'
+                    )
+                    . '".'
             );
 
 
-        /*==================================================
-        =              ACTUALIZAR PROYECTO                 =
-        ==================================================*/
+            /*==================================================
+            =                  RESPUESTA                       =
+            ==================================================*/
 
-        $proyectoActualizado =
-            array_merge(
-                $proyectoExistente,
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        'Proyecto actualizado correctamente.',
+
+                    'proyecto' =>
+                        $proyectoActualizado,
+
+                    'fila_html' =>
+                        view(
+                            'components/ui/fila_proyecto',
+                            [
+                                'proyecto' =>
+                                    $proyectoActualizado,
+                            ],
+                            [
+                                'saveData' =>
+                                    false,
+                            ]
+                        ),
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al actualizar proyecto {id}: {mensaje}',
                 [
-                    'id_proyecto' =>
-                    $idProyecto,
+                    'id' =>
+                        $idProyecto,
 
-                    'nombre' =>
-                    trim(
-                        (string) (
-                            $datos['nombre']
-                            ?? ''
-                        )
-                    ),
-
-                    'estado' =>
-                    $estado,
-
-                    'estado_tipo' =>
-                    $this->obtenerTipoEstado(
-                        $estado
-                    ),
-
-                    'origen' =>
-                    trim(
-                        (string) (
-                            $datos['origen']
-                            ?? ''
-                        )
-                    ),
-
-                    'descripcion' =>
-                    trim(
-                        (string) (
-                            $datos['descripcion']
-                            ?? ''
-                        )
-                    ),
-
-                    'repositorio_url' =>
-                    trim(
-                        (string) (
-                            $datos['repositorio_url']
-                            ?? ''
-                        )
-                    ),
-
-                    'ruta_local' =>
-                    trim(
-                        (string) (
-                            $datos['ruta_local']
-                            ?? ''
-                        )
-                    ),
-
-                    'url_servidor' =>
-                    trim(
-                        (string) (
-                            $datos['url_servidor']
-                            ?? ''
-                        )
-                    ),
-
-                    'id_especificacion' =>
-                    (string) (
-                        $datos['id_especificacion']
-                        ?? ''
-                    ),
-
-                    'responsable' =>
-                    trim(
-                        (string) (
-                            $datos['responsable']
-                            ?? ''
-                        )
-                    ),
-
-                    'observaciones' =>
-                    trim(
-                        (string) (
-                            $datos['observaciones']
-                            ?? ''
-                        )
-                    ),
-
-                    'total_sistemas' =>
-                    $totalSistemas,
+                    'mensaje' =>
+                        $error->getMessage(),
                 ]
             );
 
 
-        /*==================================================
-        =                  GUARDAR                        =
-        ==================================================*/
-
-        $proyectos[$indiceProyecto] =
-            $proyectoActualizado;
-
-        $this->storage
-            ->guardarTodos(
-                $proyectos
-            );
-
-
-        /*==================================================
-        =              REGISTRAR ACTIVIDAD                 =
-        ==================================================*/
-
-        $this->registrarActividad(
-            'Editó',
-            $idProyecto,
-            'Editó el proyecto "'
-                . (
-                    $proyectoActualizado['nombre']
-                    ?? 'Proyecto'
-                )
-                . '".'
-        );
-
-
-        /*==================================================
-        =                  RESPUESTA                       =
-        ==================================================*/
-
-        return $this->response
-            ->setJSON([
-                'ok' =>
-                true,
-
-                'mensaje' =>
-                'Proyecto actualizado correctamente.',
-
-                'proyecto' =>
-                $proyectoActualizado,
-
-                'fila_html' =>
-                view(
-                    'components/ui/fila_proyecto',
-                    [
-                        'proyecto' =>
-                        $proyectoActualizado,
-                    ],
-                    [
-                        'saveData' =>
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
                         false,
-                    ]
-                ),
-            ]);
+
+                    'mensaje' =>
+                        $error->getMessage()
+                        ?: 'Ocurrió un error al actualizar el proyecto.',
+                ]);
+        }
     }
 
 
@@ -653,11 +492,13 @@ class Proyectos_Controller extends BaseController
     public function desactivar(
         int $idProyecto
     ) {
+
         $proyecto =
             $this->storage
             ->desactivar(
                 $idProyecto
             );
+
 
         if ($proyecto === null) {
 
@@ -665,17 +506,13 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                    false,
+                        false,
 
                     'mensaje' =>
-                    'No se encontró el proyecto solicitado.',
+                        'No se encontró el proyecto solicitado.',
                 ]);
         }
 
-
-        /*==================================================
-        =              REGISTRAR ACTIVIDAD                 =
-        ==================================================*/
 
         $this->registrarActividad(
             'Desactivó',
@@ -689,20 +526,16 @@ class Proyectos_Controller extends BaseController
         );
 
 
-        /*==================================================
-        =                  RESPUESTA                       =
-        ==================================================*/
-
         return $this->response
             ->setJSON([
                 'ok' =>
-                true,
+                    true,
 
                 'mensaje' =>
-                'Proyecto desactivado correctamente.',
+                    'Proyecto desactivado correctamente.',
 
                 'proyecto' =>
-                $proyecto,
+                    $proyecto,
             ]);
     }
 
@@ -714,11 +547,13 @@ class Proyectos_Controller extends BaseController
     public function activar(
         int $idProyecto
     ) {
+
         $proyecto =
             $this->storage
             ->activar(
                 $idProyecto
             );
+
 
         if ($proyecto === null) {
 
@@ -726,17 +561,13 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                    false,
+                        false,
 
                     'mensaje' =>
-                    'No se encontró el proyecto solicitado.',
+                        'No se encontró el proyecto solicitado.',
                 ]);
         }
 
-
-        /*==================================================
-        =              REGISTRAR ACTIVIDAD                 =
-        ==================================================*/
 
         $this->registrarActividad(
             'Activó',
@@ -750,20 +581,16 @@ class Proyectos_Controller extends BaseController
         );
 
 
-        /*==================================================
-        =                  RESPUESTA                       =
-        ==================================================*/
-
         return $this->response
             ->setJSON([
                 'ok' =>
-                true,
+                    true,
 
                 'mensaje' =>
-                'Proyecto activado correctamente.',
+                    'Proyecto activado correctamente.',
 
                 'proyecto' =>
-                $proyecto,
+                    $proyecto,
             ]);
     }
 
@@ -775,99 +602,153 @@ class Proyectos_Controller extends BaseController
     public function eliminar(
         int $idProyecto
     ) {
-        /*==================================================
-        =          DATOS ANTES DE ELIMINAR                 =
-        ==================================================*/
-
-        $proyectos =
-            $this->storage
-            ->obtenerTodos();
-
-        $proyectoEncontrado =
-            null;
-
-        foreach ($proyectos as $proyecto) {
-
-            if (
-                (int) (
-                    $proyecto['id_proyecto']
-                    ?? 0
-                ) === $idProyecto
-            ) {
-                $proyectoEncontrado =
-                    $proyecto;
-
-                break;
-            }
-        }
-
 
         /*==================================================
-        =                  ELIMINAR                        =
+        =             OBTENER PROYECTO                     =
         ==================================================*/
 
-        $eliminado =
+        $proyecto =
             $this->storage
-            ->eliminar(
+            ->obtenerPorId(
                 $idProyecto
             );
 
-        if (!$eliminado) {
+
+        if ($proyecto === null) {
 
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                    false,
+                        false,
 
                     'mensaje' =>
-                    'No se encontró el proyecto solicitado.',
+                        'No se encontró el proyecto solicitado.',
                 ]);
         }
 
 
         /*==================================================
-        =              REGISTRAR ACTIVIDAD                 =
+        =              VALIDAR SISTEMAS                    =
         ==================================================*/
 
-        $nombreProyecto =
-            $proyectoEncontrado['nombre']
-            ?? 'Proyecto';
-
-        $this->registrarActividad(
-            'Eliminó',
-            $idProyecto,
-            'Eliminó el proyecto "'
-                . $nombreProyecto
-                . '".'
-        );
+        $sistemasAsociados =
+            $this->sistemaStorage
+            ->obtenerPorProyecto(
+                $idProyecto
+            );
 
 
-        /*==================================================
-        =                  RESPUESTA                       =
-        ==================================================*/
+        if (!empty($sistemasAsociados)) {
 
-        return $this->response
-            ->setJSON([
-                'ok' =>
-                true,
+            return $this->response
+                ->setStatusCode(409)
+                ->setJSON([
+                    'ok' =>
+                        false,
 
-                'mensaje' =>
-                'Proyecto eliminado correctamente.',
-            ]);
+                    'mensaje' =>
+                        'No se puede eliminar este proyecto porque tiene sistemas asociados.',
+                ]);
+        }
+
+
+        try {
+
+            /*==================================================
+            =                   ELIMINAR                       =
+            ==================================================*/
+
+            $eliminado =
+                $this->storage
+                ->eliminar(
+                    $idProyecto
+                );
+
+
+            if (!$eliminado) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró el proyecto solicitado.',
+                    ]);
+            }
+
+
+            /*==================================================
+            =              REGISTRAR ACTIVIDAD                 =
+            ==================================================*/
+
+            $this->registrarActividad(
+                'Eliminó',
+                $idProyecto,
+                'Eliminó el proyecto "'
+                    . (
+                        $proyecto['nombre']
+                        ?? 'Proyecto'
+                    )
+                    . '".'
+            );
+
+
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        'Proyecto eliminado correctamente.',
+                ]);
+
+        } catch (\Throwable $error) {
+
+            /*
+             * La BD también protege al proyecto
+             * cuando existen registros relacionados
+             * mediante llaves foráneas.
+             */
+            log_message(
+                'error',
+                'No fue posible eliminar el proyecto {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idProyecto,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(409)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No se puede eliminar el proyecto porque existen registros asociados.',
+                ]);
+        }
     }
 
 
-
     /*==================================================
-    =            GUARDAR ESPECIFICACIÓN                =
+    =            GUARDAR ESPECIFICACIÓN               =
     ==================================================*/
 
     public function guardarEspecificacion()
     {
+
         $datos =
             $this->request
             ->getJSON(true);
+
 
         if (!is_array($datos)) {
 
@@ -875,17 +756,13 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' =>
-                    false,
+                        false,
 
                     'mensaje' =>
-                    'No se recibieron datos válidos de la ficha técnica.',
+                        'No se recibieron datos válidos de la ficha técnica.',
                 ]);
         }
 
-
-        /*==================================================
-        =                  VALIDAR CÓDIGO                  =
-        ==================================================*/
 
         $codigo =
             trim(
@@ -895,170 +772,116 @@ class Proyectos_Controller extends BaseController
                 )
             );
 
+
         if ($codigo === '') {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
                     'ok' =>
-                    false,
+                        false,
 
                     'mensaje' =>
-                    'El código de la ficha técnica es obligatorio.',
+                        'El código de la ficha técnica es obligatorio.',
                 ]);
         }
-
-
-        /*==================================================
-        =             OBTENER ESPECIFICACIONES             =
-        ==================================================*/
-
-        $especificaciones =
-            $this->especificacionStorage
-            ->obtenerTodos();
 
 
         /*==================================================
         =              VALIDAR CÓDIGO ÚNICO               =
         ==================================================*/
 
-        foreach ($especificaciones as $especificacion) {
+        if (
+            $this->especificacionStorage
+            ->existeCodigo(
+                $codigo
+            )
+        ) {
 
-            $codigoExistente =
-                strtolower(
-                    trim(
-                        (string) (
-                            $especificacion['codigo']
-                            ?? ''
-                        )
-                    )
-                );
-
-            if (
-                $codigoExistente ===
-                strtolower($codigo)
-            ) {
-
-                return $this->response
-                    ->setStatusCode(409)
-                    ->setJSON([
-                        'ok' =>
+            return $this->response
+                ->setStatusCode(409)
+                ->setJSON([
+                    'ok' =>
                         false,
 
-                        'mensaje' =>
+                    'mensaje' =>
                         'Ya existe una ficha técnica con ese código.',
-                    ]);
-            }
+                ]);
         }
 
 
-        /*==================================================
-        =               CONSTRUIR REGISTRO                 =
-        ==================================================*/
+        try {
 
-        $especificacion = [
+            /*==================================================
+            =                    CREAR                         =
+            ==================================================*/
 
-            'id_especificacion' =>
-            $this->especificacionStorage
-                ->generarNuevoId(
-                    $especificaciones
-                ),
-
-            'codigo' =>
-            $codigo,
-
-            'framework' =>
-            trim(
-                (string) (
-                    $datos['framework']
-                    ?? ''
-                )
-            ),
-
-            'version_framework' =>
-            trim(
-                (string) (
-                    $datos['version_framework']
-                    ?? ''
-                )
-            ),
-
-            'php' =>
-            trim(
-                (string) (
-                    $datos['php']
-                    ?? ''
-                )
-            ),
-
-            'base_datos' =>
-            trim(
-                (string) (
-                    $datos['base_datos']
-                    ?? ''
-                )
-            ),
-
-            'repositorio' =>
-            trim(
-                (string) (
-                    $datos['repositorio']
-                    ?? ''
-                )
-            ),
-
-            'entorno_local' =>
-            trim(
-                (string) (
-                    $datos['entorno_local']
-                    ?? ''
-                )
-            ),
-        ];
+            $especificacion =
+                $this->especificacionStorage
+                ->crear(
+                    $datos
+                );
 
 
-        /*==================================================
-        =                    GUARDAR                       =
-        ==================================================*/
+            if ($especificacion === null) {
 
-        $especificaciones[] =
-            $especificacion;
+                return $this->response
+                    ->setStatusCode(500)
+                    ->setJSON([
+                        'ok' =>
+                            false,
 
-        $this->especificacionStorage
-            ->guardarTodos(
-                $especificaciones
+                        'mensaje' =>
+                            'No fue posible registrar la ficha técnica.',
+                    ]);
+            }
+
+
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        'Ficha técnica registrada correctamente.',
+
+                    'especificacion' =>
+                        $especificacion,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al registrar especificación técnica: {mensaje}',
+                [
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
             );
 
 
-        /*==================================================
-        =                   RESPUESTA                      =
-        ==================================================*/
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
 
-        return $this->response
-            ->setJSON([
-                'ok' =>
-                true,
-
-                'mensaje' =>
-                'Ficha técnica registrada correctamente.',
-
-                'especificacion' =>
-                $especificacion,
-            ]);
+                    'mensaje' =>
+                        $error->getMessage()
+                        ?: 'Ocurrió un error al registrar la ficha técnica.',
+                ]);
+        }
     }
 
 
     /*==================================================
-    =            OBTENER ESPECIFICACIÓN                =
+    =            OBTENER ESPECIFICACIÓN               =
     ==================================================*/
 
     public function obtenerEspecificacion(
         int $idEspecificacion
     ) {
-
-        /*==================================================
-        =              OBTENER FICHA                     =
-        ==================================================*/
 
         $especificacion =
             $this->especificacionStorage
@@ -1073,26 +896,22 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                    false,
+                        false,
 
                     'mensaje' =>
-                    'No se encontró la ficha técnica solicitada.',
+                        'No se encontró la ficha técnica solicitada.',
                 ]);
         }
 
 
         /*==================================================
-        =              OBTENER PROYECTOS                  =
+        =            PROYECTOS ASOCIADOS                  =
         ==================================================*/
 
         $proyectos =
             $this->storage
             ->obtenerTodos();
 
-
-        /*==================================================
-        =          PROYECTOS ASOCIADOS A LA FICHA         =
-        ==================================================*/
 
         $proyectosAsociados =
             array_values(
@@ -1106,103 +925,31 @@ class Proyectos_Controller extends BaseController
 
                         return (
                             (int) (
-                                $proyecto['id_especificacion']
+                                $proyecto[
+                                    'id_especificacion'
+                                ]
                                 ?? 0
                             )
-                        ) === $idEspecificacion;
+                        ) ===
+                        $idEspecificacion;
                     }
                 )
             );
 
 
-        /*==================================================
-        =                  RESPUESTA                       =
-        ==================================================*/
-
         return $this->response
             ->setJSON([
                 'ok' =>
-                true,
+                    true,
 
                 'especificacion' =>
-                $especificacion,
+                    $especificacion,
 
                 'proyectos_asociados' =>
-                $proyectosAsociados,
+                    $proyectosAsociados,
             ]);
     }
 
-
-    /*==================================================
-    =              REGISTRAR ACTIVIDAD                 =
-    ==================================================*/
-
-    private function registrarActividad(
-        string $accion,
-        int $idProyecto,
-        string $detalle
-    ): void {
-        try {
-
-            $this->actividadStorage
-                ->registrar([
-                    'bloque' =>
-                    'Proyectos',
-
-                    'accion' =>
-                    $accion,
-
-                    'entidad_tipo' =>
-                    'Proyecto',
-
-                    'entidad_id' =>
-                    $idProyecto,
-
-                    'detalle' =>
-                    $detalle,
-                ]);
-        } catch (\Throwable $error) {
-
-            log_message(
-                'error',
-                'No fue posible registrar actividad del proyecto {id}: {mensaje}',
-                [
-                    'id' =>
-                    $idProyecto,
-
-                    'mensaje' =>
-                    $error->getMessage(),
-                ]
-            );
-        }
-    }
-
-
-    /*==================================================
-    =              TIPO DE ESTADO                     =
-    ==================================================*/
-
-    private function obtenerTipoEstado(
-        string $estado
-    ): string {
-        return match ($estado) {
-
-            'Producción' =>
-            'produccion',
-
-            'Desarrollo' =>
-            'desarrollo',
-
-            'Detenido' =>
-            'detenido',
-
-            'Mantenimiento' =>
-            'mantenimiento',
-
-            default =>
-            'inactivo',
-        };
-    }
 
     /*==================================================
     =           ACTUALIZAR ESPECIFICACIÓN             =
@@ -1211,67 +958,47 @@ class Proyectos_Controller extends BaseController
     public function actualizarEspecificacion(
         int $idEspecificacion
     ) {
+
         $datos =
             $this->request
             ->getJSON(true);
+
 
         if (!is_array($datos)) {
 
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
+
                     'mensaje' =>
-                    'Los datos enviados no son válidos.',
+                        'Los datos enviados no son válidos.',
                 ]);
         }
 
 
-        $especificaciones =
+        /*==================================================
+        =              VALIDAR EXISTENCIA                  =
+        ==================================================*/
+
+        $existente =
             $this->especificacionStorage
-            ->obtenerTodos();
-
-        $indiceEncontrado =
-            null;
-
-        $especificacionExistente =
-            null;
+            ->obtenerPorId(
+                $idEspecificacion
+            );
 
 
-        foreach (
-            $especificaciones
-            as $indice => $especificacion
-        ) {
-
-            if (
-                (int) (
-                    $especificacion['id_especificacion']
-                    ?? 0
-                ) === $idEspecificacion
-            ) {
-
-                $indiceEncontrado =
-                    $indice;
-
-                $especificacionExistente =
-                    $especificacion;
-
-                break;
-            }
-        }
-
-
-        if (
-            $indiceEncontrado === null ||
-            $especificacionExistente === null
-        ) {
+        if ($existente === null) {
 
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
+
                     'mensaje' =>
-                    'No se encontró la ficha técnica solicitada.',
+                        'No se encontró la ficha técnica solicitada.',
                 ]);
         }
 
@@ -1290,9 +1017,11 @@ class Proyectos_Controller extends BaseController
             return $this->response
                 ->setStatusCode(400)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
+
                     'mensaje' =>
-                    'El código de la ficha técnica es obligatorio.',
+                        'El código de la ficha técnica es obligatorio.',
                 ]);
         }
 
@@ -1301,137 +1030,93 @@ class Proyectos_Controller extends BaseController
         =              VALIDAR CÓDIGO ÚNICO               =
         ==================================================*/
 
-        foreach (
-            $especificaciones
-            as $especificacion
+        if (
+            $this->especificacionStorage
+            ->existeCodigo(
+                $codigo,
+                $idEspecificacion
+            )
         ) {
 
-            $idActual =
-                (int) (
-                    $especificacion['id_especificacion']
-                    ?? 0
-                );
+            return $this->response
+                ->setStatusCode(409)
+                ->setJSON([
+                    'ok' =>
+                        false,
 
-            if (
-                $idActual ===
-                $idEspecificacion
-            ) {
-                continue;
-            }
-
-
-            $codigoExistente =
-                strtolower(
-                    trim(
-                        (string) (
-                            $especificacion['codigo']
-                            ?? ''
-                        )
-                    )
-                );
-
-
-            if (
-                $codigoExistente ===
-                strtolower(
-                    $codigo
-                )
-            ) {
-
-                return $this->response
-                    ->setStatusCode(409)
-                    ->setJSON([
-                        'ok' => false,
-                        'mensaje' =>
+                    'mensaje' =>
                         'Ya existe una ficha técnica con ese código.',
-                    ]);
-            }
+                ]);
         }
 
 
-        $especificacionActualizada =
-            array_merge(
-                $especificacionExistente,
+        try {
+
+            $especificacionActualizada =
+                $this->especificacionStorage
+                ->actualizar(
+                    $idEspecificacion,
+                    $datos
+                );
+
+
+            if ($especificacionActualizada === null) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No se encontró la ficha técnica solicitada.',
+                    ]);
+            }
+
+
+            return $this->response
+                ->setJSON([
+                    'ok' =>
+                        true,
+
+                    'mensaje' =>
+                        'Ficha técnica actualizada correctamente.',
+
+                    'especificacion' =>
+                        $especificacionActualizada,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al actualizar especificación {id}: {mensaje}',
                 [
-                    'codigo' =>
-                    $codigo,
+                    'id' =>
+                        $idEspecificacion,
 
-                    'framework' =>
-                    trim(
-                        (string) (
-                            $datos['framework']
-                            ?? ''
-                        )
-                    ),
-
-                    'version_framework' =>
-                    trim(
-                        (string) (
-                            $datos['version_framework']
-                            ?? ''
-                        )
-                    ),
-
-                    'php' =>
-                    trim(
-                        (string) (
-                            $datos['php']
-                            ?? ''
-                        )
-                    ),
-
-                    'base_datos' =>
-                    trim(
-                        (string) (
-                            $datos['base_datos']
-                            ?? ''
-                        )
-                    ),
-
-                    'repositorio' =>
-                    trim(
-                        (string) (
-                            $datos['repositorio']
-                            ?? ''
-                        )
-                    ),
-
-                    'entorno_local' =>
-                    trim(
-                        (string) (
-                            $datos['entorno_local']
-                            ?? ''
-                        )
-                    ),
+                    'mensaje' =>
+                        $error->getMessage(),
                 ]
             );
 
 
-        $especificaciones[$indiceEncontrado] =
-            $especificacionActualizada;
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
 
-
-        $this->especificacionStorage
-            ->guardarTodos(
-                $especificaciones
-            );
-
-
-        return $this->response
-            ->setJSON([
-                'ok' =>
-                true,
-
-                'mensaje' =>
-                'Ficha técnica actualizada correctamente.',
-
-                'especificacion' =>
-                $especificacionActualizada,
-            ]);
+                    'mensaje' =>
+                        $error->getMessage()
+                        ?: 'Ocurrió un error al actualizar la ficha técnica.',
+                ]);
+        }
     }
 
+
     /*==================================================
-    =            ELIMINAR ESPECIFICACIÓN               =
+    =            ELIMINAR ESPECIFICACIÓN              =
     ==================================================*/
 
     public function eliminarEspecificacion(
@@ -1439,7 +1124,7 @@ class Proyectos_Controller extends BaseController
     ) {
 
         /*==================================================
-        =          COMPROBAR QUE LA FICHA EXISTE          =
+        =              COMPROBAR EXISTENCIA               =
         ==================================================*/
 
         $especificacion =
@@ -1455,10 +1140,10 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                    false,
+                        false,
 
                     'mensaje' =>
-                    'No se encontró la ficha técnica solicitada.',
+                        'No se encontró la ficha técnica solicitada.',
                 ]);
         }
 
@@ -1484,22 +1169,19 @@ class Proyectos_Controller extends BaseController
 
                         return (
                             (int) (
-                                $proyecto['id_especificacion']
+                                $proyecto[
+                                    'id_especificacion'
+                                ]
                                 ?? 0
                             )
-                        ) === $idEspecificacion;
+                        ) ===
+                        $idEspecificacion;
                     }
                 )
             );
 
 
-        /*==================================================
-        =              BLOQUEAR ELIMINACIÓN               =
-        ==================================================*/
-
-        if (
-            !empty($proyectosAsociados)
-        ) {
+        if (!empty($proyectosAsociados)) {
 
             $nombresProyectos =
                 array_values(
@@ -1507,10 +1189,12 @@ class Proyectos_Controller extends BaseController
                         static fn(
                             array $proyecto
                         ): string =>
-                        (string) (
-                            $proyecto['nombre']
-                            ?? 'Proyecto'
-                        ),
+                            (string) (
+                                $proyecto[
+                                    'nombre'
+                                ]
+                                ?? 'Proyecto'
+                            ),
                         $proyectosAsociados
                     )
                 );
@@ -1520,13 +1204,13 @@ class Proyectos_Controller extends BaseController
                 ->setStatusCode(409)
                 ->setJSON([
                     'ok' =>
-                    false,
+                        false,
 
                     'mensaje' =>
-                    'No se puede eliminar esta ficha técnica porque está asociada a uno o más proyectos.',
+                        'No se puede eliminar esta ficha técnica porque está asociada a uno o más proyectos.',
 
                     'proyectos_asociados' =>
-                    $nombresProyectos,
+                        $nombresProyectos,
                 ]);
         }
 
@@ -1535,69 +1219,128 @@ class Proyectos_Controller extends BaseController
         =                   ELIMINAR                       =
         ==================================================*/
 
-        $especificaciones =
-            $this->especificacionStorage
-            ->obtenerTodos();
+        try {
+
+            $eliminado =
+                $this->especificacionStorage
+                ->eliminar(
+                    $idEspecificacion
+                );
 
 
-        $especificacionesFiltradas =
-            array_values(
-                array_filter(
-                    $especificaciones,
-                    static fn(
-                        array $especificacionActual
-                    ): bool =>
-                    (int) (
-                        $especificacionActual['id_especificacion']
-                        ?? 0
-                    ) !== $idEspecificacion
-                )
-            );
+            if (!$eliminado) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'No fue posible encontrar la ficha técnica.',
+                    ]);
+            }
 
 
-        if (
-            count($especificacionesFiltradas)
-            ===
-            count($especificaciones)
-        ) {
+            $totalEspecificaciones =
+                count(
+                    $this->especificacionStorage
+                    ->obtenerTodos()
+                );
+
 
             return $this->response
-                ->setStatusCode(404)
                 ->setJSON([
                     'ok' =>
-                    false,
+                        true,
 
                     'mensaje' =>
-                    'No fue posible encontrar la ficha técnica.',
+                        'La ficha técnica fue eliminada correctamente.',
+
+                    'id_especificacion' =>
+                        $idEspecificacion,
+
+                    'total_especificaciones' =>
+                        $totalEspecificaciones,
                 ]);
-        }
 
+        } catch (\Throwable $error) {
 
-        $this->especificacionStorage
-            ->guardarTodos(
-                $especificacionesFiltradas
+            log_message(
+                'error',
+                'Error al eliminar especificación {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idEspecificacion,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
             );
 
 
-        /*==================================================
-        =                  RESPUESTA                       =
-        ==================================================*/
+            return $this->response
+                ->setStatusCode(409)
+                ->setJSON([
+                    'ok' =>
+                        false,
 
-        return $this->response
-            ->setJSON([
-                'ok' =>
-                true,
+                    'mensaje' =>
+                        'No se puede eliminar la ficha técnica porque existen registros asociados.',
+                ]);
+        }
+    }
 
-                'mensaje' =>
-                'La ficha técnica fue eliminada correctamente.',
 
-                'id_especificacion' =>
-                $idEspecificacion,
+    /*==================================================
+    =              REGISTRAR ACTIVIDAD                =
+    ==================================================*/
 
-                'total_especificaciones' =>
-                count(
-                    $especificacionesFiltradas
-                ),
-            ]);
+    private function registrarActividad(
+        string $accion,
+        int $idProyecto,
+        string $detalle
+    ): void {
+
+        try {
+
+            /*
+             * Auditoría todavía continúa usando
+             * Actividad_StorageService.
+             *
+             * Se migrará en su propia etapa.
+             */
+            $this->actividadStorage
+                ->registrar([
+                    'bloque' =>
+                        'Proyectos',
+
+                    'accion' =>
+                        $accion,
+
+                    'entidad_tipo' =>
+                        'Proyecto',
+
+                    'entidad_id' =>
+                        $idProyecto,
+
+                    'detalle' =>
+                        $detalle,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'No fue posible registrar actividad del proyecto {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idProyecto,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+        }
     }
 }

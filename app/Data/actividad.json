@@ -306,5 +306,71 @@
         "entidad_id": 13,
         "detalle": "Agregó el proyecto \"prueba de ver detalles de la tabla de ficha\".",
         "fecha_hora": "2026-08-21 14:08:33"
+    },
+    {
+        "id_actividad": 29,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Proyectos",
+        "accion": "Agregó",
+        "entidad_tipo": "Proyecto",
+        "entidad_id": 1,
+        "detalle": "Agregó el proyecto \"Proyecto de Prueba\".",
+        "fecha_hora": "2026-08-24 11:14:39"
+    },
+    {
+        "id_actividad": 30,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Proyectos",
+        "accion": "Editó",
+        "entidad_tipo": "Proyecto",
+        "entidad_id": 1,
+        "detalle": "Editó el proyecto \"Proyecto de Prueba 1\".",
+        "fecha_hora": "2026-08-24 11:15:14"
+    },
+    {
+        "id_actividad": 31,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Proyectos",
+        "accion": "Editó",
+        "entidad_tipo": "Proyecto",
+        "entidad_id": 1,
+        "detalle": "Editó el proyecto \"1 Proyecto de Prueba\".",
+        "fecha_hora": "2026-08-24 11:15:45"
+    },
+    {
+        "id_actividad": 32,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Proyectos",
+        "accion": "Desactivó",
+        "entidad_tipo": "Proyecto",
+        "entidad_id": 1,
+        "detalle": "Desactivó el proyecto \"1 Proyecto de Prueba\".",
+        "fecha_hora": "2026-08-24 11:15:52"
+    },
+    {
+        "id_actividad": 33,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Proyectos",
+        "accion": "Activó",
+        "entidad_tipo": "Proyecto",
+        "entidad_id": 1,
+        "detalle": "Activó el proyecto \"1 Proyecto de Prueba\".",
+        "fecha_hora": "2026-08-24 11:16:07"
+    },
+    {
+        "id_actividad": 34,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Proyectos",
+        "accion": "Eliminó",
+        "entidad_tipo": "Proyecto",
+        "entidad_id": 1,
+        "detalle": "Eliminó el proyecto \"1 Proyecto de Prueba\".",
+        "fecha_hora": "2026-08-24 11:19:32"
     }
 ]

@@ -2,124 +2,623 @@
 
 namespace App\Modules\Proyectos\Services;
 
+use App\Modules\Proyectos\Models\Proyecto_Model;
+use CodeIgniter\Database\BaseConnection;
+
 class Proyecto_StorageService
 {
-    private string $rutaArchivo;
+    private Proyecto_Model $model;
+
+    private BaseConnection $db;
+
+    private const ID_USUARIO_TEMPORAL = 1;
+
 
     public function __construct()
     {
-        $this->rutaArchivo = APPPATH
-            . 'Modules/Proyectos/Data/proyectos.json';
+        $this->model =
+            new Proyecto_Model();
+
+        $this->db =
+            db_connect();
     }
+
+
+    /*==================================================
+    =                  OBTENER TODOS                   =
+    ==================================================*/
 
     public function obtenerTodos(): array
     {
-        if (!is_file($this->rutaArchivo)) {
-            return [];
+        $proyectos =
+            $this->model
+            ->obtenerTodosCompletos();
+
+        foreach (
+            $proyectos
+            as &$proyecto
+        ) {
+            $proyecto =
+                $this->prepararProyecto(
+                    $proyecto
+                );
         }
 
-        $contenido = file_get_contents($this->rutaArchivo);
-
-        if ($contenido === false || trim($contenido) === '') {
-            return [];
-        }
-
-        $proyectos = json_decode($contenido, true);
-
-        if (!is_array($proyectos)) {
-            return [];
-        }
+        unset($proyecto);
 
         return $proyectos;
     }
 
-    public function guardarTodos(array $proyectos): void
-    {
-        $directorio = dirname($this->rutaArchivo);
 
-        if (!is_dir($directorio)) {
-            mkdir($directorio, 0775, true);
+    /*==================================================
+    =                  OBTENER POR ID                  =
+    ==================================================*/
+
+    public function obtenerPorId(
+        int $idProyecto
+    ): ?array {
+
+        $proyecto =
+            $this->model
+            ->obtenerCompletoPorId(
+                $idProyecto
+            );
+
+        if ($proyecto === null) {
+            return null;
         }
 
-        file_put_contents(
-            $this->rutaArchivo,
-            json_encode(
-                $proyectos,
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
-            ),
-            LOCK_EX
+        return $this->prepararProyecto(
+            $proyecto
         );
     }
 
-    public function generarNuevoId(array $proyectos): int
-    {
-        $ids = array_map(
-            static fn(array $proyecto): int =>
-            (int) ($proyecto['id_proyecto'] ?? 0),
-            $proyectos
-        );
 
-        return empty($ids)
-            ? 1
-            : max($ids) + 1;
-    }
+    /*==================================================
+    =                     CREAR                        =
+    ==================================================*/
 
-    public function desactivar(int $idProyecto): ?array
-    {
-        $proyectos = $this->obtenerTodos();
+    public function crear(
+        array $datos
+    ): ?array {
 
-        foreach ($proyectos as $indice => $proyecto) {
-            if ((int) ($proyecto['id_proyecto'] ?? 0) !== $idProyecto) {
-                continue;
-            }
+        $datosBd =
+            $this->prepararDatosBd(
+                $datos
+            );
 
-            $proyectos[$indice]['activo'] = false;
+        $datosBd['id_usuario_creador'] =
+            self::ID_USUARIO_TEMPORAL;
 
-            $this->guardarTodos($proyectos);
+        $datosBd['activo'] =
+            1;
 
-            return $proyectos[$indice];
+
+        $idProyecto =
+            $this->model
+            ->insert(
+                $datosBd,
+                true
+            );
+
+
+        if (!$idProyecto) {
+            return null;
         }
 
-        return null;
+
+        return $this->obtenerPorId(
+            (int) $idProyecto
+        );
     }
 
-    public function activar(int $idProyecto): ?array
-{
-    $proyectos = $this->obtenerTodos();
 
-    foreach ($proyectos as $indice => $proyecto) {
-        if ((int) ($proyecto['id_proyecto'] ?? 0) !== $idProyecto) {
-            continue;
+    /*==================================================
+    =                   ACTUALIZAR                     =
+    ==================================================*/
+
+    public function actualizar(
+        int $idProyecto,
+        array $datos
+    ): ?array {
+
+        $existente =
+            $this->model
+            ->find(
+                $idProyecto
+            );
+
+        if (!is_array($existente)) {
+            return null;
         }
 
-        $proyectos[$indice]['activo'] = true;
 
-        $this->guardarTodos($proyectos);
+        $datosBd =
+            $this->prepararDatosBd(
+                $datos
+            );
 
-        return $proyectos[$indice];
+
+        $actualizado =
+            $this->model
+            ->update(
+                $idProyecto,
+                $datosBd
+            );
+
+
+        if ($actualizado === false) {
+            return null;
+        }
+
+
+        return $this->obtenerPorId(
+            $idProyecto
+        );
     }
 
-    return null;
-}
 
-    public function eliminar(int $idProyecto): bool
-    {
-        $proyectos = $this->obtenerTodos();
+    /*==================================================
+    =                  DESACTIVAR                      =
+    ==================================================*/
 
-        $proyectosFiltrados = array_filter(
-            $proyectos,
-            static fn(array $proyecto): bool =>
-            (int) ($proyecto['id_proyecto'] ?? 0) !== $idProyecto
+    public function desactivar(
+        int $idProyecto
+    ): ?array {
+
+        $proyecto =
+            $this->model
+            ->find(
+                $idProyecto
+            );
+
+        if (!is_array($proyecto)) {
+            return null;
+        }
+
+
+        $actualizado =
+            $this->model
+            ->update(
+                $idProyecto,
+                [
+                    'activo' =>
+                        0,
+                ]
+            );
+
+
+        if ($actualizado === false) {
+            return null;
+        }
+
+
+        return $this->obtenerPorId(
+            $idProyecto
         );
+    }
 
-        if (count($proyectosFiltrados) === count($proyectos)) {
+
+    /*==================================================
+    =                    ACTIVAR                       =
+    ==================================================*/
+
+    public function activar(
+        int $idProyecto
+    ): ?array {
+
+        $proyecto =
+            $this->model
+            ->find(
+                $idProyecto
+            );
+
+        if (!is_array($proyecto)) {
+            return null;
+        }
+
+
+        $actualizado =
+            $this->model
+            ->update(
+                $idProyecto,
+                [
+                    'activo' =>
+                        1,
+                ]
+            );
+
+
+        if ($actualizado === false) {
+            return null;
+        }
+
+
+        return $this->obtenerPorId(
+            $idProyecto
+        );
+    }
+
+
+    /*==================================================
+    =                    ELIMINAR                      =
+    ==================================================*/
+
+    public function eliminar(
+        int $idProyecto
+    ): bool {
+
+        $proyecto =
+            $this->model
+            ->find(
+                $idProyecto
+            );
+
+        if (!is_array($proyecto)) {
             return false;
         }
 
-        $proyectosFiltrados = array_values($proyectosFiltrados);
 
-        $this->guardarTodos($proyectosFiltrados);
+        return $this->model
+            ->delete(
+                $idProyecto
+            );
+    }
 
-        return true;
+
+    /*==================================================
+    =              PREPARAR DATOS PARA BD             =
+    ==================================================*/
+
+    private function prepararDatosBd(
+        array $datos
+    ): array {
+
+        return [
+
+            'nombre' =>
+                trim(
+                    (string) (
+                        $datos['nombre']
+                        ?? ''
+                    )
+                ),
+
+            'id_estado' =>
+                $this->obtenerIdEstado(
+                    (string) (
+                        $datos['estado']
+                        ?? ''
+                    )
+                ),
+
+            'id_origen' =>
+                $this->obtenerIdOrigen(
+                    (string) (
+                        $datos['origen']
+                        ?? ''
+                    )
+                ),
+
+            'descripcion' =>
+                $this->normalizarNullable(
+                    $datos['descripcion']
+                    ?? null
+                ),
+
+            'repositorio_url' =>
+                $this->normalizarNullable(
+                    $datos['repositorio_url']
+                    ?? null
+                ),
+
+            'ruta_local' =>
+                $this->normalizarNullable(
+                    $datos['ruta_local']
+                    ?? null
+                ),
+
+            'url_servidor' =>
+                $this->normalizarNullable(
+                    $datos['url_servidor']
+                    ?? null
+                ),
+
+            'id_especificacion' =>
+                $this->normalizarIdNullable(
+                    $datos['id_especificacion']
+                    ?? null
+                ),
+
+            'responsable' =>
+                trim(
+                    (string) (
+                        $datos['responsable']
+                        ?? ''
+                    )
+                ),
+
+            'observaciones' =>
+                $this->normalizarNullable(
+                    $datos['observaciones']
+                    ?? null
+                ),
+        ];
+    }
+
+
+    /*==================================================
+    =               PREPARAR PROYECTO                  =
+    ==================================================*/
+
+    private function prepararProyecto(
+        array $proyecto
+    ): array {
+
+        $estado =
+            trim(
+                (string) (
+                    $proyecto['estado']
+                    ?? ''
+                )
+            );
+
+
+        $proyecto['activo'] =
+            (bool) (
+                $proyecto['activo']
+                ?? false
+            );
+
+
+        $proyecto['estado_tipo'] =
+            $this->obtenerTipoEstado(
+                $estado
+            );
+
+
+        $proyecto['id_especificacion'] =
+            isset(
+                $proyecto['id_especificacion']
+            )
+            && $proyecto['id_especificacion'] !== null
+                ? (string) $proyecto['id_especificacion']
+                : '';
+
+
+        if (
+            !isset(
+                $proyecto['fecha_creacion']
+            )
+        ) {
+
+            $createdAt =
+                $proyecto['created_at']
+                ?? null;
+
+
+            $proyecto['fecha_creacion'] =
+                $createdAt
+                    ? date(
+                        'd/m/Y',
+                        strtotime(
+                            (string) $createdAt
+                        )
+                    )
+                    : '';
+        }
+
+
+        return $proyecto;
+    }
+
+
+    /*==================================================
+    =                  ID DE ESTADO                    =
+    ==================================================*/
+
+    private function obtenerIdEstado(
+        string $estado
+    ): int {
+
+        $estado =
+            trim(
+                $estado
+            );
+
+
+        if ($estado === '') {
+
+            throw new \RuntimeException(
+                'El estado del proyecto es obligatorio.'
+            );
+        }
+
+
+        $registro =
+            $this->db
+            ->table(
+                'cat_estados'
+            )
+            ->select(
+                'id_estado'
+            )
+            ->where(
+                'LOWER(nombre)',
+                mb_strtolower(
+                    $estado,
+                    'UTF-8'
+                )
+            )
+            ->get()
+            ->getRowArray();
+
+
+        if (
+            !is_array(
+                $registro
+            )
+            ||
+            !isset(
+                $registro['id_estado']
+            )
+        ) {
+
+            throw new \RuntimeException(
+                'El estado seleccionado no existe en el catálogo.'
+            );
+        }
+
+
+        return (int)
+            $registro['id_estado'];
+    }
+
+
+    /*==================================================
+    =                  ID DE ORIGEN                    =
+    ==================================================*/
+
+    private function obtenerIdOrigen(
+        string $origen
+    ): int {
+
+        $origen =
+            trim(
+                $origen
+            );
+
+
+        if ($origen === '') {
+
+            throw new \RuntimeException(
+                'El origen del proyecto es obligatorio.'
+            );
+        }
+
+
+        $registro =
+            $this->db
+            ->table(
+                'cat_origenes_proyecto'
+            )
+            ->select(
+                'id_origen'
+            )
+            ->where(
+                'LOWER(nombre)',
+                mb_strtolower(
+                    $origen,
+                    'UTF-8'
+                )
+            )
+            ->get()
+            ->getRowArray();
+
+
+        if (
+            !is_array(
+                $registro
+            )
+            ||
+            !isset(
+                $registro['id_origen']
+            )
+        ) {
+
+            throw new \RuntimeException(
+                'El origen seleccionado no existe en el catálogo.'
+            );
+        }
+
+
+        return (int)
+            $registro['id_origen'];
+    }
+
+
+    /*==================================================
+    =                  TIPO DE ESTADO                  =
+    ==================================================*/
+
+    private function obtenerTipoEstado(
+        string $estado
+    ): string {
+
+        return match (
+            mb_strtolower(
+                trim(
+                    $estado
+                ),
+                'UTF-8'
+            )
+        ) {
+
+            'producción',
+            'produccion' =>
+                'produccion',
+
+            'desarrollo' =>
+                'desarrollo',
+
+            'detenido' =>
+                'detenido',
+
+            'mantenimiento' =>
+                'mantenimiento',
+
+            default =>
+                'inactivo',
+        };
+    }
+
+
+    /*==================================================
+    =                NORMALIZAR TEXTO                  =
+    ==================================================*/
+
+    private function normalizarNullable(
+        mixed $valor
+    ): ?string {
+
+        $valor =
+            trim(
+                (string) (
+                    $valor
+                    ?? ''
+                )
+            );
+
+
+        return $valor === ''
+            ? null
+            : $valor;
+    }
+
+
+    /*==================================================
+    =                   NORMALIZAR ID                  =
+    ==================================================*/
+
+    private function normalizarIdNullable(
+        mixed $valor
+    ): ?int {
+
+        if (
+            $valor === null
+            ||
+            $valor === ''
+        ) {
+            return null;
+        }
+
+
+        $id =
+            (int) $valor;
+
+
+        return $id > 0
+            ? $id
+            : null;
     }
 }
