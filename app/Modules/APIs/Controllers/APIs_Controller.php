@@ -184,6 +184,22 @@ class APIs_Controller extends BaseController
         }
 
 
+        $respuestaPermisoProyecto =
+            $this->validarPermisoProyecto(
+                $proyecto,
+                'agregar APIs a'
+            );
+
+        if ($respuestaPermisoProyecto !== null) {
+            return $respuestaPermisoProyecto;
+        }
+
+
+        $datos['id_usuario_creador'] =
+            (int) session()
+                ->get('id_usuario');
+
+
         try {
 
             /*==================================================
@@ -340,6 +356,17 @@ class APIs_Controller extends BaseController
         }
 
 
+        $respuestaPermiso =
+            $this->validarPermisoApi(
+                $apiExistente,
+                'modificar'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
+
+
         /*==================================================
         =              VALIDAR PROYECTO                   =
         ==================================================*/
@@ -371,6 +398,17 @@ class APIs_Controller extends BaseController
                     'mensaje' =>
                         'El proyecto seleccionado no existe.',
                 ]);
+        }
+
+
+        $respuestaPermisoProyecto =
+            $this->validarPermisoProyecto(
+                $proyecto,
+                'asociar APIs a'
+            );
+
+        if ($respuestaPermisoProyecto !== null) {
+            return $respuestaPermisoProyecto;
         }
 
 
@@ -556,6 +594,33 @@ class APIs_Controller extends BaseController
                     ]
                     : [],
         ];
+
+
+        $apiExistente =
+            $this->storage
+            ->obtenerPorId(
+                $idApi
+            );
+
+        if ($apiExistente === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                        'No se encontró la API solicitada.',
+                ]);
+        }
+
+        $respuestaPermiso =
+            $this->validarPermisoApi(
+                $apiExistente,
+                'modificar la arquitectura de'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
 
 
         try {
@@ -783,6 +848,33 @@ class APIs_Controller extends BaseController
         }
 
 
+        $apiExistente =
+            $this->storage
+            ->obtenerPorId(
+                $idApi
+            );
+
+        if ($apiExistente === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                        'No se encontró la API solicitada.',
+                ]);
+        }
+
+        $respuestaPermiso =
+            $this->validarPermisoApi(
+                $apiExistente,
+                'modificar las dependencias de'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
+
+
         try {
 
             $resultado =
@@ -992,6 +1084,33 @@ class APIs_Controller extends BaseController
         }
 
 
+        $apiExistente =
+            $this->storage
+            ->obtenerPorId(
+                $idApi
+            );
+
+        if ($apiExistente === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                        'No se encontró la API solicitada.',
+                ]);
+        }
+
+        $respuestaPermiso =
+            $this->validarPermisoApi(
+                $apiExistente,
+                'modificar el historial de'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
+
+
         try {
 
             $resultado =
@@ -1185,6 +1304,33 @@ class APIs_Controller extends BaseController
         }
 
 
+        $apiExistente =
+            $this->storage
+            ->obtenerPorId(
+                $idApi
+            );
+
+        if ($apiExistente === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                        'No se encontró la API solicitada.',
+                ]);
+        }
+
+        $respuestaPermiso =
+            $this->validarPermisoApi(
+                $apiExistente,
+                'modificar las observaciones de'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
+
+
         try {
 
             $resultado =
@@ -1278,6 +1424,33 @@ class APIs_Controller extends BaseController
     public function desactivar(
         int $idApi
     ) {
+
+        $apiExistente =
+            $this->storage
+            ->obtenerPorId(
+                $idApi
+            );
+
+        if ($apiExistente === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                        'No se encontró la API solicitada.',
+                ]);
+        }
+
+        $respuestaPermiso =
+            $this->validarPermisoApi(
+                $apiExistente,
+                'desactivar'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
+
 
         try {
 
@@ -1378,6 +1551,33 @@ class APIs_Controller extends BaseController
     public function activar(
         int $idApi
     ) {
+
+        $apiExistente =
+            $this->storage
+            ->obtenerPorId(
+                $idApi
+            );
+
+        if ($apiExistente === null) {
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON([
+                    'ok' => false,
+                    'mensaje' =>
+                        'No se encontró la API solicitada.',
+                ]);
+        }
+
+        $respuestaPermiso =
+            $this->validarPermisoApi(
+                $apiExistente,
+                'activar'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
+
 
         try {
 
@@ -1500,6 +1700,17 @@ class APIs_Controller extends BaseController
         }
 
 
+        $respuestaPermiso =
+            $this->validarPermisoApi(
+                $api,
+                'eliminar'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
+
+
         try {
 
             $eliminada =
@@ -1616,6 +1827,17 @@ class APIs_Controller extends BaseController
         }
 
 
+        $respuestaPermiso =
+            $this->validarPermisoApi(
+                $api,
+                'eliminar la arquitectura de'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
+
+
         try {
 
             $arquitectura =
@@ -1719,6 +1941,17 @@ class APIs_Controller extends BaseController
                     'mensaje' =>
                         'No se encontró la API solicitada.',
                 ]);
+        }
+
+
+        $respuestaPermiso =
+            $this->validarPermisoApi(
+                $api,
+                'eliminar las dependencias de'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
         }
 
 
@@ -1828,6 +2061,17 @@ class APIs_Controller extends BaseController
         }
 
 
+        $respuestaPermiso =
+            $this->validarPermisoApi(
+                $api,
+                'eliminar las observaciones de'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
+        }
+
+
         try {
 
             $observaciones =
@@ -1931,6 +2175,17 @@ class APIs_Controller extends BaseController
                     'mensaje' =>
                         'No se encontró la API solicitada.',
                 ]);
+        }
+
+
+        $respuestaPermiso =
+            $this->validarPermisoApi(
+                $api,
+                'eliminar el historial de'
+            );
+
+        if ($respuestaPermiso !== null) {
+            return $respuestaPermiso;
         }
 
 
@@ -2458,6 +2713,104 @@ class APIs_Controller extends BaseController
                     false,
             ]
         );
+    }
+
+
+    /*==================================================
+    =               VALIDAR PERMISO API                =
+    ==================================================*/
+
+    private function validarPermisoApi(
+        array $api,
+        string $accion = 'modificar'
+    ): ?\CodeIgniter\HTTP\ResponseInterface {
+
+        $rolUsuario =
+            (string) session()
+                ->get('usuario_rol');
+
+        $idUsuario =
+            (int) session()
+                ->get('id_usuario');
+
+        $idUsuarioCreador =
+            (int) (
+                $api['id_usuario_creador']
+                ?? 0
+            );
+
+        if (
+            $rolUsuario === 'superadministrador'
+            ||
+            (
+                $rolUsuario === 'desarrollador'
+                &&
+                $idUsuario > 0
+                &&
+                $idUsuarioCreador === $idUsuario
+            )
+        ) {
+            return null;
+        }
+
+        return $this->response
+            ->setStatusCode(403)
+            ->setJSON([
+                'ok' => false,
+                'mensaje' =>
+                    'No tienes permisos para '
+                    . $accion
+                    . ' esta API.',
+            ]);
+    }
+
+
+    /*==================================================
+    =             VALIDAR PERMISO PROYECTO             =
+    ==================================================*/
+
+    private function validarPermisoProyecto(
+        array $proyecto,
+        string $accion = 'modificar'
+    ): ?\CodeIgniter\HTTP\ResponseInterface {
+
+        $rolUsuario =
+            (string) session()
+                ->get('usuario_rol');
+
+        $idUsuario =
+            (int) session()
+                ->get('id_usuario');
+
+        $idUsuarioCreador =
+            (int) (
+                $proyecto['id_usuario_creador']
+                ?? 0
+            );
+
+        if (
+            $rolUsuario === 'superadministrador'
+            ||
+            (
+                $rolUsuario === 'desarrollador'
+                &&
+                $idUsuario > 0
+                &&
+                $idUsuarioCreador === $idUsuario
+            )
+        ) {
+            return null;
+        }
+
+        return $this->response
+            ->setStatusCode(403)
+            ->setJSON([
+                'ok' => false,
+                'mensaje' =>
+                    'No tienes permisos para '
+                    . $accion
+                    . ' este proyecto.',
+            ]);
     }
 
 

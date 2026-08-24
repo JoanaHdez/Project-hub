@@ -26,7 +26,7 @@ class Auth_Controller extends BaseController
     {
         if (
             session()
-                ->get('autenticado')
+            ->get('autenticado')
         ) {
             return $this->redirigirPorRol();
         }
@@ -35,7 +35,7 @@ class Auth_Controller extends BaseController
             'App\Modules\Auth\Views\login',
             [
                 'title' =>
-                    'Iniciar sesión | Project Hub',
+                'Iniciar sesión | Project Hub',
             ]
         );
     }
@@ -86,9 +86,9 @@ class Auth_Controller extends BaseController
 
         $usuario =
             $this->usuarioStorage
-                ->obtenerPorCorreo(
-                    $correo
-                );
+            ->obtenerPorCorreo(
+                $correo
+            );
 
         if (
             $usuario === null ||
@@ -107,8 +107,8 @@ class Auth_Controller extends BaseController
 
 
         /*==================================================
-        =              VALIDAR CONTRASEÑA                 =
-        ==================================================*/
+=              VALIDAR CONTRASEÑA                 =
+==================================================*/
 
         $hash =
             (string) (
@@ -179,24 +179,24 @@ class Auth_Controller extends BaseController
         session()
             ->set([
                 'autenticado' =>
-                    true,
+                true,
 
                 'id_usuario' =>
-                    (int) (
-                        $usuario['id_usuario']
-                        ?? 0
-                    ),
+                (int) (
+                    $usuario['id_usuario']
+                    ?? 0
+                ),
 
                 'usuario_nombre' =>
-                    $usuario['nombre']
+                $usuario['nombre']
                     ?? 'Usuario',
 
                 'usuario_correo' =>
-                    $usuario['correo']
+                $usuario['correo']
                     ?? '',
 
                 'usuario_rol' =>
-                    $rol,
+                $rol,
             ]);
 
 

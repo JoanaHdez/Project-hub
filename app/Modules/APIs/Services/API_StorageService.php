@@ -26,9 +26,6 @@ class API_StorageService
 
     private BaseConnection $db;
 
-    private const ID_USUARIO_TEMPORAL = 1;
-
-
     public function __construct()
     {
         $this->apiModel =
@@ -168,10 +165,22 @@ class API_StorageService
                 );
 
 
+            $idUsuarioCreador =
+                (int) (
+                    $datos['id_usuario_creador']
+                    ?? 0
+                );
+
+            if ($idUsuarioCreador <= 0) {
+                throw new \RuntimeException(
+                    'No se pudo identificar al usuario creador de la API.'
+                );
+            }
+
             $datosApi[
                 'id_usuario_creador'
             ] =
-                self::ID_USUARIO_TEMPORAL;
+                $idUsuarioCreador;
 
             $datosApi['activo'] =
                 1;
