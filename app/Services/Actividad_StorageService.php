@@ -2,17 +2,19 @@
 
 namespace App\Services;
 
+use App\Models\Auditoria_Model;
 
 class Actividad_StorageService
 {
-    private string $rutaArchivo;
+    private Auditoria_Model $model;
+
+    private const ID_USUARIO_TEMPORAL = 1;
 
 
     public function __construct()
     {
-        $this->rutaArchivo =
-            APPPATH
-            . 'Data/actividad.json';
+        $this->model =
+            new Auditoria_Model();
     }
 
 
@@ -22,33 +24,18 @@ class Actividad_StorageService
 
     public function obtenerTodos(): array
     {
-        if (!is_file($this->rutaArchivo)) {
-            return [];
-        }
-
-        $contenido =
-            file_get_contents(
-                $this->rutaArchivo
-            );
-
-        if (
-            $contenido === false ||
-            trim($contenido) === ''
-        ) {
-            return [];
-        }
-
         $actividades =
-            json_decode(
-                $contenido,
-                true
-            );
+            $this->model
+            ->obtenerTodas();
 
-        if (!is_array($actividades)) {
-            return [];
-        }
 
-        return $actividades;
+        return array_map(
+            fn(array $actividad): array =>
+                $this->prepararActividad(
+                    $actividad
+                ),
+            $actividades
+        );
     }
 
 
@@ -59,32 +46,20 @@ class Actividad_StorageService
     public function obtenerRecientes(
         int $limite = 10
     ): array {
+
         $actividades =
-            $this->obtenerTodos();
+            $this->model
+            ->obtenerRecientes(
+                $limite
+            );
 
-        usort(
-            $actividades,
-            static function (
-                array $a,
-                array $b
-            ): int {
-                return strcmp(
-                    (string) (
-                        $b['fecha_hora']
-                        ?? ''
-                    ),
-                    (string) (
-                        $a['fecha_hora']
-                        ?? ''
-                    )
-                );
-            }
-        );
 
-        return array_slice(
-            $actividades,
-            0,
-            $limite
+        return array_map(
+            fn(array $actividad): array =>
+                $this->prepararActividad(
+                    $actividad
+                ),
+            $actividades
         );
     }
 
@@ -96,137 +71,301 @@ class Actividad_StorageService
     public function registrar(
         array $datos
     ): array {
-        $actividades =
-            $this->obtenerTodos();
 
-        $actividad = [
-
-            'id_actividad' =>
-                $this->generarNuevoId(
-                    $actividades
-                ),
-
-            /*
-             * Temporal hasta integrar
-             * autenticación y usuarios.
-             */
-            'id_usuario' =>
-                $datos['id_usuario']
-                ?? null,
-
-            'usuario_nombre' =>
-                trim(
-                    (string) (
-                        $datos['usuario_nombre']
-                        ?? 'Usuario actual'
-                    )
-                ),
-
-            'bloque' =>
-                trim(
-                    (string) (
-                        $datos['bloque']
-                        ?? ''
-                    )
-                ),
-
-            'accion' =>
-                trim(
-                    (string) (
-                        $datos['accion']
-                        ?? ''
-                    )
-                ),
-
-            'entidad_tipo' =>
-                trim(
-                    (string) (
-                        $datos['entidad_tipo']
-                        ?? ''
-                    )
-                ),
-
-            'entidad_id' =>
-                $datos['entidad_id']
-                ?? null,
-
-            'detalle' =>
-                trim(
-                    (string) (
-                        $datos['detalle']
-                        ?? ''
-                    )
-                ),
-
-            'fecha_hora' =>
-                date(
-                    'Y-m-d H:i:s'
-                ),
-        ];
-
-        $actividades[] =
-            $actividad;
-
-        $this->guardarTodos(
-            $actividades
-        );
-
-        return $actividad;
-    }
-
-
-    /*==================================================
-    =              GUARDAR TODAS                     =
-    ==================================================*/
-
-    private function guardarTodos(
-        array $actividades
-    ): void {
-        $directorio =
-            dirname(
-                $this->rutaArchivo
+        $bloque =
+            trim(
+                (string) (
+                    $datos['bloque']
+                    ?? ''
+                )
             );
 
-        if (!is_dir($directorio)) {
-            mkdir(
-                $directorio,
-                0775,
-                true
+
+        $accion =
+            trim(
+                (string) (
+                    $datos['accion']
+                    ?? ''
+                )
+            );
+
+
+        $detalle =
+            trim(
+                (string) (
+                    $datos['detalle']
+                    ?? ''
+                )
+            );
+
+
+        if ($bloque === '') {
+
+            throw new \RuntimeException(
+                'El bloque de la actividad es obligatorio.'
             );
         }
 
-        file_put_contents(
-            $this->rutaArchivo,
-            json_encode(
-                $actividades,
-                JSON_PRETTY_PRINT
-                | JSON_UNESCAPED_UNICODE
-                | JSON_UNESCAPED_SLASHES
-            ),
-            LOCK_EX
+
+        if ($accion === '') {
+
+            throw new \RuntimeException(
+                'La acción de la actividad es obligatoria.'
+            );
+        }
+
+
+        if ($detalle === '') {
+
+            throw new \RuntimeException(
+                'El detalle de la actividad es obligatorio.'
+            );
+        }
+
+
+        $idUsuario =
+            (int) (
+                $datos['id_usuario']
+                ?? self::ID_USUARIO_TEMPORAL
+            );
+
+
+        if ($idUsuario <= 0) {
+
+            $idUsuario =
+                self::ID_USUARIO_TEMPORAL;
+        }
+
+
+        $entidadTipo =
+            trim(
+                (string) (
+                    $datos['entidad_tipo']
+                    ?? ''
+                )
+            );
+
+
+        $entidadId =
+            $datos['entidad_id']
+            ?? null;
+
+
+        if (
+            $entidadId === ''
+            ||
+            $entidadId === null
+        ) {
+
+            $entidadId =
+                null;
+
+        } else {
+
+            $entidadId =
+                (int) $entidadId;
+
+
+            if ($entidadId <= 0) {
+                $entidadId = null;
+            }
+        }
+
+
+        $idAuditoria =
+            $this->model
+            ->insert(
+                [
+                    'id_usuario' =>
+                        $idUsuario,
+
+                    'bloque' =>
+                        $bloque,
+
+                    'accion' =>
+                        $accion,
+
+                    'entidad_tipo' =>
+                        $entidadTipo !== ''
+                            ? $entidadTipo
+                            : null,
+
+                    'entidad_id' =>
+                        $entidadId,
+
+                    'detalle' =>
+                        $detalle,
+                ],
+                true
+            );
+
+
+        if (!$idAuditoria) {
+
+            throw new \RuntimeException(
+                'No fue posible registrar la actividad.'
+            );
+        }
+
+
+        $actividad =
+            $this->model
+            ->where(
+                'auditoria.id_auditoria',
+                (int) $idAuditoria
+            )
+            ->select(
+                '
+                auditoria.*,
+                usuarios.nombre,
+                usuarios.apellido_paterno,
+                usuarios.apellido_materno,
+                usuarios.correo
+                '
+            )
+            ->join(
+                'usuarios',
+                'usuarios.id_usuario = auditoria.id_usuario',
+                'left'
+            )
+            ->first();
+
+
+        if (!is_array($actividad)) {
+
+            throw new \RuntimeException(
+                'La actividad fue registrada, pero no fue posible recuperarla.'
+            );
+        }
+
+
+        return $this->prepararActividad(
+            $actividad
         );
     }
 
 
     /*==================================================
-    =              GENERAR NUEVO ID                  =
+    =              PREPARAR ACTIVIDAD                 =
     ==================================================*/
 
-    private function generarNuevoId(
-        array $actividades
-    ): int {
-        $ids =
-            array_map(
-                static fn(array $actividad): int =>
-                    (int) (
-                        $actividad['id_actividad']
-                        ?? 0
-                    ),
-                $actividades
+    private function prepararActividad(
+        array $actividad
+    ): array {
+
+        $nombre =
+            trim(
+                (string) (
+                    $actividad['nombre']
+                    ?? ''
+                )
             );
 
-        return empty($ids)
-            ? 1
-            : max($ids) + 1;
+
+        $apellidoPaterno =
+            trim(
+                (string) (
+                    $actividad['apellido_paterno']
+                    ?? ''
+                )
+            );
+
+
+        $apellidoMaterno =
+            trim(
+                (string) (
+                    $actividad['apellido_materno']
+                    ?? ''
+                )
+            );
+
+
+        $usuarioNombre =
+            trim(
+                $nombre
+                . ' '
+                . $apellidoPaterno
+                . ' '
+                . $apellidoMaterno
+            );
+
+
+        if ($usuarioNombre === '') {
+
+            $usuarioNombre =
+                'Usuario actual';
+        }
+
+
+        return [
+
+            /*
+             * Alias compatible con el formato
+             * que antes utilizaba actividad.json.
+             */
+            'id_actividad' =>
+                (int) (
+                    $actividad['id_auditoria']
+                    ?? 0
+                ),
+
+            'id_usuario' =>
+                (int) (
+                    $actividad['id_usuario']
+                    ?? 0
+                ),
+
+            'usuario_nombre' =>
+                $usuarioNombre,
+
+            'bloque' =>
+                $actividad['bloque']
+                ?? '',
+
+            'accion' =>
+                $actividad['accion']
+                ?? '',
+
+            'entidad_tipo' =>
+                $actividad['entidad_tipo']
+                ?? '',
+
+            'entidad_id' =>
+                isset(
+                    $actividad['entidad_id']
+                )
+                    ? (
+                        $actividad['entidad_id'] !== null
+                            ? (int) $actividad['entidad_id']
+                            : null
+                    )
+                    : null,
+
+            'detalle' =>
+                $actividad['detalle']
+                ?? '',
+
+            /*
+             * Alias de compatibilidad:
+             * antes se llamaba fecha_hora.
+             */
+            'fecha_hora' =>
+                $actividad['created_at']
+                ?? '',
+
+            /*
+             * Dejamos también los nombres reales
+             * de la BD por si después los necesitas.
+             */
+            'id_auditoria' =>
+                (int) (
+                    $actividad['id_auditoria']
+                    ?? 0
+                ),
+
+            'created_at' =>
+                $actividad['created_at']
+                ?? '',
+        ];
     }
 }
