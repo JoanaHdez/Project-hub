@@ -14,8 +14,11 @@ use App\Services\Actividad_StorageService;
 class Documentos_Controller extends BaseController
 {
     private Sistema_StorageService $sistemaStorage;
+
     private Proyecto_StorageService $proyectoStorage;
+
     private Documento_StorageService $documentoStorage;
+
     private Actividad_StorageService $actividadStorage;
 
 
@@ -45,37 +48,9 @@ class Documentos_Controller extends BaseController
             $this->sistemaStorage
             ->obtenerTodos();
 
-        $proyectos =
-            $this->proyectoStorage
-            ->obtenerTodos();
-
         $documentos =
             $this->documentoStorage
             ->obtenerTodos();
-
-
-        /*==================================================
-        =              NOMBRES DE PROYECTOS                =
-        ==================================================*/
-
-        $nombresProyectos = [];
-
-        foreach ($proyectos as $proyecto) {
-
-            $idProyecto =
-                (int) (
-                    $proyecto['id_proyecto']
-                    ?? 0
-                );
-
-            if ($idProyecto <= 0) {
-                continue;
-            }
-
-            $nombresProyectos[$idProyecto] =
-                $proyecto['nombre']
-                ?? 'Sin proyecto';
-        }
 
 
         /*==================================================
@@ -92,19 +67,29 @@ class Documentos_Controller extends BaseController
                     ?? 0
                 );
 
+
             if ($idSistema <= 0) {
                 continue;
             }
 
+
             if (
                 !isset(
-                    $totalesDocumentos[$idSistema]
+                    $totalesDocumentos[
+                        $idSistema
+                    ]
                 )
             ) {
-                $totalesDocumentos[$idSistema] = 0;
+
+                $totalesDocumentos[
+                    $idSistema
+                ] = 0;
             }
 
-            $totalesDocumentos[$idSistema]++;
+
+            $totalesDocumentos[
+                $idSistema
+            ]++;
         }
 
 
@@ -123,12 +108,17 @@ class Documentos_Controller extends BaseController
 
                     $idSistema =
                         (int) (
-                            $sistema['id_sistema']
+                            $sistema[
+                                'id_sistema'
+                            ]
                             ?? 0
                         );
 
+
                     return (
-                        $totalesDocumentos[$idSistema]
+                        $totalesDocumentos[
+                            $idSistema
+                        ]
                         ?? 0
                     ) > 0;
                 }
@@ -144,31 +134,35 @@ class Documentos_Controller extends BaseController
                 static function (
                     array $sistema
                 ) use (
-                    $nombresProyectos,
                     $totalesDocumentos
                 ): array {
 
-                    $idProyecto =
-                        (int) (
-                            $sistema['id_proyecto']
-                            ?? 0
-                        );
-
                     $idSistema =
                         (int) (
-                            $sistema['id_sistema']
+                            $sistema[
+                                'id_sistema'
+                            ]
                             ?? 0
                         );
 
+
+                    /*
+                     * Sistema_Model ya obtiene
+                     * proyecto_nombre mediante JOIN.
+                     */
                     return array_merge(
                         $sistema,
                         [
                             'proyecto_nombre' =>
-                            $nombresProyectos[$idProyecto]
+                                $sistema[
+                                    'proyecto_nombre'
+                                ]
                                 ?? 'Sin proyecto',
 
                             'total_documentos' =>
-                            $totalesDocumentos[$idSistema]
+                                $totalesDocumentos[
+                                    $idSistema
+                                ]
                                 ?? 0,
                         ]
                     );
@@ -179,21 +173,18 @@ class Documentos_Controller extends BaseController
             );
 
 
-        /*==================================================
-        =                    VISTA                          =
-        ==================================================*/
-
         return view(
             'App\Modules\Documentos\Views\index',
             [
                 'sistemas' =>
-                $sistemasVista,
+                    $sistemasVista,
 
                 'documentos' =>
-                $documentos,
+                    $documentos,
             ]
         );
     }
+
 
     /*==================================================
     =                 NUEVO DOCUMENTO                  =
@@ -205,58 +196,20 @@ class Documentos_Controller extends BaseController
             $this->sistemaStorage
             ->obtenerTodos();
 
-        $proyectos =
-            $this->proyectoStorage
-            ->obtenerTodos();
-
-
-        /*==================================================
-        =              NOMBRES DE PROYECTOS                =
-        ==================================================*/
-
-        $nombresProyectos = [];
-
-        foreach ($proyectos as $proyecto) {
-
-            $idProyecto =
-                (int) (
-                    $proyecto['id_proyecto']
-                    ?? 0
-                );
-
-            if ($idProyecto <= 0) {
-                continue;
-            }
-
-            $nombresProyectos[$idProyecto] =
-                $proyecto['nombre']
-                ?? 'Sin proyecto';
-        }
-
-
-        /*==================================================
-        =              PREPARAR SISTEMAS                   =
-        ==================================================*/
 
         $sistemasVista =
             array_map(
                 static function (
                     array $sistema
-                ) use (
-                    $nombresProyectos
                 ): array {
-
-                    $idProyecto =
-                        (int) (
-                            $sistema['id_proyecto']
-                            ?? 0
-                        );
 
                     return array_merge(
                         $sistema,
                         [
                             'proyecto_nombre' =>
-                            $nombresProyectos[$idProyecto]
+                                $sistema[
+                                    'proyecto_nombre'
+                                ]
                                 ?? 'Sin proyecto',
                         ]
                     );
@@ -265,18 +218,15 @@ class Documentos_Controller extends BaseController
             );
 
 
-        /*==================================================
-        =                    VISTA                          =
-        ==================================================*/
-
         return view(
             'App\Modules\Documentos\Views\nuevo',
             [
                 'sistemas' =>
-                $sistemasVista,
+                    $sistemasVista,
             ]
         );
     }
+
 
     /*==================================================
     =                CREAR DOCUMENTO                   =
@@ -290,24 +240,29 @@ class Documentos_Controller extends BaseController
 
         $idSistema =
             (int) (
-                $this->request->getPost(
+                $this->request
+                ->getPost(
                     'id_sistema'
                 )
                 ?? 0
             );
 
+
         $descripcion =
             trim(
                 (string) (
-                    $this->request->getPost(
+                    $this->request
+                    ->getPost(
                         'descripcion'
                     )
                     ?? ''
                 )
             );
 
+
         $archivo =
-            $this->request->getFile(
+            $this->request
+            ->getFile(
                 'archivo'
             );
 
@@ -317,14 +272,18 @@ class Documentos_Controller extends BaseController
         ==================================================*/
 
         if ($idSistema <= 0) {
+
             return $this->response
                 ->setStatusCode(422)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
+
                     'mensaje' =>
-                    'Selecciona un sistema válido.',
+                        'Selecciona un sistema válido.',
                 ]);
         }
+
 
         $sistema =
             $this->sistemaStorage
@@ -332,13 +291,17 @@ class Documentos_Controller extends BaseController
                 $idSistema
             );
 
-        if (!$sistema) {
+
+        if ($sistema === null) {
+
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
+
                     'mensaje' =>
-                    'El sistema seleccionado no existe.',
+                        'El sistema seleccionado no existe.',
                 ]);
         }
 
@@ -348,16 +311,21 @@ class Documentos_Controller extends BaseController
         ==================================================*/
 
         if (
-            !$archivo ||
-            !$archivo->isValid() ||
+            !$archivo
+            ||
+            !$archivo->isValid()
+            ||
             $archivo->hasMoved()
         ) {
+
             return $this->response
                 ->setStatusCode(422)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
+
                     'mensaje' =>
-                    'Selecciona un archivo válido.',
+                        'Selecciona un archivo válido.',
                 ]);
         }
 
@@ -369,13 +337,19 @@ class Documentos_Controller extends BaseController
         $nombreOriginal =
             $archivo->getClientName();
 
+
         $extension =
             strtolower(
                 $archivo->getClientExtension()
             );
 
+
         $tamano =
             $archivo->getSize();
+
+
+        $tipoMime =
+            $archivo->getMimeType();
 
 
         /*==================================================
@@ -398,6 +372,7 @@ class Documentos_Controller extends BaseController
             '7z',
         ];
 
+
         if (
             !in_array(
                 $extension,
@@ -405,12 +380,15 @@ class Documentos_Controller extends BaseController
                 true
             )
         ) {
+
             return $this->response
                 ->setStatusCode(422)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
+
                     'mensaje' =>
-                    'El tipo de archivo seleccionado no está permitido.',
+                        'El tipo de archivo seleccionado no está permitido.',
                 ]);
         }
 
@@ -422,30 +400,19 @@ class Documentos_Controller extends BaseController
         $tamanoMaximo =
             25 * 1024 * 1024;
 
+
         if ($tamano > $tamanoMaximo) {
+
             return $this->response
                 ->setStatusCode(422)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
+
                     'mensaje' =>
-                    'El archivo no puede superar los 25 MB.',
+                        'El archivo no puede superar los 25 MB.',
                 ]);
         }
-
-
-        /*==================================================
-        =              OBTENER DOCUMENTOS                  =
-        ==================================================*/
-
-        $documentos =
-            $this->documentoStorage
-            ->obtenerTodos();
-
-        $idDocumento =
-            $this->documentoStorage
-            ->generarNuevoId(
-                $documentos
-            );
 
 
         /*==================================================
@@ -456,9 +423,11 @@ class Documentos_Controller extends BaseController
             'uploads/documentos/'
             . $idSistema;
 
+
         $rutaDirectorio =
             FCPATH
             . $rutaRelativa;
+
 
         if (!is_dir($rutaDirectorio)) {
 
@@ -467,22 +436,233 @@ class Documentos_Controller extends BaseController
                     $rutaDirectorio,
                     0775,
                     true
-                ) &&
-                !is_dir($rutaDirectorio)
+                )
+                &&
+                !is_dir(
+                    $rutaDirectorio
+                )
             ) {
+
                 return $this->response
                     ->setStatusCode(500)
                     ->setJSON([
-                        'ok' => false,
+                        'ok' =>
+                            false,
+
                         'mensaje' =>
-                        'No fue posible preparar el directorio del documento.',
+                            'No fue posible preparar el directorio del documento.',
                     ]);
             }
         }
 
 
         /*==================================================
-        =              NOMBRE INTERNO                      =
+        =          NOMBRE TEMPORAL DEL ARCHIVO             =
+        ==================================================*/
+
+        try {
+
+            $identificadorTemporal =
+                bin2hex(
+                    random_bytes(8)
+                );
+
+        } catch (\Throwable $error) {
+
+            $identificadorTemporal =
+                uniqid(
+                    '',
+                    true
+                );
+        }
+
+
+        $nombreTemporal =
+            'documento-temp-'
+            . $identificadorTemporal
+            . '.'
+            . $extension;
+
+
+        /*==================================================
+        =              MOVER ARCHIVO TEMPORAL              =
+        ==================================================*/
+
+        try {
+
+            $archivo->move(
+                $rutaDirectorio,
+                $nombreTemporal
+            );
+
+        } catch (\Throwable $error) {
+
+            log_message(
+                'error',
+                'Error al guardar documento temporal: {mensaje}',
+                [
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No fue posible guardar el archivo.',
+                ]);
+        }
+
+
+        $rutaTemporal =
+            $rutaRelativa
+            . '/'
+            . $nombreTemporal;
+
+
+        $rutaFisicaTemporal =
+            $rutaDirectorio
+            . DIRECTORY_SEPARATOR
+            . $nombreTemporal;
+
+
+        /*==================================================
+        =        CREAR REGISTRO EN MYSQL                   =
+        ==================================================*/
+
+        try {
+
+            $documento =
+                $this->documentoStorage
+                ->crear([
+                    'id_sistema' =>
+                        $idSistema,
+
+                    'nombre_original' =>
+                        $nombreOriginal,
+
+                    /*
+                     * Temporalmente se registra este
+                     * nombre hasta que MySQL genere
+                     * id_documento.
+                     */
+                    'nombre_archivo' =>
+                        $nombreTemporal,
+
+                    'tipo_mime' =>
+                        $tipoMime,
+
+                    'extension' =>
+                        $extension,
+
+                    'tamano' =>
+                        $tamano,
+
+                    'ruta_archivo' =>
+                        $rutaTemporal,
+
+                    'descripcion' =>
+                        $descripcion,
+                ]);
+
+
+            if ($documento === null) {
+
+                throw new \RuntimeException(
+                    'No fue posible registrar el documento.'
+                );
+            }
+
+        } catch (\Throwable $error) {
+
+            /*
+             * Si MySQL falla, eliminamos el archivo
+             * temporal para evitar archivos huérfanos.
+             */
+            if (
+                is_file(
+                    $rutaFisicaTemporal
+                )
+            ) {
+
+                @unlink(
+                    $rutaFisicaTemporal
+                );
+            }
+
+
+            log_message(
+                'error',
+                'Error al registrar documento: {mensaje}',
+                [
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No fue posible registrar el documento.',
+                ]);
+        }
+
+
+        /*==================================================
+        =              ID GENERADO POR MYSQL                =
+        ==================================================*/
+
+        $idDocumento =
+            (int) (
+                $documento[
+                    'id_documento'
+                ]
+                ?? 0
+            );
+
+
+        if ($idDocumento <= 0) {
+
+            /*
+             * Muy improbable, pero evitamos dejar
+             * un registro inconsistente.
+             */
+            if (
+                is_file(
+                    $rutaFisicaTemporal
+                )
+            ) {
+
+                @unlink(
+                    $rutaFisicaTemporal
+                );
+            }
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No fue posible obtener el identificador del documento.',
+                ]);
+        }
+
+
+        /*==================================================
+        =            NOMBRE DEFINITIVO                     =
         ==================================================*/
 
         $nombreArchivo =
@@ -494,176 +674,195 @@ class Documentos_Controller extends BaseController
             . $extension;
 
 
-        /*==================================================
-        =                  MOVER ARCHIVO                   =
-        ==================================================*/
-
-        try {
-
-            $archivo->move(
-                $rutaDirectorio,
-                $nombreArchivo
-            );
-        } catch (\Throwable $error) {
-
-            log_message(
-                'error',
-                'Error al guardar documento: {mensaje}',
-                [
-                    'mensaje' =>
-                    $error->getMessage(),
-                ]
-            );
-
-            return $this->response
-                ->setStatusCode(500)
-                ->setJSON([
-                    'ok' => false,
-                    'mensaje' =>
-                    'No fue posible guardar el archivo.',
-                ]);
-        }
+        $rutaFisicaFinal =
+            $rutaDirectorio
+            . DIRECTORY_SEPARATOR
+            . $nombreArchivo;
 
 
-        /*==================================================
-        =              CREAR REGISTRO                      =
-        ==================================================*/
-
-        $documento = [
-            'id_documento' =>
-            $idDocumento,
-
-            'id_sistema' =>
-            $idSistema,
-
-            'nombre_original' =>
-            $nombreOriginal,
-
-            'nombre_archivo' =>
-            $nombreArchivo,
-
-            'ruta' =>
+        $rutaFinal =
             $rutaRelativa
-                . '/'
-                . $nombreArchivo,
-
-            'tipo' =>
-            strtoupper(
-                $extension
-            ),
-
-            'extension' =>
-            $extension,
-
-            'tamano' =>
-            $tamano,
-
-            'descripcion' =>
-            $descripcion,
-
-            'fecha_subida' =>
-            date('Y-m-d H:i:s'),
-        ];
+            . '/'
+            . $nombreArchivo;
 
 
         /*==================================================
-        =              GUARDAR REGISTRO                    =
+        =             RENOMBRAR ARCHIVO                     =
         ==================================================*/
-
-        $documentos[] =
-            $documento;
 
         try {
 
-            $this->documentoStorage
-                ->guardarTodos(
-                    $documentos
+            $renombrado =
+                rename(
+                    $rutaFisicaTemporal,
+                    $rutaFisicaFinal
                 );
+
+
+            if (!$renombrado) {
+
+                throw new \RuntimeException(
+                    'No fue posible asignar el nombre definitivo al archivo.'
+                );
+            }
+
         } catch (\Throwable $error) {
 
             /*
-         * Si falla el registro, eliminamos el archivo
-         * para no dejar archivos huérfanos.
-         */
+             * Si el archivo no puede finalizarse,
+             * eliminamos también el registro de BD.
+             */
+            $this->documentoStorage
+                ->eliminar(
+                    $idDocumento
+                );
 
-            $rutaFisica =
-                $rutaDirectorio
-                . DIRECTORY_SEPARATOR
-                . $nombreArchivo;
 
-            if (is_file($rutaFisica)) {
-                @unlink($rutaFisica);
+            if (
+                is_file(
+                    $rutaFisicaTemporal
+                )
+            ) {
+
+                @unlink(
+                    $rutaFisicaTemporal
+                );
             }
+
 
             log_message(
                 'error',
-                'Error al registrar documento: {mensaje}',
+                'Error al renombrar documento {id}: {mensaje}',
                 [
+                    'id' =>
+                        $idDocumento,
+
                     'mensaje' =>
-                    $error->getMessage(),
+                        $error->getMessage(),
                 ]
             );
+
 
             return $this->response
                 ->setStatusCode(500)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
+
                     'mensaje' =>
-                    'No fue posible registrar el documento.',
+                        'No fue posible finalizar el archivo.',
                 ]);
         }
+
+
+        /*==================================================
+        =            ACTUALIZAR RUTA EN MYSQL               =
+        ==================================================*/
+
+        try {
+
+            $documentoActualizado =
+                $this->documentoStorage
+                ->actualizarArchivo(
+                    $idDocumento,
+                    [
+                        'nombre_archivo' =>
+                            $nombreArchivo,
+
+                        'ruta_archivo' =>
+                            $rutaFinal,
+
+                        'tipo_mime' =>
+                            $tipoMime,
+
+                        'extension' =>
+                            $extension,
+
+                        'tamano' =>
+                            $tamano,
+                    ]
+                );
+
+
+            if ($documentoActualizado === null) {
+
+                throw new \RuntimeException(
+                    'No fue posible actualizar los datos finales del documento.'
+                );
+            }
+
+
+            $documento =
+                $documentoActualizado;
+
+        } catch (\Throwable $error) {
+
+            /*
+             * No dejamos ni registro ni archivo
+             * si la actualización final falla.
+             */
+            if (
+                is_file(
+                    $rutaFisicaFinal
+                )
+            ) {
+
+                @unlink(
+                    $rutaFisicaFinal
+                );
+            }
+
+
+            $this->documentoStorage
+                ->eliminar(
+                    $idDocumento
+                );
+
+
+            log_message(
+                'error',
+                'Error al actualizar datos del documento {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idDocumento,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+
+
+            return $this->response
+                ->setStatusCode(500)
+                ->setJSON([
+                    'ok' =>
+                        false,
+
+                    'mensaje' =>
+                        'No fue posible completar el registro del documento.',
+                ]);
+        }
+
 
         /*==================================================
         =              REGISTRAR ACTIVIDAD                 =
         ==================================================*/
 
-        try {
+        $this->registrarActividad(
+            'Agregó',
+            $idDocumento,
+            'Agregó el archivo "'
+                . $nombreOriginal
+                . '" al sistema "'
+                . (
+                    $sistema[
+                        'nombre'
+                    ]
+                    ?? 'Sistema'
+                )
+                . '".'
+        );
 
-            $nombreSistema =
-                $sistema['nombre']
-                ?? 'Sistema';
-
-            $this->actividadStorage
-                ->registrar([
-                    'bloque' =>
-                    'Documentos',
-
-                    'accion' =>
-                    'Agregó',
-
-                    'entidad_tipo' =>
-                    'Documento',
-
-                    'entidad_id' =>
-                    $idDocumento,
-
-                    'detalle' =>
-                    'Agregó el archivo "'
-                        . $nombreOriginal
-                        . '" al sistema "'
-                        . $nombreSistema
-                        . '".',
-                ]);
-        } catch (\Throwable $error) {
-
-            /*
-        * La auditoría no debe impedir
-        * que una operación ya realizada
-        * sea considerada exitosa.
-        */
-
-            log_message(
-                'error',
-                'No fue posible registrar la actividad del documento {id}: {mensaje}',
-                [
-                    'id' =>
-                    $idDocumento,
-
-                    'mensaje' =>
-                    $error->getMessage(),
-                ]
-            );
-        }
 
         /*==================================================
         =                  RESPUESTA                       =
@@ -672,18 +871,20 @@ class Documentos_Controller extends BaseController
         return $this->response
             ->setStatusCode(201)
             ->setJSON([
-                'ok' => true,
+                'ok' =>
+                    true,
 
                 'mensaje' =>
-                'El documento fue subido correctamente.',
+                    'El documento fue subido correctamente.',
 
                 'documento' =>
-                $documento,
+                    $documento,
 
                 'id_sistema' =>
-                $idSistema,
+                    $idSistema,
             ]);
     }
+
 
     /*==================================================
     =              DOCUMENTOS POR SISTEMA              =
@@ -692,17 +893,22 @@ class Documentos_Controller extends BaseController
     public function sistema(
         int $idSistema
     ) {
+
         $sistema =
             $this->sistemaStorage
             ->obtenerPorId(
                 $idSistema
             );
 
+
         if ($sistema === null) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
-                'El sistema solicitado no existe.'
-            );
+
+            throw \CodeIgniter\Exceptions\PageNotFoundException
+                ::forPageNotFound(
+                    'El sistema solicitado no existe.'
+                );
         }
+
 
         $documentos =
             $this->documentoStorage
@@ -710,50 +916,30 @@ class Documentos_Controller extends BaseController
                 $idSistema
             );
 
-        $proyectoNombre =
-            'Sin proyecto';
 
-        $idProyecto =
-            (int) (
-                $sistema['id_proyecto']
-                ?? 0
-            );
-
-        if ($idProyecto > 0) {
-
-            foreach (
-                $this->proyectoStorage
-                    ->obtenerTodos() as $proyecto
-            ) {
-                if (
-                    (int) (
-                        $proyecto['id_proyecto']
-                        ?? 0
-                    ) === $idProyecto
-                ) {
-                    $proyectoNombre =
-                        $proyecto['nombre']
-                        ?? 'Sin proyecto';
-
-                    break;
-                }
-            }
-        }
-
+        /*
+         * Sistema_Model ya proporciona
+         * proyecto_nombre mediante JOIN.
+         */
         $sistema['proyecto_nombre'] =
-            $proyectoNombre;
+            $sistema[
+                'proyecto_nombre'
+            ]
+            ?? 'Sin proyecto';
+
 
         return view(
             'App\Modules\Documentos\Views\sistema',
             [
                 'sistema' =>
-                $sistema,
+                    $sistema,
 
                 'documentos' =>
-                $documentos,
+                    $documentos,
             ]
         );
     }
+
 
     /*==================================================
     =                ELIMINAR DOCUMENTO                =
@@ -762,46 +948,28 @@ class Documentos_Controller extends BaseController
     public function eliminar(
         int $idDocumento
     ) {
+
         /*==================================================
         =              BUSCAR DOCUMENTO                    =
         ==================================================*/
 
-        $documentos =
+        $documento =
             $this->documentoStorage
-            ->obtenerTodos();
-
-        $documentoEncontrado =
-            null;
-
-        foreach ($documentos as $documento) {
-
-            if (
-                (int) (
-                    $documento['id_documento']
-                    ?? 0
-                ) === $idDocumento
-            ) {
-                $documentoEncontrado =
-                    $documento;
-
-                break;
-            }
-        }
+            ->obtenerPorId(
+                $idDocumento
+            );
 
 
-        /*==================================================
-        =              VALIDAR EXISTENCIA                  =
-        ==================================================*/
-
-        if ($documentoEncontrado === null) {
+        if ($documento === null) {
 
             return $this->response
                 ->setStatusCode(404)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'El documento seleccionado no existe.',
+                        'El documento seleccionado no existe.',
                 ]);
         }
 
@@ -812,62 +980,71 @@ class Documentos_Controller extends BaseController
 
         $idSistema =
             (int) (
-                $documentoEncontrado['id_sistema']
+                $documento[
+                    'id_sistema'
+                ]
                 ?? 0
             );
 
+
         $rutaRelativa =
             (string) (
-                $documentoEncontrado['ruta']
+                $documento[
+                    'ruta'
+                ]
                 ?? ''
             );
 
 
         /*==================================================
-        =              QUITAR DEL REGISTRO                 =
-        ==================================================*/
-
-        $documentosActualizados =
-            array_values(
-                array_filter(
-                    $documentos,
-                    static fn(array $documento): bool =>
-                    (int) (
-                        $documento['id_documento']
-                        ?? 0
-                    ) !== $idDocumento
-                )
-            );
-
-
-        /*==================================================
-        =              GUARDAR CAMBIO                      =
+        =              ELIMINAR DE MYSQL                   =
         ==================================================*/
 
         try {
 
-            $this->documentoStorage
-                ->guardarTodos(
-                    $documentosActualizados
+            $eliminado =
+                $this->documentoStorage
+                ->eliminar(
+                    $idDocumento
                 );
+
+
+            if (!$eliminado) {
+
+                return $this->response
+                    ->setStatusCode(404)
+                    ->setJSON([
+                        'ok' =>
+                            false,
+
+                        'mensaje' =>
+                            'El documento seleccionado no existe.',
+                    ]);
+            }
+
         } catch (\Throwable $error) {
 
             log_message(
                 'error',
-                'Error al eliminar registro de documento: {mensaje}',
+                'Error al eliminar documento {id}: {mensaje}',
                 [
+                    'id' =>
+                        $idDocumento,
+
                     'mensaje' =>
-                    $error->getMessage(),
+                        $error->getMessage(),
                 ]
             );
+
 
             return $this->response
                 ->setStatusCode(500)
                 ->setJSON([
-                    'ok' => false,
+                    'ok' =>
+                        false,
 
                     'mensaje' =>
-                    'No fue posible eliminar el documento.',
+                        'No fue posible eliminar el documento.',
                 ]);
         }
 
@@ -885,6 +1062,7 @@ class Documentos_Controller extends BaseController
                     '/\\'
                 );
 
+
             if (is_file($rutaFisica)) {
 
                 try {
@@ -892,23 +1070,23 @@ class Documentos_Controller extends BaseController
                     unlink(
                         $rutaFisica
                     );
+
                 } catch (\Throwable $error) {
 
                     /*
-                 * El registro ya fue eliminado.
-                 * Dejamos constancia en logs si el
-                 * archivo físico no pudo borrarse.
-                 */
-
+                     * El registro ya fue eliminado.
+                     * Dejamos el error únicamente
+                     * registrado en logs.
+                     */
                     log_message(
                         'error',
                         'No fue posible eliminar el archivo físico del documento {id}: {mensaje}',
                         [
                             'id' =>
-                            $idDocumento,
+                                $idDocumento,
 
                             'mensaje' =>
-                            $error->getMessage(),
+                                $error->getMessage(),
                         ]
                     );
                 }
@@ -921,72 +1099,49 @@ class Documentos_Controller extends BaseController
         ==================================================*/
 
         $totalDocumentos =
-            count(
-                array_filter(
-                    $documentosActualizados,
-                    static fn(array $documento): bool =>
-                    (int) (
-                        $documento['id_sistema']
-                        ?? 0
-                    ) === $idSistema
+            $idSistema > 0
+                ? count(
+                    $this->documentoStorage
+                    ->obtenerPorSistema(
+                        $idSistema
+                    )
                 )
-            );
+                : 0;
+
 
         /*==================================================
         =              REGISTRAR ACTIVIDAD                 =
         ==================================================*/
 
-        try {
+        $sistema =
+            $idSistema > 0
+                ? $this->sistemaStorage
+                    ->obtenerPorId(
+                        $idSistema
+                    )
+                : null;
 
-            $sistema =
-                $this->sistemaStorage
-                ->obtenerPorId(
-                    $idSistema
-                );
 
-            $nombreSistema =
-                $sistema['nombre']
-                ?? 'Sistema';
+        $this->registrarActividad(
+            'Eliminó',
+            $idDocumento,
+            'Eliminó el archivo "'
+                . (
+                    $documento[
+                        'nombre_original'
+                    ]
+                    ?? 'Documento'
+                )
+                . '" del sistema "'
+                . (
+                    $sistema[
+                        'nombre'
+                    ]
+                    ?? 'Sistema'
+                )
+                . '".'
+        );
 
-            $nombreDocumento =
-                $documentoEncontrado['nombre_original']
-                ?? 'Documento';
-
-            $this->actividadStorage
-                ->registrar([
-                    'bloque' =>
-                    'Documentos',
-
-                    'accion' =>
-                    'Eliminó',
-
-                    'entidad_tipo' =>
-                    'Documento',
-
-                    'entidad_id' =>
-                    $idDocumento,
-
-                    'detalle' =>
-                    'Eliminó el archivo "'
-                        . $nombreDocumento
-                        . '" del sistema "'
-                        . $nombreSistema
-                        . '".',
-                ]);
-        } catch (\Throwable $error) {
-
-            log_message(
-                'error',
-                'No fue posible registrar la actividad de eliminación del documento {id}: {mensaje}',
-                [
-                    'id' =>
-                    $idDocumento,
-
-                    'mensaje' =>
-                    $error->getMessage(),
-                ]
-            );
-        }
 
         /*==================================================
         =                  RESPUESTA                       =
@@ -994,21 +1149,23 @@ class Documentos_Controller extends BaseController
 
         return $this->response
             ->setJSON([
-                'ok' => true,
+                'ok' =>
+                    true,
 
                 'mensaje' =>
-                'El documento fue eliminado correctamente.',
+                    'El documento fue eliminado correctamente.',
 
                 'id_documento' =>
-                $idDocumento,
+                    $idDocumento,
 
                 'id_sistema' =>
-                $idSistema,
+                    $idSistema,
 
                 'total_documentos' =>
-                $totalDocumentos,
+                    $totalDocumentos,
             ]);
     }
+
 
     /*==================================================
     =          NUEVO DOCUMENTO PARA SISTEMA            =
@@ -1017,6 +1174,7 @@ class Documentos_Controller extends BaseController
     public function nuevoSistema(
         int $idSistema
     ) {
+
         /*==================================================
         =              BUSCAR SISTEMA                     =
         ==================================================*/
@@ -1026,6 +1184,7 @@ class Documentos_Controller extends BaseController
             ->obtenerPorId(
                 $idSistema
             );
+
 
         if ($sistemaSeleccionado === null) {
 
@@ -1044,34 +1203,6 @@ class Documentos_Controller extends BaseController
             $this->sistemaStorage
             ->obtenerTodos();
 
-        $proyectos =
-            $this->proyectoStorage
-            ->obtenerTodos();
-
-
-        /*==================================================
-        =              NOMBRES PROYECTOS                   =
-        ==================================================*/
-
-        $nombresProyectos = [];
-
-        foreach ($proyectos as $proyecto) {
-
-            $idProyecto =
-                (int) (
-                    $proyecto['id_proyecto']
-                    ?? 0
-                );
-
-            if ($idProyecto <= 0) {
-                continue;
-            }
-
-            $nombresProyectos[$idProyecto] =
-                $proyecto['nombre']
-                ?? 'Sin proyecto';
-        }
-
 
         /*==================================================
         =              PREPARAR SISTEMAS                   =
@@ -1081,21 +1212,15 @@ class Documentos_Controller extends BaseController
             array_map(
                 static function (
                     array $sistema
-                ) use (
-                    $nombresProyectos
                 ): array {
-
-                    $idProyecto =
-                        (int) (
-                            $sistema['id_proyecto']
-                            ?? 0
-                        );
 
                     return array_merge(
                         $sistema,
                         [
                             'proyecto_nombre' =>
-                            $nombresProyectos[$idProyecto]
+                                $sistema[
+                                    'proyecto_nombre'
+                                ]
                                 ?? 'Sin proyecto',
                         ]
                     );
@@ -1104,19 +1229,67 @@ class Documentos_Controller extends BaseController
             );
 
 
-        /*==================================================
-        =                    VISTA                         =
-        ==================================================*/
-
         return view(
             'App\Modules\Documentos\Views\nuevo',
             [
                 'sistemas' =>
-                $sistemasVista,
+                    $sistemasVista,
 
                 'idSistemaSeleccionado' =>
-                $idSistema,
+                    $idSistema,
             ]
         );
+    }
+
+
+    /*==================================================
+    =              REGISTRAR ACTIVIDAD                 =
+    ==================================================*/
+
+    private function registrarActividad(
+        string $accion,
+        int $idDocumento,
+        string $detalle
+    ): void {
+
+        try {
+
+            $this->actividadStorage
+                ->registrar([
+                    'bloque' =>
+                        'Documentos',
+
+                    'accion' =>
+                        $accion,
+
+                    'entidad_tipo' =>
+                        'Documento',
+
+                    'entidad_id' =>
+                        $idDocumento,
+
+                    'detalle' =>
+                        $detalle,
+                ]);
+
+        } catch (\Throwable $error) {
+
+            /*
+             * Una falla de actividad/auditoría
+             * no debe revertir una operación
+             * que ya fue completada.
+             */
+            log_message(
+                'error',
+                'No fue posible registrar actividad del documento {id}: {mensaje}',
+                [
+                    'id' =>
+                        $idDocumento,
+
+                    'mensaje' =>
+                        $error->getMessage(),
+                ]
+            );
+        }
     }
 }

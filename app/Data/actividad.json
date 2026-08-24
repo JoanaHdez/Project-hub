@@ -900,5 +900,27 @@
         "entidad_id": 3,
         "detalle": "Agregó la API \"prueba\".",
         "fecha_hora": "2026-08-24 14:30:24"
+    },
+    {
+        "id_actividad": 83,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Documentos",
+        "accion": "Agregó",
+        "entidad_tipo": "Documento",
+        "entidad_id": 1,
+        "detalle": "Agregó el archivo \"SEMESTRAL ENE-JUN 2026 (1).xlsx\" al sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 14:39:57"
+    },
+    {
+        "id_actividad": 84,
+        "id_usuario": null,
+        "usuario_nombre": "Usuario actual",
+        "bloque": "Documentos",
+        "accion": "Eliminó",
+        "entidad_tipo": "Documento",
+        "entidad_id": 1,
+        "detalle": "Eliminó el archivo \"SEMESTRAL ENE-JUN 2026 (1).xlsx\" del sistema \"Sistema de prueba\".",
+        "fecha_hora": "2026-08-24 14:42:10"
     }
 ]
