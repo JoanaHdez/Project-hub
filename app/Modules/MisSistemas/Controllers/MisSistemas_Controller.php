@@ -39,15 +39,15 @@ class MisSistemas_Controller extends BaseController
     {
         $sistemas =
             $this->sistemaStorage
-            ->obtenerTodos();
+                ->obtenerTodos();
 
         $proyectos =
             $this->proyectoStorage
-            ->obtenerTodos();
+                ->obtenerTodos();
 
         $modulos =
             $this->moduloStorage
-            ->obtenerTodos();
+                ->obtenerTodos();
 
 
         /*==================================================
@@ -68,7 +68,9 @@ class MisSistemas_Controller extends BaseController
                 continue;
             }
 
-            $nombresProyectos[$idProyecto] =
+            $nombresProyectos[
+                $idProyecto
+            ] =
                 $proyecto['nombre']
                 ?? 'Sin proyecto';
         }
@@ -93,13 +95,11 @@ class MisSistemas_Controller extends BaseController
             }
 
 
-            /*
-             * Solo permitimos sistemas
-             * expresamente activos.
-             */
             $activo =
-                isset($sistema['activo'])
-                && $sistema['activo'] === true;
+                (bool) (
+                    $sistema['activo']
+                    ?? false
+                );
 
             if (!$activo) {
                 continue;
@@ -113,21 +113,114 @@ class MisSistemas_Controller extends BaseController
                 );
 
 
-            $sistemasActivos[$idSistema] = [
+            $sistemasActivos[
+                $idSistema
+            ] = [
                 ...$sistema,
 
                 'proyecto_nombre' =>
-                    $nombresProyectos[$idProyecto]
+                    $nombresProyectos[
+                        $idProyecto
+                    ]
                     ?? 'Sin proyecto',
             ];
         }
 
 
         /*==================================================
-        =              MÓDULOS DISPONIBLES                 =
+        =              ACCESOS PÚBLICOS                   =
         ==================================================*/
 
         $accesos = [];
+
+
+        /*==================================================
+        =              AGREGAR SISTEMAS                   =
+        ==================================================*/
+
+        foreach (
+            $sistemasActivos
+            as $sistema
+        ) {
+
+            $idSistema =
+                (int) (
+                    $sistema['id_sistema']
+                    ?? 0
+                );
+
+
+            $accesos[] = [
+
+                'tipo_acceso' =>
+                    'sistema',
+
+                'id_sistema' =>
+                    $idSistema,
+
+                'id_modulo' =>
+                    null,
+
+                'nombre' =>
+                    trim(
+                        (string) (
+                            $sistema['nombre']
+                            ?? 'Sistema'
+                        )
+                    ),
+
+                'tipo' =>
+                    trim(
+                        (string) (
+                            $sistema['tipo']
+                            ?? 'Sistema'
+                        )
+                    ),
+
+                'descripcion' =>
+                    trim(
+                        (string) (
+                            $sistema['descripcion']
+                            ?? ''
+                        )
+                    ),
+
+                'url' =>
+                    trim(
+                        (string) (
+                            $sistema['url']
+                            ?? ''
+                        )
+                    ),
+
+                /*
+                 * Los sistemas actualmente no manejan
+                 * imagen pública como los módulos.
+                 */
+                'imagen' =>
+                    '',
+
+                'activo' =>
+                    true,
+
+                'sistema_nombre' =>
+                    $sistema['nombre']
+                    ?? 'Sistema',
+
+                'sistema_tipo' =>
+                    $sistema['tipo']
+                    ?? 'Sistema',
+
+                'proyecto_nombre' =>
+                    $sistema['proyecto_nombre']
+                    ?? 'Sin proyecto',
+            ];
+        }
+
+
+        /*==================================================
+        =              AGREGAR MÓDULOS                    =
+        ==================================================*/
 
         foreach ($modulos as $modulo) {
 
@@ -139,26 +232,26 @@ class MisSistemas_Controller extends BaseController
 
 
             /*
-             * Si el sistema padre no está activo,
-             * ninguno de sus módulos puede mostrarse.
+             * El módulo solamente se muestra
+             * si su sistema padre está activo.
              */
             if (
-                $idSistema <= 0 ||
+                $idSistema <= 0
+                ||
                 !isset(
-                    $sistemasActivos[$idSistema]
+                    $sistemasActivos[
+                        $idSistema
+                    ]
                 )
             ) {
                 continue;
             }
 
 
-            /*
-             * Solo mostramos módulos activos.
-             */
             $moduloActivo =
                 (bool) (
                     $modulo['activo']
-                    ?? true
+                    ?? false
                 );
 
             if (!$moduloActivo) {
@@ -167,10 +260,15 @@ class MisSistemas_Controller extends BaseController
 
 
             $sistema =
-                $sistemasActivos[$idSistema];
+                $sistemasActivos[
+                    $idSistema
+                ];
 
 
             $accesos[] = [
+
+                'tipo_acceso' =>
+                    'modulo',
 
                 'id_modulo' =>
                     (int) (
@@ -224,11 +322,6 @@ class MisSistemas_Controller extends BaseController
                 'activo' =>
                     true,
 
-
-                /*==========================================
-                =              DATOS PADRE                =
-                ==========================================*/
-
                 'sistema_nombre' =>
                     $sistema['nombre']
                     ?? 'Sistema',
@@ -255,11 +348,11 @@ class MisSistemas_Controller extends BaseController
                     'Mis sistemas | Project Hub',
 
                 /*
-                 * Conservamos el nombre "sistemas"
-                 * temporalmente para no romper la vista.
+                 * Conservamos "sistemas" para no
+                 * romper la vista actual.
                  *
-                 * En realidad ahora contiene accesos
-                 * correspondientes a módulos.
+                 * Ahora contiene tanto sistemas
+                 * como módulos.
                  */
                 'sistemas' =>
                     $accesos,
